@@ -1,6 +1,6 @@
 # Bertha2
 
-a program that will integrate with a Twitch livestream to take user inputted YouTube videos and play them on custom piano player hardware.
+a program that integrates with a Twitch livestream to take user inputted YouTube videos and play them on custom piano player hardware.
 
 
 ## Contributing
