@@ -5,7 +5,9 @@ import VideoDownloader
 import historyLogger
 
 #Code by Jarvis Coghlin
-#__main__()
+#
+#The main function joins all of the useful functions into one coheirent place
+
 
 def main():
 
@@ -19,9 +21,6 @@ def main():
         historyLogger.saveBSongLog()
 
     print("The signal inforamtion is in the file: ", videoName.strip(" "),".txt", sep="")
-
-
-
 
 
 

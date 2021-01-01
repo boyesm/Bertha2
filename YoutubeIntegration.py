@@ -1,10 +1,12 @@
 
 
+#Code by Jarvis Coghlin
+
 def getVideoName(link):
 
     """
     :param link: This is the link to the youtube video including https://
-    
+
     """
 
     if type(link) == "String":
