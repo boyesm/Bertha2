@@ -5,11 +5,18 @@ from VideoDownloader import YVideo
 import sys
 
 def main():
-    print("Starting Bertha2 software integration...")
-    YT = YVideo("https://www.youtube.com/watch?v=mJdeFEog-YQ")
 
-    print(YT)
+    print("Testing VideoDownloader")
 
-if __name__ == "__main__"():
+    link = input("Enter the link of the video:")
+
+    YT = YVideo(link, False)
+
+    print(YT, "was downloaded")
+    print("Fun bug facts:")
+    print("This video has",YT.getViews(), "views")
+
+
+if __name__ == "__main__":
 
     main()
