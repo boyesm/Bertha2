@@ -5,6 +5,7 @@ import sys, convert_midi_to_gpio, convert_midi_to_gpio
 
 def main():
     print("Starting Bertha2 software integration...")
+    
 
 if __name__ == "__main__"():
 
