@@ -1,66 +1,44 @@
-import asyncio
+import asyncio, wget, os
 from pyppeteer import launch
+from pathlib import Path
 
-# async def convert_audio_to_midi(audio_file):
-    # browser = await launch()
-    # page = await browser.newPage()
-    # await page.goto('https://www.ofoct.com/audio-converter/convert-wav-or-mp3-ogg-aac-wma-to-midi.html')
-    # await page.waitForSelector('input[type=file]')
-    # return midi_file
-
-
-import asyncio
-from pyppeteer import launch
-
-async def main():
-    browser = await launch()
-    page = await browser.newPage()
-    await page.goto('https://example.com')
-    await page.screenshot({'path': 'example.png'})
-    await browser.close()
-
-
-async def main2():
-    browser = await launch()
-    page = await browser.newPage()
-    await page.goto('https://easyupload.io/')
-    await page.waitForSelector('input[type=file]')
-    await page.waitFor(1000)
-
-    inputUploadHandle = await 
-    fileToUpload = 'example.png'
-
-    '''
-    const inputUploadHandle = await page.$('input[type=file]');
-
-    // prepare file to upload, I'm using test_to_upload.jpg file on same directory as this script
-    // Photo by Ave Calvar Martinez from Pexels https://www.pexels.com/photo/lighthouse-3361704/
-    let fileToUpload = 'test_to_upload.jpg';
-
-    // Sets the value of the file input to fileToUpload
-    inputUploadHandle.uploadFile(fileToUpload);
-    '''
-
-
-    await page.waitForSelector('#upload')
-    await page.evaluate(() => document.getElementById('upload').click())
-
-
-    await page.waitForSelector('#upload-link')
-    await page.waitFor(5000)
-
-    let downloadUrl = await page.evaluate(() => {
-        return document.getElementById('upload-link').value;
-    })
-    print({'file': fileToUpload,
-                 'download_url': downloadUrl})
-
-
-
-    await browser.close()
-
-
-
+# midi output dir must be a Path object
+def convert_audio_to_midi(upload_file, midi_output_dir, midi_file_name):
+    print("Converting audio to midi...")
+    url = asyncio.get_event_loop().run_until_complete(get_dl_link(upload_file))
     
+    print("Downloading midi file")
+    dl_link(url, midi_output_dir, midi_file_name)
 
-asyncio.get_event_loop().run_until_complete(main())
+
+async def get_dl_link(upload_file):
+    browser = await launch()
+    page = await browser.newPage()
+    await page.goto('https://www.conversion-tool.com/audiotomidi/')
+
+    filechoose = await page.querySelector('#localfile')
+    await filechoose.uploadFile(upload_file)
+
+
+    submit = await page.querySelector('#uploadProgress > p > button')
+    await submit.click()
+
+    await page.waitForSelector('#post-472 > div.entry-content.clearfix > ul > li:nth-child(1) > a')
+    link = await page.querySelectorEval('#post-472 > div.entry-content.clearfix > ul > li:nth-child(1) > a', 'n => n.href')
+
+    await browser.close()
+    
+    return link
+
+def dl_link(url, file_dir, file_name):
+    file_dir = Path(file_dir)
+    if not os.path.exists(file_dir):
+        os.makedirs(file_dir)
+    dl_here = file_dir / file_name
+    wget.download(url, str(dl_here)) # must be converted to str type from path object
+
+# cwd = os.getcwd()
+# file_dir = cwd + '/files/img/'
+# # print(file_dir)
+# # convert_audio_to_midi('./test.mp3', Path(file_dir), 'test.mid')
+# dl_link('https://i.stack.imgur.com/7302F.png', Path(file_dir), 'test.png')
