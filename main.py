@@ -1,35 +1,23 @@
 # Code by Jarvis "Smelly" Coghlin and M-Dog
 # The main function joins all of the useful functions into one coherent place
-from youtubedl import downloadvideo
-import VideoQ
+import sys, convert_midi_to_gpio, convert_midi_to_gpio
+from pathlib import Path
+# from os import getcwd
+
+# cwd = getcwd()
+
+# declare directories for files (midi files, mp4 files, ...)
+# midi_file_path = Path(cwd + "/files/midi")
+# audio_file_path = Path(cwd + "/files/audio")
+# video_file_path = Path(cwd + "/files/video")
+
+midi_file_path = Path("/files/midi/")
+audio_file_path = Path("/files/audio/")
+video_file_path = Path("/files/video/")
 
 def main():
-
     print("Starting Bertha2 software integration...")
-
-
-    #Arbitrary number of runs for testing. When running, this will be while True:
-    for i in range(15):
-
-        #FIXME Replace this input function with the input to get links
-        link = input("Enter link:")
-
-        if link != "n":
-
-            if VideoQ.addVideo(link):
-
-                print("Video added")
-
-            else:
-
-                print("Q FULL")
-        else:
-
-            VideoQ.nextVideo()
-
-
-        link = ""
-        VideoQ.printQ()
+    print(midi_file_path)
 
 
 if __name__ == "__main__":
