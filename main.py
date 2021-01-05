@@ -22,3 +22,15 @@ def main():
 
 # if __name__ == "__main__"():
 main()
+=======
+from youtubedl import downloadvideo
+from cliinput import getlink
+
+def main():
+    print("Starting Bertha2 software integration...")
+    link = getlink()
+    downloadvideo(link)
+
+
+if __name__ == "__main__"():
+    main()
