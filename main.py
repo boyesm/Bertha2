@@ -1,6 +1,5 @@
-# Code by Jarvis "Smelly" Coghlin
+# Code by Jarvis "Smelly" Coghlin and M-Dog
 # The main function joins all of the useful functions into one coherent place
-
 import sys, convert_midi_to_gpio, convert_midi_to_gpio
 from pathlib import Path
 # from os import getcwd
@@ -20,17 +19,6 @@ def main():
     print("Starting Bertha2 software integration...")
     print(midi_file_path)
 
-# if __name__ == "__main__"():
-main()
-=======
-from youtubedl import downloadvideo
-from cliinput import getlink
 
-def main():
-    print("Starting Bertha2 software integration...")
-    link = getlink()
-    downloadvideo(link)
-
-
-if __name__ == "__main__"():
+if __name__ == "__main__":
     main()
