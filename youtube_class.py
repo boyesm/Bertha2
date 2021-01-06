@@ -16,15 +16,7 @@ class YVideo:
         self.URL = youtube_url
         self.downloaded = downloaded # should this be a param?
         self.yt = YouTube(self.URL)
-        self.file_name = self.URL[32:43]
-
-    def test(self):
-        # print(video_file_path)
-        # print(type(video_file_path))
-        # print(self.file_name)
-        # print(video_file_path / (self.file_name + ".mp4"))
-        videoclip = VideoFileClip(str(video_file_path / (self.file_name + ".mp4")))
-        return
+        self.file_name = self.URL[32:43] # is this always going to work?
 
     def checkIfSafeforWork(self):
         if not self.yt.age_restricted:
