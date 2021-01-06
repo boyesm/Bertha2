@@ -18,4 +18,7 @@ def check_if_youtube_link(user_input):
     else:
         return False
 
+def check_if_valid_ip(ip_address): # only allow 1 upload per IP/User-agent per n minutes
+    return True
+
 get_video_url()

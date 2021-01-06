@@ -10,6 +10,12 @@ from pathlib import Path
 def main():
     print("Starting Bertha2 software integration...")
 
+    # start processes
+        # converter
+        # website backend
+        # livestream process
+
+
     init()
 
     youtube_url = get_video_url()

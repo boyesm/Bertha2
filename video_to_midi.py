@@ -15,7 +15,6 @@ def video_to_midi(youtube_url):
     print("Downloading midi file...")
     dl_midi_file(midi_file_url, file_name) # store audio file in midi_file_path
 
-
 def download_video_audio(youtube_url):
     video_obj = YVideo(youtube_url)
     video_obj.downloadVideo()
