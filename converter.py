@@ -6,13 +6,14 @@ from pyppeteer import launch
 from pathlib import Path
 from youtube_class import YVideo
 from global_vars import midi_file_path, audio_file_path, video_file_path
+from sqlalchemy import create_engine
 
 engine = create_engine('sqlite:///bertha2.db')
 conn = engine.connect()
 
-while True:
-    check_db_for_unconverted_videos()
-    time.sleep(10)
+# while True:
+#     check_db_for_unconverted_videos()
+#     time.sleep(10)
     
 def check_db_for_unconverted_videos():
     # check for if db elements have a True value for 'isconverted'

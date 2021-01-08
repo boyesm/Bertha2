@@ -53,10 +53,13 @@ def start_new_video(file_name):
 # start_new_video("mJdeFEog-YQ")
 # check_db_for_new_videos()
 
-while True:
-    check_db_for_new_videos()
-    if len(queue) > i:
-        start_new_video(queue[i])
-        i+=1
-    else:
-        time.sleep(5)
+# while True:
+#     check_db_for_new_videos()
+#     if len(queue) > i:
+#         start_new_video(queue[i])
+#         i+=1
+#     else:
+#         # time.sleep(10)
+#         break
+
+start_new_video('mJdeFEog-YQ')
