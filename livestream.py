@@ -7,11 +7,12 @@ import vlc, time
 from global_vars import midi_file_path, audio_file_path, video_file_path, queue_table
 from sqlalchemy import create_engine, select
 
-vlc_instance = vlc.Instance()
+# vlc_instance1 = vlc.Instance()
+vlc_instance2 = vlc.Instance()
 
-video_player = vlc_instance.media_player_new()
-midi_player = vlc_instance.media_player_new()
-video_player.audio_set_volume(0)
+# video_player = vlc_instance1.media_player_new()
+midi_player = vlc_instance2.media_player_new()
+# video_player.audio_set_volume(0)
 
 engine = create_engine('sqlite:///bertha2.db')
 conn = engine.connect()
@@ -35,20 +36,20 @@ def check_db_for_new_videos(): # make sure videos are converted as wel!!!!!
 
 def start_new_video(file_name):
 
-    video = vlc_instance.media_new(str(video_file_path / (file_name + ".mp4")))
-    midi = vlc_instance.media_new(str(midi_file_path / (file_name + ".midi")))
+    # video = vlc_instance1.media_new(str(video_file_path / (file_name + ".mp4")))
+    midi = vlc_instance2.media_new(str(midi_file_path / (file_name + ".midi")))
     # video_player = vlc_instance.media_player_new()
     # midi_player = vlc_instance.media_player_new()
-    video_player.set_media(video)
+    # video_player.set_media(video)
     midi_player.set_media(midi)
-    video_player.play()
+    # video_player.play()
     midi_player.play()    
     
     time.sleep(0.3)
     # print((video_player.get_length()) / 1000)
     # print((midi_player.get_length()) / 1000)
-    # time.sleep(10)
-    time.sleep(video_player.get_length() / 1000)
+    time.sleep(10)
+    # time.sleep(video_player.get_length() / 1000)
 
 # start_new_video("mJdeFEog-YQ")
 # check_db_for_new_videos()
