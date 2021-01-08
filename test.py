@@ -1,15 +1,18 @@
 from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData, Boolean, select
 from global_vars import queue_table
+import request_handler
+#engine = create_engine('sqlite:///bertha2.db')
 
-engine = create_engine('sqlite:///bertha2.db')
+
+
 
 # # creating a row
-conn = engine.connect()
+#conn = engine.connect()
 
-create_row = queue_table.insert().values(username='mamae', link='https://www.youtube.com/watch?v=mJdeFEog-YQ', filename='mJdeFEog-YQ', isconverted=False, isqueued=False)
-conn.execute(create_row)
-create_row = queue_table.insert().values(username='mamae', link='https://www.youtube.com/watch?v=mJdeFEog-YQ', filename='mJdeFEog-YQ', isconverted=False, isqueued=False)
-conn.execute(create_row)
+#create_row = queue_table.insert().values(username='mamae', link='https://www.youtube.com/watch?v=mJdeFEog-YQ', filename='mJdeFEog-YQ', isconverted=False, isqueued=False)
+#conn.execute(create_row)
+#create_row = queue_table.insert().values(username='mamae', link='https://www.youtube.com/watch?v=mJdeFEog-YQ', filename='mJdeFEog-YQ', isconverted=False, isqueued=False)
+#conn.execute(create_row)
 
 
 # # modifying a row

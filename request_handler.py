@@ -20,7 +20,7 @@ def get_video_url():
 
 def check_if_youtube_link(user_input):
     # add: check if this is a working link with youtube
-    # add: check if video is age restricted
+    # add: check if video is age restricted DONE (in youtube_class.py)
     start = user_input.find("https://www.youtube.com/watch?v=")
     if start == 0:
         return True
