@@ -7,7 +7,6 @@ from pathlib import Path
 from youtube_class import YVideo
 from global_vars import midi_file_path, audio_file_path, video_file_path
 from sqlalchemy import create_engine
-from midi2audio import FluidSynth
 
 engine = create_engine('sqlite:///bertha2.db')
 conn = engine.connect()
@@ -73,10 +72,6 @@ async def convert_audio_to_link(file_name):
 
 def dl_midi_file(url, file_name):
     wget.download(url, str(midi_file_path / (file_name + ".midi")))
-
-def convert_midi_to_audio(file_name):
-    fs = FluidSynth()
-    fs.midi_to_audio(str(midi_file_path / (file_name + '.midi')), str(audio_file_path / (file_name + '.mp3')))
     
 
 # video_to_midi("https://www.youtube.com/watch?v=mJdeFEog-YQ")
