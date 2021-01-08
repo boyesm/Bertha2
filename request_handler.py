@@ -2,6 +2,9 @@
 # when a web request is received, user input is validated and sent to db
 
 
+# when a 'play' command is received, validate the link, then send to db
+
+
 
 
 def get_video_url():
