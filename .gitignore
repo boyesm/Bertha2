@@ -3,6 +3,11 @@ example.png
 .DS_Store
 files
 test.py
+anothertest.py
+*.mp4
+*.mkv
+*.midi
+*.db
 
 
 # IDE

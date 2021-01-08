@@ -1,3 +1,8 @@
+# always waiting for web requests
+# when a web request is received, user input is validated and sent to db
+
+
+
 def get_video_url():
     user_input = input("Input YouTube link: ")
     
@@ -18,7 +23,5 @@ def check_if_youtube_link(user_input):
     else:
         return False
 
-def check_if_valid_ip(ip_address): # only allow 1 upload per IP/User-agent per n minutes
+def check_if_valid_user(username): # only allow 1 upload per IP/User-agent per n minutes
     return True
-
-get_video_url()
