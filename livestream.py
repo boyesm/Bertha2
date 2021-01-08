@@ -20,7 +20,7 @@ conn = engine.connect()
 queue = [] # queue stores file names
 i = 0
 
-def check_db_for_new_videos():
+def check_db_for_new_videos(): # make sure videos are converted as wel!!!!!
     s = select([queue_table])
     result = conn.execute(s)
     for row in result:

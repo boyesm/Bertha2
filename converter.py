@@ -39,6 +39,9 @@ def video_to_midi(youtube_url):
     print("Downloading midi file...")
     dl_midi_file(midi_file_url, file_name) # store audio file in midi_file_path
 
+    print("Converting midi file back into audio file...")
+    convert_midi_to_audio(file_name)
+
 def download_video_audio(youtube_url):
     video_obj = YVideo(youtube_url)
     video_obj.downloadVideo()
@@ -53,7 +56,7 @@ async def convert_audio_to_link(file_name):
 
     filechoose = await page.querySelector('#localfile')
     upload_file = str(audio_file_path / (file_name + ".mp3"))
-    print(upload_file)
+    os.remove(str(audio_file_path / (file_name + '.mp3'))) # remove mp3 file
     await filechoose.uploadFile(upload_file)
 
 
@@ -69,5 +72,7 @@ async def convert_audio_to_link(file_name):
 
 def dl_midi_file(url, file_name):
     wget.download(url, str(midi_file_path / (file_name + ".midi")))
+    
 
-video_to_midi("https://www.youtube.com/watch?v=mJdeFEog-YQ")
+# video_to_midi("https://www.youtube.com/watch?v=mJdeFEog-YQ")
+convert_midi_to_audio('mJdeFEog-YQ')
