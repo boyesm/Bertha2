@@ -2,8 +2,9 @@
 # The main function joins all of the useful functions into one coherent place
 import sys
 from init import init
-# from cli_input import get_video_url
-# from video_to_midi import video_to_midi
+# from request_handler import get_video_url
+# from converter import video_to_midi
+# from livestream import start_new_video
 from pathlib import Path
 
 
@@ -12,7 +13,14 @@ if __name__ == "__main__":
     
     init()
 
+    # url = get_video_url()
+    # file_name = video_to_midi(url)
+    # start_new_video(file_name)
+
+
     # start processes
     # exec(open("request_handler.py").read()) # stream chat bot
-    exec(open("converter.py").read()) # converter process
-    exec(open("livestream.py").read()) # livestream process
+    # exec(open("converter.py").read()) # converter process
+    # exec(open("livestream.py").read()) # livestream process
+
+

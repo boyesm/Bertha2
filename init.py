@@ -8,6 +8,9 @@ def init():
     create_db()
 
 def create_dirs():
+    # delete them if they already exist
+
+
     dirs = [midi_file_path, audio_file_path, video_file_path]
     
     for dir in dirs:
@@ -20,4 +23,4 @@ def create_db():
     # add: backup existing queue table and delete it  
     meta.create_all(engine)
 
-init()
+# init()

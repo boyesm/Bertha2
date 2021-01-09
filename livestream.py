@@ -3,16 +3,10 @@
 # also responsible for playing audio and video
 # tells vlc what to do
 
-import vlc, time
+import time, os
 from global_vars import midi_file_path, audio_file_path, video_file_path, queue_table
 from sqlalchemy import create_engine, select
-
-# vlc_instance1 = vlc.Instance()
-vlc_instance2 = vlc.Instance()
-
-# video_player = vlc_instance1.media_player_new()
-midi_player = vlc_instance2.media_player_new()
-# video_player.audio_set_volume(0)
+from moviepy.editor import VideoFileClip
 
 engine = create_engine('sqlite:///bertha2.db')
 conn = engine.connect()
@@ -20,47 +14,43 @@ conn = engine.connect()
 queue = [] # queue stores file names
 i = 0
 
+vlc_path = "/Applications/VLC.app/Contents/MacOS/VLC"
+
 def check_db_for_new_videos(): # make sure videos are converted as wel!!!!!
     s = select([queue_table])
     result = conn.execute(s)
     for row in result:
         # print(row)
-        if row['isqueued'] == 0:
+        if row['isqueued'] == 0 and row['isconverted'] == 1:
             queue.append(row['filename'])
     
-    # req = queue_table.update().values(isqueued=1)
-    # conn.execute(req)
+            req = queue_table.update().where(queue_table.c.id == row['id']).values(isqueued=1)
+            conn.execute(req)
 
     # print(queue)
 
 
 def start_new_video(file_name):
+    clip = VideoFileClip(str(video_file_path / (file_name + ".mp4")))
+    play_video(file_name)
+    play_midi(file_name)
+    time.sleep(clip.duration + 10)
 
-    # video = vlc_instance1.media_new(str(video_file_path / (file_name + ".mp4")))
-    midi = vlc_instance2.media_new(str(midi_file_path / (file_name + ".midi")))
-    # video_player = vlc_instance.media_player_new()
-    # midi_player = vlc_instance.media_player_new()
-    # video_player.set_media(video)
-    midi_player.set_media(midi)
-    # video_player.play()
-    midi_player.play()    
+
+def play_video(file_name):
+    os.popen(str(vlc_path + " -f --video-on-top --no-audio " + str(video_file_path / (file_name + ".mp4"))))
+
+def play_midi(file_name):
+    os.popen(str(vlc_path + " " + str(midi_file_path / (file_name + ".midi"))))
     
-    time.sleep(0.3)
-    # print((video_player.get_length()) / 1000)
-    # print((midi_player.get_length()) / 1000)
-    time.sleep(10)
-    # time.sleep(video_player.get_length() / 1000)
+
+while True:
+    check_db_for_new_videos()
+    if len(queue) > i:
+        start_new_video(queue[i])
+        i+=1
+    else:
+        time.sleep(3)
+
 
 # start_new_video("mJdeFEog-YQ")
-# check_db_for_new_videos()
-
-# while True:
-#     check_db_for_new_videos()
-#     if len(queue) > i:
-#         start_new_video(queue[i])
-#         i+=1
-#     else:
-#         # time.sleep(10)
-#         break
-
-start_new_video('mJdeFEog-YQ')
