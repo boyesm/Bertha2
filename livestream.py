@@ -40,6 +40,10 @@ def start_new_video(file_name):
 def play_video(file_name):
     os.popen(str(vlc_path + " -f --video-on-top --no-audio " + str(video_file_path / (file_name + ".mp4"))))
 
+    ## --play-and-exit
+    ## --start-paused
+    ## 
+
 def play_midi(file_name):
     os.popen(str(vlc_path + " " + str(midi_file_path / (file_name + ".midi"))))
     
@@ -49,8 +53,8 @@ while True:
     if len(queue) > i:
         start_new_video(queue[i])
         i+=1
-    else:
-        time.sleep(3)
+    # else:
+    #     time.sleep(0.1)
 
 
 # start_new_video("mJdeFEog-YQ")

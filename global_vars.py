@@ -17,3 +17,10 @@ queue_table = Table('queue', meta,
         Column('isconverted', Boolean),
         Column('isqueued', Boolean),
     )
+
+tl = { # twitch login
+    'username': 'berthatwo',
+    'clientid': 'oqjx4qhulp84kvlv32rwggu7q2z2tb',
+    'token': 'uk0yu50mnczb6vxf05uy3446b1e3er',
+    'channel': 'berthatwo',
+}
