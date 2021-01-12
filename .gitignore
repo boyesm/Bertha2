@@ -2,7 +2,8 @@
 example.png
 .DS_Store
 files
-# test.py
+files.old
+test.py
 anothertest.py
 *.mp4
 *.mkv

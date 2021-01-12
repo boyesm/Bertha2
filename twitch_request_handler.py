@@ -6,17 +6,17 @@
 import time, sys, irc.bot, requests
 from sqlalchemy import create_engine
 from global_vars import midi_file_path, audio_file_path, video_file_path, queue_table, tl
-from pytube import YouTube
+from pytube import YouTube, extract
 
-engine = create_engine('sqlite:///bertha2.db')
+engine = create_engine('sqlite:///bertha2.db', connect_args={'timeout': 15})
 conn = engine.connect()
 
 def get_file_name(link):
-    return link[32:43]
+    return str(extract.video_id(link))
 
 def check_if_valid_youtube_link(user_input):
     try:
-        yt = YouTube(user_input)
+        yt = YouTube(user_input) # YouTube("https://www.youtube.com/watch?v=KRbsco8M7Fc")
         yt.check_availability()
         if yt.length <= 180:
             return True
@@ -129,4 +129,6 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
 
 bot = TwitchBot(tl['username'], tl['clientid'], tl['token'], tl['channel'])
 bot.start()
+
+# get_file_name("https://www.youtube.com/watch?v=KRbsco8M7Fc")
 

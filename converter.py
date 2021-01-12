@@ -8,8 +8,8 @@ from youtube_class import YVideo
 from global_vars import midi_file_path, audio_file_path, video_file_path, queue_table
 from sqlalchemy import create_engine, select
 
-engine = create_engine('sqlite:///bertha2.db')
-conn = engine.connect()
+engine = create_engine('sqlite:///bertha2.db', connect_args={'timeout': 120})
+conn = engine.connect() # create and connect to database here
     
 def check_db_for_unconverted_videos():
     print("checking db for unconverted videos")
@@ -27,6 +27,8 @@ def check_db_for_unconverted_videos():
                 req = queue_table.update().where(queue_table.c.id == row['id']).values(isqueued=1)
                 print("unsuccessfully converted it")
             conn.execute(req)
+
+    result.close()
 
 
 def video_to_midi(youtube_url):
@@ -74,10 +76,6 @@ async def convert_audio_to_link(file_name): # put some try catches in here to pr
 
 def dl_midi_file(url, file_name):
     wget.download(url, str(midi_file_path / (file_name + ".midi")))
-    
-
-# video_to_midi("https://www.youtube.com/watch?v=mJdeFEog-YQ")
-# convert_midi_to_audio('mJdeFEog-YQ')
 
 while True:
     check_db_for_unconverted_videos()
