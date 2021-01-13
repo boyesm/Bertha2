@@ -21,7 +21,8 @@ def create_dirs():
 
 def remove_old_dirs():
     try:
-        shutil.move(str(cwd / Path("files")), str(cwd / Path("files.old")))
+        # shutil.move(str(cwd / Path("files")), str(cwd / Path("files.old")))
+        shutil.rmtree('files')
     except:
         return
 
@@ -33,7 +34,8 @@ def create_db():
 
 def remove_old_db():
     try:
-        os.rename('bertha2.db', 'oldbertha2.db')
+        # os.rename('bertha2.db', 'oldbertha2.db')
+        os.remove('bertha2.db')
     except:
         return
 
