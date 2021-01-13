@@ -4,9 +4,9 @@ from sqlalchemy import Table, Column, Integer, String, MetaData, Boolean
 
 cwd = getcwd()
 
-midi_file_path = Path(cwd + "/files/midi/")
-audio_file_path = Path(cwd + "/files/audio/")
-video_file_path = Path(cwd + "/files/video/")
+midi_file_path = Path(cwd / Path("files") / Path("midi"))
+audio_file_path = Path(cwd / Path("files") / Path("audio"))
+video_file_path = Path(cwd / Path("files") / Path("video"))
 
 meta = MetaData()
 queue_table = Table('queue', meta, 
