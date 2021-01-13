@@ -54,6 +54,7 @@ def download_video_audio(youtube_url):
     return video_obj.file_name
 
 async def convert_audio_to_link(file_name): # put some try catches in here to prevent timeouts
+    print("ATTEMPTING TO GET LINK")
     browser = await launch()
     page = await browser.newPage()
     await page.goto('https://www.conversion-tool.com/audiotomidi/')
@@ -77,6 +78,7 @@ async def convert_audio_to_link(file_name): # put some try catches in here to pr
 def dl_midi_file(url, file_name):
     wget.download(url, str(midi_file_path / (file_name + ".midi")))
 
-while True:
-    check_db_for_unconverted_videos()
-    time.sleep(10)
+#while True:
+    #check_db_for_unconverted_videos()
+    #time.sleep(10)
+print(asyncio.get_event_loop().run_until_complete(convert_audio_to_link("HHcgTbs7_Os")))

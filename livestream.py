@@ -16,8 +16,9 @@ i = 0
 
 if sys.platform == 'darwin':
     vlc_path = "/Applications/VLC.app/Contents/MacOS/VLC"
-else if sys.plaform == 'win32': # this is untested !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    vlc_path = "C:\Program Files\VideoLAN\VLC"
+
+elif sys.platform == 'win32': # this is untested !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    vlc_path = "H:\Programs\VLC\vlc.exe"
 
 def check_db_for_new_videos():
     s = select([queue_table])
