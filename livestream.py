@@ -46,16 +46,18 @@ def start_new_video(file_name):
 
 
 def play_video(file_name):
-    try:
-        os.popen(str(vlc_path + " -f --video-on-top --no-audio --play-and-exit " + str(video_file_path / (file_name + ".mp4"))))
-    except:
-        print("CRITICAL: CHECK VLC FILE PATH VARIABLE AND MAKE SURE ITS CORRECT, from Malcolm")
+    print("video has been opened!")
+    # try:
+    #     os.popen(str(vlc_path + " -f --video-on-top --no-audio --play-and-exit " + str(video_file_path / (file_name + ".mp4"))))
+    # except:
+    #     print("CRITICAL: CHECK VLC FILE PATH VARIABLE AND MAKE SURE ITS CORRECT, from Malcolm")
 
 def play_midi(file_name):
-    try:
-        os.popen(str(vlc_path + " --play-and-exit " + str(midi_file_path / (file_name + ".midi"))))
-    except:
-        print("CRITICAL: CHECK VLC FILE PATH VARIABLE AND MAKE SURE ITS CORRECT, from Malcolm")
+    print("audio has been opened!")
+    # try:
+    #     os.popen(str(vlc_path + " --play-and-exit " + str(midi_file_path / (file_name + ".midi"))))
+    # except:
+    #     print("CRITICAL: CHECK VLC FILE PATH VARIABLE AND MAKE SURE ITS CORRECT, from Malcolm")
     
 
 while True:
