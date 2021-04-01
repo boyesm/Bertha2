@@ -1,6 +1,6 @@
 # Bertha2
 
-a program that integrates with a Twitch livestream to take user inputted YouTube videos and play them on custom piano player hardware.
+Bertha2 is a livestreamed player piano that integrates with a Twitch. Twitch viewers submit links to YouTube videos, the audio from these videos is converted into MIDI and automatically played on the player piano.
 
 
 ## Contributing
