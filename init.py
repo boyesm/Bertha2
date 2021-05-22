@@ -6,8 +6,10 @@ from global_vars import midi_file_path, audio_file_path, video_file_path, meta
 cwd = Path(os.getcwd())
 
 def init():
+    print("Initializing Bertha2...")
     create_dirs()
     create_db()
+    print("Initializing completed...")
 
 def create_dirs():
     remove_old_dirs()

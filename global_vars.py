@@ -2,11 +2,17 @@ from os import getcwd
 from pathlib import Path
 from sqlalchemy import Table, Column, Integer, String, MetaData, Boolean
 
+
+##### move this into a dotenv file #####
+
 cwd = getcwd()
 
 midi_file_path = Path(cwd / Path("files") / Path("midi"))
 audio_file_path = Path(cwd / Path("files") / Path("audio"))
 video_file_path = Path(cwd / Path("files") / Path("video"))
+
+
+##### ^^ move this into a dotenv file ^^ #####
 
 meta = MetaData()
 queue_table = Table('queue', meta, 
