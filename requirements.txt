@@ -1,0 +1,7 @@
+SQLAlchemy~=1.4.15
+wget~=3.2
+pyppeteer~=0.2.5
+moviepy~=1.0.3
+pytube~=10.8.2
+requests~=2.25.1
+irc~=19.0.1

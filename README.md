@@ -1,17 +1,10 @@
 # Bertha2
 
-a program that integrates with a Twitch livestream to take user inputed YouTube videos and play them on custom piano player hardware.
-
-
-## How the hell this thing works (from malcolm, to Jarvis)
-
-0. run ```pip install -r requirements.txt```
-1. Run init.py (this will create needed files and the database)
-2. (if testing) Run livestream.py, CLI_request_handler.py, converter.py in !!seperate windows!!!
-2. (if not testing) Run livestream.py, twitch_request_handler.py, converter.py in !!seperate windows!!!
-
+Bertha2 is a livestreamed player piano that integrates with Twitch. Twitch viewers submit links to YouTube videos, the audio from these videos is converted into MIDI and automatically played on the player piano.
 
 ## Contributing
 
-* when working on a feature, please add it to the appropriate project and indicate that it is in progress
+* identify what you're working on in the GitHub projects tab. each component has its own Projects tab, add/move something to the "In Progress" tab when work is started
 * when working on a new feature, create a new sub-branch of the appropriate component branch
+* run the appropriate tests before creating a pull request to merge your branch with the branch below it
+* when a component version in complete, create a PR to merge it with dev-branch. from there, integration with other components will be tested, then is will be merged with main.

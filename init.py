@@ -41,4 +41,4 @@ def remove_old_db():
     except:
         return
 
-init()
+init() # this is not a test case. this is needed to run the program.

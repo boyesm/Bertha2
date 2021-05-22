@@ -44,8 +44,8 @@ def input_links(link):  # this is for testing purposes only
 
 # run this file to simulate 5 links being added by users
 
-input_links("https://www.youtube.com/watch?v=mJdeFEog-YQ")
-input_links("https://www.youtube.com/watch?v=HHcgTbs7_Os")
-input_links("https://www.youtube.com/watch?v=OnZn-ci3ImM")
-input_links("https://www.youtube.com/watch?v=Srq1FqFPwj0")
-input_links("https://www.youtube.com/watch?v=SmbmeOgWsqE")
+# input_links("https://www.youtube.com/watch?v=mJdeFEog-YQ")
+# input_links("https://www.youtube.com/watch?v=HHcgTbs7_Os")
+# input_links("https://www.youtube.com/watch?v=OnZn-ci3ImM")
+# input_links("https://www.youtube.com/watch?v=Srq1FqFPwj0")
+# input_links("https://www.youtube.com/watch?v=SmbmeOgWsqE")

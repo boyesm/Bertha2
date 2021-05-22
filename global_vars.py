@@ -3,7 +3,7 @@ from pathlib import Path
 from sqlalchemy import Table, Column, Integer, String, MetaData, Boolean
 
 
-##### move this into a dotenv file #####
+##### \/ \/ move this into a dotenv file \/ \/ ##### set in init
 
 cwd = getcwd()
 
@@ -24,9 +24,15 @@ queue_table = Table('queue', meta,
         Column('isqueued', Boolean),
     )
 
+##### \/ \/ move this into a dotenv file \/ \/ #####
+
+
 tl = { # twitch login
     'username': 'berthatwo',
     'clientid': 'oqjx4qhulp84kvlv32rwggu7q2z2tb',
     'token': 'uk0yu50mnczb6vxf05uy3446b1e3er',
     'channel': 'berthatwo',
 }
+
+
+##### ^^ move this into a dotenv file ^^ #####
