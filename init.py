@@ -7,7 +7,6 @@ cwd = Path(os.getcwd())
 
 def init():
     print("Initializing Bertha2...")
-
     create_dirs()
     create_db()
     print("Initializing completed...")
@@ -31,11 +30,9 @@ def create_dirs():
             os.makedirs(file_dir)
 
 def create_db():
-
-    # Delete the old database
     try:
 
-        os.remove('bertha2.db')
+        os.remove('bertha2.db') # Delete the old database
 
     except:
 
@@ -43,5 +40,5 @@ def create_db():
 
 init() # this is not a test case. this is needed to run the program.
 
-engine = create_engine('sqlite:///bertha2.db')
-meta.create_all(engine)
+# engine = create_engine('sqlite:///bertha2.db')
+# meta.create_all(engine)

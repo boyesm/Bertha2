@@ -1,7 +1,6 @@
 from sqlalchemy import create_engine
 import pandas as pd
 
-
 # Handles most of the database querying, usually returning a dataset for a query
 class dbEngine:
     Server = ''

@@ -109,10 +109,12 @@ async def convert_audio_to_link(file_name): # put some try catches in here to pr
 def dl_midi_file(url, file_name):
     wget.download(url, str(midi_file_path / (file_name + ".midi")))
 
+
+
+
 print("Started converter")
 
 while True:
-
     check_db_for_unconverted_videos()
     time.sleep(1)
 
