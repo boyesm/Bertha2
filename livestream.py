@@ -8,6 +8,7 @@ from global_vars import midi_file_path, audio_file_path, video_file_path, queue_
 from sqlalchemy import create_engine, select
 from moviepy.editor import VideoFileClip
 
+
 engine = create_engine('sqlite:///bertha2.db', connect_args={'timeout': 120})
 conn = engine.connect() # create and connect to database here
 
@@ -17,8 +18,10 @@ i = 0
 if sys.platform == 'darwin':
     vlc_path = "/Applications/VLC.app/Contents/MacOS/VLC"
 
-elif sys.platform == 'win32': # this is untested !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+elif sys.platform == 'win32': # this is untested !!!!!!
+
     vlc_path = "H:\Programs\VLC\vlc.exe"
+
 
 def check_db_for_new_videos():
     s = select([queue_table])

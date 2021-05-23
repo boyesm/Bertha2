@@ -3,30 +3,38 @@
 
 
 # when a 'play' command is received, validate the link, then send to db
-import time, sys, irc.bot, requests
-from sqlalchemy import create_engine
-from global_vars import midi_file_path, audio_file_path, video_file_path, queue_table, tl
-from pytube import YouTube, extract
+import irc.bot, requests
 
-engine = create_engine('sqlite:///bertha2.db', connect_args={'timeout': 15})
-conn = engine.connect()
+
+from global_vars import tl
+from pytube import YouTube, extract
+from datetime import datetime
+from dbEngine import dbEngine
 
 def get_file_name(link):
     return str(extract.video_id(link))
 
 def check_if_valid_youtube_link(user_input):
-    try:
-        yt = YouTube(user_input) # YouTube("https://www.youtube.com/watch?v=KRbsco8M7Fc")
-        yt.check_availability()
-        if yt.length <= 180:
-            return True
-        else:
-            return False
-    except:
+
+    print("LINK TO CHECK: ", user_input)
+    # try:
+
+    yt = YouTube(user_input) # YouTube("https://www.youtube.com/watch?v=KRbsco8M7Fc")
+    yt.check_availability()
+
+
+    if yt.length <= 390:
+
+        return True
+
+    else:
+
         return False
 
-# def check_if_valid_user(username): # only allow 1 upload per IP/User-agent per n minutes
-#     return True
+    # except:
+    #
+    #     print("Error: Unable to determine if video is valid")
+    #     return False
 
 
 def getKeyFromFakeDict(key, parse):
@@ -40,8 +48,8 @@ def getKeyFromFakeDict(key, parse):
                 endLocation = i
 
     dictValue = parse[location+len(key)+2:endLocation]
-    print("Key found at:", location)
-    print("End key found at:",endLocation)
+    # print("Key found at:", location)
+    # print("End key found at:",endLocation)
 
     return dictValue
 
@@ -84,33 +92,49 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
         # If a chat message starts with an exclamation point, try to run it as a command
         if e.arguments[0][:1] == '!':
             cmd = e.arguments[0].split(' ')[0][1:]
-            print('Received command: ' + cmd)
+            print('Received command: ' + cmd + 'from' + getKeyFromFakeDict("source",str(e)))
             # print("Raw information from message:" + e.arguments[0])
-            print("Sent user:", getKeyFromFakeDict("source",str(e)))
             self.do_command(cmd, e)
+
         return
 
     def do_command(self, cmd, e):
-        c = self.connection
 
+        engine = dbEngine()
+
+        # Take the argument right after the command. With !play the next argument will be the link
         try:
+
             arg = e.arguments[0].split(' ')[1]
+
+            print("ARGUMENTS")
+            print(e.arguments[0])
+
         except:
+
+            print("Error pulling argument after command in twitchBot")
             return
+
 
         # Poll the API to get current game.
         if cmd == "play":
-            if check_if_valid_youtube_link(arg):
-                # print('valid input')
-                create_row = queue_table.insert().values(username=str(getKeyFromFakeDict("source",str(e))), link=arg, filename=get_file_name(arg), isconverted=False, isqueued=False)
-                conn.execute(create_row)
-                c.privmsg(self.channel, "The video has been added to the queue")
-            else:
-                # print('invalid input')
-                c.privmsg(self.channel, "The video has NOT been added to the queue. If it longer than 3 minutes, it will not be added.")
+
+            if(check_if_valid_youtube_link(arg)):
+
+                youtube_url = arg
+                # The converter now handles db interactoions, with this just invoking the converter
+                dateAdded = datetime.now()
+
+                engine.insertQuery(f"INSERT INTO Bertha2Table(dateadded, played, converted, link) VALUES ('{dateAdded}', 0, 0, '{youtube_url}')")
+
+                # c.privmsg(self.channel, "The video has been added to the queue")
+
+            # else:
+
+                # c.privmsg(self.channel, "The video has NOT been added to the queue. If it longer than 3 minutes, it will not be added.")
 
             
-            
+
         # # Poll the API the get the current status of the stream
         # elif cmd == "title":
         #     url = 'https://api.twitch.tv/kraken/channels/' + self.channel_id
@@ -130,5 +154,4 @@ class TwitchBot(irc.bot.SingleServerIRCBot):
 bot = TwitchBot(tl['username'], tl['clientid'], tl['token'], tl['channel'])
 bot.start()
 
-# get_file_name("https://www.youtube.com/watch?v=KRbsco8M7Fc")
 
