@@ -20,7 +20,7 @@ class dbEngine:
     def __init__(self):
 
         # Get database information from file:
-        with open("ServerInfo") as fp:
+        with open("server_info") as fp:
 
             # Reads the first line, and splits it into items
             elements = fp.readline()
