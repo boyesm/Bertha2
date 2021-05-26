@@ -5,6 +5,36 @@ what this file should do:
 - play on hardware
 '''
 import time
+# import asyncio
+
+starting_note = 0 # note that actuators start on
+number_of_notes = 50 # number of actuators
+time_interval = 20 # milliseconds
+
+# def check_db  ### always be checking db for songs to play
+
+
+def play_midi_file(midi_filename): # add a parameter to determine how much time the file is played for
+
+    # initialize
+        # parse midi file
+        # etc...
+        # signal initization has been completed to calling function (this is so that video can be synced with piano audio) ### toggle flag in db?
+
+
+
+    # loop
+        # track time in some way
+        # at current time, determine which notes should be depressed, and for how long
+        # call async functions that depress those notes for set duration
+
+    length_of_midi_file # calculate the length in milliseconds of the midi file
+
+    for i in range(0, length_of_midi_file, time_interval):
+
+
+
+
 
 
 
@@ -18,8 +48,7 @@ import time
 
 #### hardware stuff
 
-starting_note = 0 # note that actuators start on
-number_of_notes = 50 # number of actuators
+
 
 ### docs: https://circuitpython.readthedocs.io/projects/pca9685/en/latest/examples.html
 from board import SCL, SDA
@@ -38,7 +67,6 @@ def power_draw_function(time, note_velocity): # a function to produce an optimal
     return duty_cycle_at_time_t
 
 def turn_on_solenoid(note_number, note_duration, note_velocity): # this needs to be async # note_duration is in milliseconds (or converted to such)
-    time_interval = 20 # milliseconds
 
     for i in range(0, note_duration, time_interval): # time values in this function won't be completely accurate
         pca.channels[note_number].duty_cycle = hex(power_draw_function(i, note_velocity))
