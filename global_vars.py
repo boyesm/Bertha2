@@ -36,3 +36,7 @@ tl = { # twitch login
 
 
 ##### ^^ move this into a dotenv file ^^ #####
+
+proxy_port = '22225'
+proxy_username = 'lum-customer-hl_65bf90ee-zone-data_center'
+proxy_password = '2?f8ek31o~xr'

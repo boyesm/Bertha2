@@ -2,16 +2,17 @@
 # when an uncoverted link is found, it is converted
 
 import asyncio, wget, os
+import random
 from datetime import datetime
 import time
 import logging
 
 from pyppeteer import launch
 from youtube_class import YVideo
-from global_vars import midi_file_path, audio_file_path, video_file_path, queue_table
+from global_vars import midi_file_path, audio_file_path, video_file_path, queue_table, proxy_port, proxy_username, proxy_password
 from db_engine import dbEngine
 
-engine = dbEngine()
+# engine = dbEngine()
     
 def check_db_for_unconverted_videos():
 
@@ -56,10 +57,9 @@ def check_db_for_unconverted_videos():
         print("No videos to convert")
 
 
-
 def video_to_midi(youtube_url):
 
-    engine = dbEngine()
+    # engine = dbEngine()
 
     print("Converting YouTube URL into audio file...")
     file_name = download_video_audio(youtube_url) # store audio file in audio_file_path
@@ -85,10 +85,25 @@ def download_video_audio(youtube_url):
 
 async def convert_audio_to_link(file_name): # put some try catches in here to prevent timeouts
 
+    proxy_num = random.randrange(0, 100000)
+
     # print("ATTEMPTING TO GET LINK")
-    browser = await launch()
+    browser = await launch({
+        'args': [f'--proxy-server=zproxy.lum-superproxy.io:{proxy_port}'],
+        'headless': False
+    })
     page = await browser.newPage()
-    await page.goto('https://www.conversion-tool.com/audiotomidi/')
+    await page.authenticate({'username': f'{proxy_username}-session-{proxy_num}', 'password': proxy_password})
+
+    try:  # TODO: finish the error checking on this function
+        await page.goto('https://www.conversion-tool.com/audiotomidi/', timeout=5000)
+
+    except:
+        print("goto timed out!")
+        return asyncio.get_event_loop().run_until_complete(convert_audio_to_link(file_name))
+
+    finally:
+        await browser.close()
 
     filechoose = await page.querySelector('#localfile')
     upload_file = str(audio_file_path / (file_name + ".mp3"))
@@ -97,14 +112,16 @@ async def convert_audio_to_link(file_name): # put some try catches in here to pr
     submit = await page.querySelector('#uploadProgress > p > button')
     await submit.click()
 
-    await page.waitForSelector('#post-472 > div.entry-content.clearfix > ul > li:nth-child(1) > a')
+    await page.waitForSelector('#post-472 > div.entry-content.clearfix > ul > li:nth-child(1) > a', timeout=0)
     link = await page.querySelectorEval('#post-472 > div.entry-content.clearfix > ul > li:nth-child(1) > a', 'n => n.href')
 
     await browser.close()
 
-    os.remove(str(audio_file_path / (file_name + '.mp3'))) # remove mp3 file
-    
+    # os.remove(str(audio_file_path / (file_name + '.mp3'))) # remove mp3 file
+
     return link
+
+
 
 def dl_midi_file(url, file_name):
     wget.download(url, str(midi_file_path / (file_name + ".midi")))
@@ -114,8 +131,8 @@ def dl_midi_file(url, file_name):
 
 print("Started converter")
 
-while True:
-    check_db_for_unconverted_videos()
-    time.sleep(1)
+# while True:
+#     check_db_for_unconverted_videos()
+#     time.sleep(1)
 
 
