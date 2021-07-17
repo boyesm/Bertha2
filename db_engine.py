@@ -44,6 +44,8 @@ class dbEngine:
 
         Database_Con = f'mssql://{self.Username}:{self.Password}@{self.Server}/{self.Database}?driver={self.Driver}'
 
+        print ('mssql://{self.Username}:{self.Password}@{self.Server}/{self.Database}?driver={self.Driver}')
+
         engine = create_engine(Database_Con)
 
         self.con = engine.connect()

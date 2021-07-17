@@ -14,7 +14,7 @@ from youtube_class import YVideo
 from global_vars import midi_file_path, audio_file_path, video_file_path, queue_table, proxy_port, proxy_username, proxy_password
 from db_engine import dbEngine
 
-# engine = dbEngine()
+engine = dbEngine()
     
 def check_db_for_unconverted_videos():
 
@@ -57,7 +57,6 @@ def check_db_for_unconverted_videos():
     else:
 
         print("No videos to convert")
-
 
 def video_to_midi(youtube_url):
 
@@ -132,9 +131,9 @@ def dl_midi_file(url, file_name):
 
 
 print("Started converter")
-
-# while True:
-#     check_db_for_unconverted_videos()
-#     time.sleep(1)
+if __name__ == '__main__':
+    while True:
+        check_db_for_unconverted_videos()
+        time.sleep(1)
 
 
