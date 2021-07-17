@@ -8,6 +8,8 @@ import time
 import logging
 
 from pyppeteer import launch
+
+from cli_request_handler import engine
 from youtube_class import YVideo
 from global_vars import midi_file_path, audio_file_path, video_file_path, queue_table, proxy_port, proxy_username, proxy_password
 from db_engine import dbEngine

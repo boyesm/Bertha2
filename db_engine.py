@@ -58,7 +58,6 @@ class dbEngine:
 
         return pd.read_sql_query(query, self.con)
 
-
         # except:
 
         # print("Error running query: " + query)
