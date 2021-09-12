@@ -83,6 +83,6 @@ async def play_midi_file(midi_filename):
     await asyncio.gather(*tasks)
 
 
-asyncio.run(play_midi_file('song.mid'))
+# asyncio.run(play_midi_file('song.mid'))
 
 

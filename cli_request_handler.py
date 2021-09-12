@@ -1,4 +1,3 @@
-
 from sqlalchemy import create_engine
 from global_vars import midi_file_path, audio_file_path, video_file_path, queue_table, tl
 from pytube import YouTube, extract
