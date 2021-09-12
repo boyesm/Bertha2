@@ -4,92 +4,85 @@ what this file should do:
 - convert to data playable by the hardware
 - play on hardware
 '''
-import mido, time, math
-import asyncio
-
-starting_note = 0 # note that actuators start on (lowest note == 0 == C0)
-number_of_notes = 50 # number of actuators
-time_interval = 20 # milliseconds
-
-# def check_db  ### always be checking db for songs to play
-
-
-
-def play_midi_file(midi_filename): # TODO: add a parameter to determine how much time the file is played for
-
-    loop = asyncio.get_event_loop()
-
-    mid = mido.MidiFile(midi_filename)
-
-    for msg in mid.play():
-        # print(msg)
-        if msg.type == "note_on":
-            # turn note on with velocity
-            # await note_on(msg.note, msg.time, msg.velocity)
-            # asyncio.sleep(1)
-            loop.run_until_complete(wait())
-            print(msg)
-
-
-async def wait():
-    await time.sleep(1)
-    print("lests go!")
-
-
-
-'''
-#### hardware stuff
+import os
+os.environ["BLINKA_FT232H"] = "1"  # this needs to set before board is imported
 
 from board import SCL, SDA
 import busio
+import asyncio
+import mido
 from adafruit_pca9685 import PCA9685
+import math
+import datetime
+
+i2c_bus = busio.I2C(SCL, SDA)
+pca = PCA9685(i2c_bus)
+pca.frequency = 60  # Set the PWM frequency to 60hz. TODO: should this be greater??
+
+# duty_cycle is 16 bits to match other PWM objects
+# but the PCA9685 will only actually give 12 bits of resolution.
+
+starting_note = 48
+number_of_notes = 16
 
 
-i2c_bus = busio.I2C(SCL, SDA) # Create the I2C bus interface.
-pca = PCA9685(i2c_bus) # Create a simple PCA9685 class instance.
-pca.frequency = 60 # Set the PWM frequency to 60hz.
-
-async def note_on(note, duration, velocity):
-
-    # check if note is in range of hardware
-    # turn on solenoid pwm output to highest value (this should be a function of velocity)
-    # reduce the pwm signal to hold solenoid in place without overdelivering power to it
-
-    if (note < starting_note) or (note > (starting_note + number_of_notes)): # check if note is in range of hardware
-        return
-
-    start_time = time.time()
-    time_passed = 0
-
-    while time_passed < duration:
-        pwm_value = power_draw_function(time_passed, velocity)
-
-        update_solenoid_value(note, pwm_value)
-
-        asyncio.sleep(time_interval / 1000)
-        time_passed = time.time() - start_time # TODO: check if this is going to produce a float/int time value
+def update_solenoid_value(note, pwm_value):
+    if starting_note + number_of_notes <= note:  # this will ensure only valid notes are toggled, preventing memory address not found errors
+        pca.channels[note-starting_note].duty_cycle = hex(pwm_value)
 
 
+async def power_draw_function(time_passed, velocity):  # a function to produce an optimal duty cycle value for the solenoid so it doesn't draw unnecessary current
 
-def power_draw_function(time_passed, velocity): # a function to produce an optimal duty cycle value for the solenoid so it doesn't draw unnecessary current
-    # starting_duty_cycle  # function of velocity
-    # final_duty_cycle # function of velocity
+    # velocity should impact the speed at which voltage is applied to the solenoids (duH!)
 
-    pwm_at_t = math.log(time_passed) + velocity # this is just an example function, not the final one!
+    # pwm_at_t = math.log(time_passed + 1) + velocity  # this must have a max value of 4095  # this is just an example function, not the final one!
+
+    if time_passed < 0.2:
+        pwm_at_t = (-10000*time_passed) + 4065
+    else:
+        pwm_at_t = 2065
 
     return pwm_at_t # max value is 65535, min is 0
 
 
-def update_solenoid_value(note, pwm_value):
-    pca.channels[note].duty_cycle = hex(pwm_value)
+async def turn_on_note(note, velocity, delay=0):
+
+    await asyncio.sleep(delay)  # this seems sketchy, but it works
+    print(f'turned on note {note}')
+    t0 = datetime.datetime.now()  # this time is different from the midi time because it's used as the independent variable for the power draw function
+    for i in range(10):
+        t1 = datetime.datetime.now()
+        pwm_value = power_draw_function((t1 - t0).total_seconds(), velocity)
+        update_solenoid_value(note, pwm_value)
+        asyncio.sleep(0.01)
 
 
+async def turn_off_note(note, delay=0):
+
+    await asyncio.sleep(delay)
+    print(f'turned off note {note}')
+    update_solenoid_value(note, 0)
 
 
+async def play_midi_file(midi_filename):
+
+    mid = mido.MidiFile(midi_filename)
+
+    msgs = mid.tracks[1]  # this should be the track with the piano roll, but check with midi files from converter
+
+    tasks = []
+    time = 0
+
+    for msg in msgs:
+        time += (msg.time/1000)
+        if msg.type == 'note_on':
+            tasks.append(turn_on_note(msg.note, msg.velocity, time))
+        if msg.type == 'note_off':
+            tasks.append(turn_off_note(msg.note, time))
+
+    await asyncio.gather(*tasks)
 
 
-### docs: https://circuitpython.readthedocs.io/projects/pca9685/en/latest/examples.html
-
-'''
+asyncio.run(play_midi_file('song.mid'))
 
 
