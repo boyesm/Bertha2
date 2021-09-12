@@ -20,7 +20,10 @@ async def turn_on_note(note, delay=0):
     # test async here
     await asyncio.sleep(delay)
     print(f'turned on note {note}')
-    pca.channels[note-starting_note].duty_cycle = 0xFFFF
+    try:
+        pca.channels[note-starting_note].duty_cycle = 0x03E8
+    except:
+        pass  # probably not an available pin on the hardware
     # await asyncio.sleep(1)
 
 
@@ -28,7 +31,10 @@ async def turn_off_note(note, delay=0):
     # test async here
     await asyncio.sleep(delay)
     print(f'turned off note {note}')
-    pca.channels[note-starting_note].duty_cycle = 0x0000
+    try:
+        pca.channels[note - starting_note].duty_cycle = 0x0000
+    except:
+        pass  # probably not an available pin on the hardware
     # await asyncio.sleep(1)
 
 
