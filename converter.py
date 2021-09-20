@@ -1,6 +1,3 @@
-# always checking db for unconverted links
-# when an uncoverted link is found, it is converted
-
 import asyncio, wget, os
 import random
 from datetime import datetime
@@ -12,55 +9,52 @@ from pyppeteer import launch
 from cli_request_handler import engine
 from youtube_class import YVideo
 from global_vars import midi_file_path, audio_file_path, video_file_path, queue_table, proxy_port, proxy_username, proxy_password
-from db_engine import dbEngine
 
-engine = dbEngine()
-    
-def check_db_for_unconverted_videos():
-
-    print("Checking db for unconverted videos...")
-
-    # Queries the top result from the database
-
-    rows = engine.selectQuery("SELECT TOP 1 id,link FROM Bertha2Table WHERE converted = 0 ")
-
-    if(rows.values.any()):
-
-        print("Found a video to convert")
-        for row in rows.values:
-
-            print("Row: ", row)
-            print("ID: ", row[0])
-            print("Link: ", row[1])
-            id = row[0]
-            link = row[1]
-
-            try:
-
-                videoInfo = video_to_midi(link)
-                filename = videoInfo[0]
-                filepath = videoInfo[1]
-
-
-
-                engine.insertQuery(f"UPDATE Bertha2Table SET converted = 1, filename = '{filename}', filepath = '{filepath}' WHERE id = {id}")
-
-                print("Successfully converted video")
-
-
-            except:  # if unconvertable
-                #     req = queue_table.update().where(queue_table.c.id == row['id']).values(isqueued=1)
-
-                # Prints the exception, but keeps running the program
-                logging.exception("Error converting video")
-
-    else:
-
-        print("No videos to convert")
+# engine = dbEngine()
+#
+# def check_db_for_unconverted_videos():
+#
+#     print("Checking db for unconverted videos...")
+#
+#     # Queries the top result from the database
+#
+#     rows = engine.selectQuery("SELECT TOP 1 id,link FROM Bertha2Table WHERE converted = 0 ")
+#
+#     if(rows.values.any()):
+#
+#         print("Found a video to convert")
+#         for row in rows.values:
+#
+#             print("Row: ", row)
+#             print("ID: ", row[0])
+#             print("Link: ", row[1])
+#             id = row[0]
+#             link = row[1]
+#
+#             try:
+#
+#                 videoInfo = video_to_midi(link)
+#                 filename = videoInfo[0]
+#                 filepath = videoInfo[1]
+#
+#
+#
+#                 engine.insertQuery(f"UPDATE Bertha2Table SET converted = 1, filename = '{filename}', filepath = '{filepath}' WHERE id = {id}")
+#
+#                 print("Successfully converted video")
+#
+#
+#             except:  # if unconvertable
+#                 #     req = queue_table.update().where(queue_table.c.id == row['id']).values(isqueued=1)
+#
+#                 # Prints the exception, but keeps running the program
+#                 logging.exception("Error converting video")
+#
+#     else:
+#
+#         print("No videos to convert")
 
 def video_to_midi(youtube_url):
-
-    # engine = dbEngine()
 
     print("Converting YouTube URL into audio file...")
     file_name = download_video_audio(youtube_url) # store audio file in audio_file_path
@@ -126,14 +120,4 @@ async def convert_audio_to_link(file_name): # put some try catches in here to pr
 
 def dl_midi_file(url, file_name):
     wget.download(url, str(midi_file_path / (file_name + ".midi")))
-
-
-
-
-print("Started converter")
-if __name__ == '__main__':
-    while True:
-        check_db_for_unconverted_videos()
-        time.sleep(1)
-
 

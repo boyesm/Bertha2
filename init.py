@@ -1,5 +1,4 @@
 import os, shutil
-from sqlalchemy import create_engine
 from pathlib import Path
 from global_vars import midi_file_path, audio_file_path, video_file_path, meta
 
@@ -8,12 +7,9 @@ cwd = Path(os.getcwd())
 def init():
     print("Initializing Bertha2...")
     create_dirs()
-    create_db()
     print("Initializing completed...")
 
 def create_dirs():
-
-    # Remove old Database
     try:
 
         shutil.rmtree('files')
@@ -29,16 +25,5 @@ def create_dirs():
         if not os.path.exists(file_dir):
             os.makedirs(file_dir)
 
-def create_db():
-    try:
 
-        os.remove('bertha2.db') # Delete the old database
-
-    except:
-
-        return
-
-init() # this is not a test case. this is needed to run the program.
-
-# engine = create_engine('sqlite:///bertha2.db')
-# meta.create_all(engine)
+init() # this is not a test case. this is needed to run the program. TODO: reimplemnt this to something like 'if __name__ == '__main__'
