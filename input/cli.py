@@ -1,9 +1,5 @@
-from sqlalchemy import create_engine
 from global_vars import midi_file_path, audio_file_path, video_file_path, queue_table, tl
 from pytube import YouTube, extract
-
-engine = create_engine('sqlite:///bertha2.db', connect_args={'timeout': 120})
-conn = engine.connect()
 
 def get_file_name(link):
     return str(extract.video_id(link))
