@@ -33,6 +33,8 @@ if __name__ == '__main__':
     # TODO: if processes crash, restart them automatically
     twitch_p = Process(target=chat_process, args=(link_q,))  # change this so that this could be swapped with a CLI
     converter_p = Process(target=converter_process, args=(link_q, play_q,))
+
+    # TODO: this might need to be changed to the livestream process, which can in-turn call hardware and play video
     hardware_p = Process(target=hardware_process, args=(play_q,))
 
     twitch_p.daemon, converter_p.daemon, hardware_p.daemon = True
