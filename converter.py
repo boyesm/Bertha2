@@ -16,13 +16,15 @@ from settings import (
 
 def download_video_audio(youtube_url):
 
+    # TODO: audio downloaded here sounds really low resolution
+
     yt = YouTube(youtube_url)
 
     file_name = video_id(youtube_url)
 
     # download video
-    # print('Starting video download')
-    yt.streams.first().download(output_path=video_file_path, filename=file_name)
+    print("Starting video download")
+    yt.streams.first().download(output_path=video_file_path, filename=f"{file_name}.mp4")
 
     # convert to mp3
     # str conversion + brackets are necessary
@@ -35,15 +37,10 @@ def download_video_audio(youtube_url):
     audioclip.close()
     videoclip.close()
 
-    # TODO: this is the only time YVideo class is used, maybe phase it out
-    # video_obj = YVideo(youtube_url)
-    # video_obj.downloadVideo()
-    # video_obj.convertVideoToMP3()
-    #
-    # return video_obj.file_name
-
     return file_name
 
+
+# TODO: get this function working
 async def convert_audio_to_link(file_name):
     # TODO: change this function so that it returns midi instead of a link
     # TODO: put some try catches in here to prevent timeouts
@@ -127,3 +124,6 @@ def converter_process(link_q, play_q):
         link = link_q.get()
         filepath = video_to_midi(link)
         play_q.put(filepath)
+
+
+download_video_audio("https://www.youtube.com/watch?v=KRbsco8M7Fc")
