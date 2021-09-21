@@ -24,7 +24,9 @@ def download_video_audio(youtube_url):
 
     # download video
     print("Starting video download")
-    yt.streams.first().download(output_path=video_file_path, filename=f"{file_name}.mp4")
+    yt.streams.first().download(
+        output_path=video_file_path, filename=f"{file_name}.mp4"
+    )
 
     # convert to mp3
     # str conversion + brackets are necessary
@@ -103,6 +105,7 @@ def dl_midi_file(url, file_name):
 
 
 def video_to_midi(youtube_url):
+    # TODO: can we convert multiple files at the same time? or can we convert them faster?
     print("Converting YouTube URL into audio file...")
     file_name = download_video_audio(youtube_url)  # store audio file in audio_file_path
 

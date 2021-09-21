@@ -1,6 +1,5 @@
 from os import getcwd
 from pathlib import Path
-# from sqlalchemy import Table, Column, Integer, String, MetaData, Boolean
 
 cwd = getcwd()
 
@@ -9,17 +8,6 @@ audio_file_path = cwd / Path("files") / Path("audio")
 video_file_path = cwd / Path("files") / Path("video")
 
 dirs = [midi_file_path, audio_file_path, video_file_path]  # add any other file paths to this variable
-
-
-# meta = MetaData()
-# queue_table = Table('queue', meta,
-#         Column('id', Integer, primary_key = True),
-#         Column('username', String),
-#         Column('link', String),
-#         Column('filename', String),
-#         Column('isconverted', Boolean),
-#         Column('isqueued', Boolean),
-#     )
 
 # TODO: move Twitch login and proxy data to a .env file
 

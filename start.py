@@ -3,7 +3,8 @@ import os, shutil
 from pathlib import Path
 from settings import dirs
 
-from chat import chat_process
+from input.chat import chat_process
+# from input.cli import cli_process
 from converter import converter_process
 from hardware import hardware_process
 
