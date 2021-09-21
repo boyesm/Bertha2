@@ -3,7 +3,7 @@ example.png
 .DS_Store
 files
 files.old
-test.py
+unneeded for now/test.py
 anothertest.py
 *.mp4
 *.mkv

@@ -18,14 +18,14 @@ class YVideo:
         self.yt = YouTube(self.URL)
         self.file_name = self.URL[32:43] # is this always going to work?
 
-    def checkIfSafeforWork(self):
-        if not self.yt.age_restricted:
-            return True
-        else:
-            return False
+    # def checkIfSafeforWork(self):
+    #     if not self.yt.age_restricted:
+    #         return True
+    #     else:
+    #         return False
 
-    def check_if_available(self): # implement this
-        return True
+    # def check_if_available(self): # implement this
+    #     return True
 
     def downloadVideo(self): # Downloads the video if it hasn't been downloaded yet
 
@@ -65,18 +65,18 @@ class YVideo:
 
 
 
-    def getDownloaded(self):
+    # def getDownloaded(self):
+    #
+    #     return self.downloaded
 
-        return self.downloaded
+    # def getViews(self):
+    #
+    #     return self.yt.views
 
-    def getViews(self):
-
-        return self.yt.views
-
-    def __repr__(self):
-
-        #return (self.URL + "|" + self.yt.title)
-        return ("Name: " + str(self.yt.title) + "| Views: " + str(self.yt.views) + "| Length: " + str(self.yt.length) + " seconds")
+    # def __repr__(self):
+    #
+    #     #return (self.URL + "|" + self.yt.title)
+    #     return ("Name: " + str(self.yt.title) + "| Views: " + str(self.yt.views) + "| Length: " + str(self.yt.length) + " seconds")
 
 
 
