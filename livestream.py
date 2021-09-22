@@ -4,10 +4,11 @@
 # tells vlc what to do
 
 import time, os, sys
-from global_vars import midi_file_path, audio_file_path, video_file_path, queue_table
+from settings import midi_file_path, audio_file_path, video_file_path, queue_table
 from sqlalchemy import create_engine, select
 from moviepy.editor import VideoFileClip
 
+import start
 
 engine = create_engine('sqlite:///bertha2.db', connect_args={'timeout': 120})
 conn = engine.connect() # create and connect to database here

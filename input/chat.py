@@ -4,7 +4,8 @@ from pytube import YouTube
 from settings import nickname, token, channel
 
 
-def valid_youtube_video(user_input):
+def is_valid_youtube_video(user_input):
+
     try:
         # TEST CASE: https://www.youtube.com/watch?v=KRbsco8M7Fc
         yt = YouTube(user_input)
@@ -34,7 +35,12 @@ def valid_youtube_video(user_input):
 
 
 def chat_process(link_q):
-    # this will read through twitch chat and parse out commands
+    """
+    Reads through twitch chat and parses out commands
+
+    :param link_q: The Queue that the Youtube links from chat should be added to
+    :return:
+    """
 
     sock = socket.socket()
     sock.connect(("irc.chat.twitch.tv", 6667))
@@ -59,9 +65,10 @@ def chat_process(link_q):
 
                 if command == "!play":
 
-                    if valid_youtube_video(command_arg):
+                    if is_valid_youtube_video(command_arg):
+                        # Queue.put adds command_arg to the global Queue variable, not a local Queue.
+                        # See multiprocessing.Queue for more info.
                         link_q.put(command_arg)
-
                     else:
                         print("invalid youtube video")
 

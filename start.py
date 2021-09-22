@@ -1,5 +1,6 @@
 from multiprocessing import Process, Queue
-import os, shutil
+import os
+# import shutil
 from pathlib import Path
 from settings import dirs
 
@@ -9,13 +10,12 @@ from converter import converter_process
 from hardware import hardware_process
 
 
-def create_dirs():
+def create_dirs(filename):
     # try:  # TODO: don't delete this directory if it already exists! don't want to lose a bunch of files
     #     shutil.rmtree('files')
     #
     # except:
     #     pass
-
     for dir in dirs:
         file_dir = Path(dir)
         if not os.path.exists(file_dir):
@@ -23,6 +23,7 @@ def create_dirs():
 
 
 if __name__ == '__main__':
+
     print("Initializing Bertha2...")
 
     create_dirs(dirs)
@@ -37,6 +38,7 @@ if __name__ == '__main__':
     # TODO: this might need to be changed to the livestream process, which can in-turn call hardware and play video
     hardware_p = Process(target=hardware_process, args=(play_q,))
 
+    # Lets the process run in the background
     twitch_p.daemon, converter_p.daemon, hardware_p.daemon = True
 
     twitch_p.start()
