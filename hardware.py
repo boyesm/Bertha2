@@ -17,6 +17,8 @@ from adafruit_pca9685 import PCA9685
 import math
 import datetime
 
+
+
 i2c_bus = busio.I2C(SCL, SDA)
 pca = PCA9685(i2c_bus)
 pca.frequency = 60  # Set the PWM frequency to 60hz. TODO: should this be greater??
@@ -30,19 +32,20 @@ number_of_notes = 16
 
 def update_solenoid_value(note, pwm_value):
     # this will ensure only valid notes are toggled, preventing memory address not found errors
-    if starting_note + number_of_notes <= note:
-        pca.channels[note - starting_note].duty_cycle = hex(pwm_value)
+    if (note - starting_note >= 0) and (note - starting_note < number_of_notes):
+        # shouldn't this be a hex value?
+        pca.channels[note - starting_note].duty_cycle = int(pwm_value)
 
 
-async def power_draw_function(time_passed, velocity):
+def power_draw_function(time_passed, velocity):
     # a function to produce an optimal duty cycle value for the solenoid so it doesn't draw unnecessary current
     # velocity should impact the speed at which voltage is applied to the solenoids (duH!)
     # pwm_at_t = math.log(time_passed + 1) + velocity  # this must have a max value of 4095  # this is just an example function, not the final one!
 
-    if time_passed < 0.2:
-        pwm_at_t = (-10000 * time_passed) + 4065
+    if time_passed < 0.1:
+        pwm_at_t = (-40000 * time_passed) + 4065
     else:
-        pwm_at_t = 2065
+        pwm_at_t = 500
 
     return pwm_at_t  # max value is 65535, min is 0
 
@@ -56,8 +59,9 @@ async def turn_on_note(note, velocity, delay=0):
     for i in range(10):
         t1 = datetime.datetime.now()
         pwm_value = power_draw_function((t1 - t0).total_seconds(), velocity)
+        # print(note)
         update_solenoid_value(note, pwm_value)
-        asyncio.sleep(0.01)
+        await asyncio.sleep(0.01)
 
 
 async def turn_off_note(note, delay=0):
@@ -93,3 +97,6 @@ def hardware_process(play_q):
 
         # TODO: this needs to be in sync with video (video can be implemented later)
         asyncio.run(play_midi_file(filepath))
+
+
+# asyncio.run(play_midi_file("song.mid"))

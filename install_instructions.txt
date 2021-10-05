@@ -1,0 +1,3 @@
+- install fmpeg
+- install this: https://eblot.github.io/pyftdi/installation.html
+- install tkinter (brew install python-tk)

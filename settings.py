@@ -14,7 +14,7 @@ dirs = [midi_file_path, audio_file_path, video_file_path]  # add any other file 
 nickname = 'berthatwo'
 token = 'oauth:in0hpn521ekxrnmhxkzwz64swmein9'
 # channel = '#berthatwo'
-channel = "#ludwig"
+channel = "#tmol"
 
 proxy_port = '22225'
 proxy_username = 'lum-customer-hl_65bf90ee-zone-data_center'

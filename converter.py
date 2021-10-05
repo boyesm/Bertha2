@@ -1,4 +1,7 @@
-import asyncio, wget
+import asyncio
+import wget
+import time
+import os
 import random
 from pyppeteer import launch
 from pytube import YouTube
@@ -16,10 +19,7 @@ from settings import (
 
 def download_video_audio(youtube_url):
 
-    # TODO: audio downloaded here sounds really low resolution
-
     yt = YouTube(youtube_url)
-
     file_name = video_id(youtube_url)
 
     # download video
@@ -43,10 +43,13 @@ def download_video_audio(youtube_url):
 
 
 # TODO: get this function working
-async def convert_audio_to_link(file_name):
-    # TODO: change this function so that it returns midi instead of a link
+async def convert_audio_to_midi(file_name):
+    """
+    this function converts
+    :param file_name: the absolute file path of the audio file that will be converted
+    :return: returns the absolute file path of the midi file that has been converted
+    """
     # TODO: put some try catches in here to prevent timeouts
-    # TODO: implement proxies work correctly
 
     proxy_num = random.randrange(0, 100000)
 
@@ -54,7 +57,7 @@ async def convert_audio_to_link(file_name):
     browser = await launch(
         {
             "args": [f"--proxy-server=zproxy.lum-superproxy.io:{proxy_port}"],
-            "headless": False,
+            # "headless": False,
         }
     )
     page = await browser.newPage()
@@ -65,17 +68,22 @@ async def convert_audio_to_link(file_name):
         }
     )
 
+    # proxy is working!!!
+
     try:  # TODO: finish the error checking on this function
-        await page.goto("https://www.conversion-tool.com/audiotomidi/", timeout=5000)
+        await page.goto("https://www.conversion-tool.com/audiotomidi/", timeout=30000)
+        # await page.goto("https://whatmyuseragent.com")
 
-    except:
+    except Exception as e:
         print("goto timed out!")
-        return asyncio.get_event_loop().run_until_complete(
-            convert_audio_to_link(file_name)
-        )
+        print(e)  # error -> Navigation Timeout Exceeded: 1000 ms exceeded.
+        # return asyncio.get_event_loop().run_until_complete(
+        #     convert_audio_to_link(file_name)
+        # )
+        # TODO: restart function from the top!
 
-    finally:
-        await browser.close()
+    print("Opened the webpage successfully")
+    # time.sleep(30)
 
     filechoose = await page.querySelector("#localfile")
     upload_file = str(audio_file_path / (file_name + ".mp3"))
@@ -93,29 +101,32 @@ async def convert_audio_to_link(file_name):
     )
 
     await browser.close()
+    print("Got the link!")
 
-    # os.remove(str(audio_file_path / (file_name + '.mp3'))) # remove mp3 file
+    # os.remove(str(audio_file_path / (file_name + ".mp3")))  # remove unneeded mp3 file
+    print(link)
 
-    return link
-
-
-def dl_midi_file(url, file_name):
-    # TODO: (unimportant) let's remove wget and use a normal python lib like requests
-    wget.download(url, str(midi_file_path / (file_name + ".midi")))
+    print("Downloading midi file...")
+    wget.download(link, str(midi_file_path / (file_name + ".midi")))
 
 
 def video_to_midi(youtube_url):
+
+    yt = YouTube(youtube_url)
+    file_name = video_id(youtube_url)
+
+    # if it's been converted and found in files, return filepath (temporarily disabled for testing)
+    # if os.path.isfile(str(midi_file_path / (file_name + ".midi"))):
+    #     return str(midi_file_path / (file_name + ".midi"))
+
     # TODO: can we convert multiple files at the same time? or can we convert them faster?
     print("Converting YouTube URL into audio file...")
     file_name = download_video_audio(youtube_url)  # store audio file in audio_file_path
 
     print("Converting audio to midi...")
-    midi_file_url = asyncio.run(convert_audio_to_link(file_name))
+    # TODO: if this fails, rerun the function
+    midi_file_url = asyncio.run(convert_audio_to_midi(file_name))
 
-    print("Downloading midi file...")
-    dl_midi_file(midi_file_url, file_name)  # store audio file in midi_file_path
-
-    # TODO: this seems weird to return when this could be returned anywhere?
     filepath = str(midi_file_path / (file_name + ".midi"))
 
     return filepath
@@ -129,4 +140,28 @@ def converter_process(link_q, play_q):
         play_q.put(filepath)
 
 
-# download_video_audio("https://www.youtube.com/watch?v=KRbsco8M7Fc")
+# TODO: test longer videos and see how they work
+# yt_links = [
+#     "jt9LlHXGckg",
+#     "3Lyex2tSUyA",
+#     "p9RtcklL0as",
+#     "meha_FCcHbo",
+#     "KRbsco8M7Fc",
+#     "jt9LlHXGckg",
+#     "3Lyex2tSUyA",
+#     "p9RtcklL0as",
+#     "meha_FCcHbo",
+#     "KRbsco8M7Fc",
+#     "jt9LlHXGckg",
+#     "3Lyex2tSUyA",
+#     "p9RtcklL0as",
+#     "meha_FCcHbo",
+#     "KRbsco8M7Fc",
+#     "jt9LlHXGckg",
+#     "3Lyex2tSUyA",
+#     "p9RtcklL0as",
+#     "meha_FCcHbo",
+#     "KRbsco8M7Fc",
+# ]
+# for link in yt_links:
+#     video_to_midi(f"https://www.youtube.com/watch?v={link}")
