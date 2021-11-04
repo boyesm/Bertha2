@@ -16,7 +16,7 @@ import mido
 from adafruit_pca9685 import PCA9685
 import math
 import datetime
-
+import atexit
 
 
 i2c_bus = busio.I2C(SCL, SDA)
@@ -42,12 +42,14 @@ def power_draw_function(time_passed, velocity):
     # velocity should impact the speed at which voltage is applied to the solenoids (duH!)
     # pwm_at_t = math.log(time_passed + 1) + velocity  # this must have a max value of 4095  # this is just an example function, not the final one!
 
-    if time_passed < 0.1:
-        pwm_at_t = (-40000 * time_passed) + 4065
-    else:
-        pwm_at_t = 500
+    # if time_passed < 0.1:
+    #     pwm_at_t = (-40000 * time_passed) + 4065
+    # else:
+    #     pwm_at_t = 500
+    #
+    # return pwm_at_t  # max value is 65535, min is 0\
 
-    return pwm_at_t  # max value is 65535, min is 0
+    return 65535
 
 
 async def turn_on_note(note, velocity, delay=0):
@@ -76,7 +78,8 @@ async def play_midi_file(midi_filename):
     mid = mido.MidiFile(midi_filename)
 
     # this should be the track with the piano roll, but check with midi files from converter
-    msgs = mid.tracks[1]
+    msgs = mid.tracks[0]
+    # msgs = mid.tracks[1]
 
     tasks = []
     time = 0
@@ -99,4 +102,15 @@ def hardware_process(play_q):
         asyncio.run(play_midi_file(filepath))
 
 
+async def turn_off_all():
+    for note in range(number_of_notes):
+        await turn_off_note(note + starting_note)
+
+
+@atexit.register
+def shutdown():
+    asyncio.run(turn_off_all())
+
+
 # asyncio.run(play_midi_file("song.mid"))
+asyncio.run(play_midi_file("all_notes2.mid"))
