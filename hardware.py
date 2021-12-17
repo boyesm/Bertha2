@@ -6,35 +6,31 @@ what this file should do:
 """
 
 import os
-
-os.environ["BLINKA_FT232H"] = "1"  # this needs to set before board is imported
-
-from board import SCL, SDA
-import busio
 import asyncio
 import mido
-from adafruit_pca9685 import PCA9685
 import math
 import datetime
 import atexit
+import serial
+import struct
 
-
-i2c_bus = busio.I2C(SCL, SDA)
-pca = PCA9685(i2c_bus)
-pca.frequency = 60  # Set the PWM frequency to 60hz. TODO: should this be greater??
-
-# duty_cycle is 16 bits to match other PWM objects
-# but the PCA9685 will only actually give 12 bits of resolution.
 
 starting_note = 48
 number_of_notes = 16
 
+arduino = serial.Serial(port='/dev/cu.usbmodem1101', baudrate=115200, timeout=.1)  # TODO: add port config in settings.py
 
 def update_solenoid_value(note, pwm_value):
+
+    note_address = note - starting_note
+
+    # this will ensure pwm_value does not exceed the bounds of 8-bit int
+    if pwm_value > 255: pwm_value = 255
+    if pwm_value < 0: pwm_value = 0
+
     # this will ensure only valid notes are toggled, preventing memory address not found errors
-    if (note - starting_note >= 0) and (note - starting_note < number_of_notes):
-        # shouldn't this be a hex value?
-        pca.channels[note - starting_note].duty_cycle = int(pwm_value)
+    if (note_address >= 0) and (note_address < number_of_notes) and (note_address < 256):
+        arduino.write(struct.pack('>2B', note_address, int(pwm_value)))
 
 
 def power_draw_function(time_passed, velocity):
@@ -49,7 +45,7 @@ def power_draw_function(time_passed, velocity):
     #
     # return pwm_at_t  # max value is 65535, min is 0\
 
-    return 65535
+    return 255
 
 
 async def turn_on_note(note, velocity, delay=0):
