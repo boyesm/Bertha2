@@ -68,10 +68,6 @@ void loop() {
     read_end_byte();
     buff[2] = temp[0];
 
-//    buff[0] -= 1;
-//    buff[1] -= 1;
-
-
     Serial.print(buff[0]);
     Serial.print(" ");
     Serial.print(buff[1]);
@@ -85,13 +81,6 @@ void loop() {
     if(0 <= buff[0] && buff[0] < 16){
         pwmController1.setChannelPWM(buff[0], buff[1] << 4);
     }
-  
-//    Serial.readBytes(buff, 2);
-//    
-//    Serial.print(buff[0]);
-//    Serial.print(" ");
-//    Serial.print(buff[1]);
-//    Serial.print('\n');
     
 //    if(0 <= buff[0] && buff[0] < 16){
 //        pwmController1.setChannelPWM(buff[0], buff[1] << 4);

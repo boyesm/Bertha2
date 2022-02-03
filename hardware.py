@@ -134,7 +134,7 @@ def shutdown():
 # asyncio.run(play_midi_file("song.mid"))
 # asyncio.run(play_midi_file("all_notes2.mid"))
 # asyncio.run(play_midi_file("take5.mid"))
-# asyncio.run(play_midi_file("scale2.mid"))
+asyncio.run(play_midi_file("scale2.mid"))
 # asyncio.run(play_midi_file("Doja+Cat++Mooo+Official+Video.midi"))
 # asyncio.run(play_midi_file("c_repeated.mid"))
 
