@@ -13,24 +13,43 @@ import datetime
 import atexit
 import serial
 import struct
+import time
 
 
 starting_note = 48
 number_of_notes = 16
 
-arduino = serial.Serial(port='/dev/cu.usbmodem1101', baudrate=115200, timeout=.1)  # TODO: add port config in settings.py
+# https://discussions.apple.com/thread/7659162
+arduino = serial.Serial()
+try:
+    arduino.port='/dev/cu.usbmodem1101'  # TODO: add port config in settings.py
+except:
+    arduino.port='/dev/cu.usbmodem101'  # TODO: add port config in settings.py
+
+arduino.baudrate=115200 # current bug is independent of baudrate
+arduino.timeout=0.1
+arduino.open()
+
+# port can be found via the command: ls /dev/
 
 def update_solenoid_value(note, pwm_value):
 
     note_address = note - starting_note
 
+    # ensure that note_address or pwm_value are always bewtween 1 and 255. 0 must be reserved for error codes in arduino (stupidest thing I ever heard).
+    note_address +=1
+    pwm_value += 1
+
     # this will ensure pwm_value does not exceed the bounds of 8-bit int
-    if pwm_value > 255: pwm_value = 255
-    if pwm_value < 0: pwm_value = 0
+    if pwm_value > 254: pwm_value = 254
+    if pwm_value < 1: pwm_value = 1
 
     # this will ensure only valid notes are toggled, preventing memory address not found errors
-    if (note_address >= 0) and (note_address < number_of_notes) and (note_address < 256):
-        arduino.write(struct.pack('>2B', note_address, int(pwm_value)))
+    if (note_address < 0+1) or (note_address > number_of_notes+1) or (note_address >= 254): return
+
+    print(f'{note_address}, {int(pwm_value)}')
+    # print(struct.pack('>2B', int(note_address), int(pwm_value)))
+    arduino.write(struct.pack('>3B', int(note_address), int(pwm_value), int(255)))
 
 
 def power_draw_function(time_passed, velocity):
@@ -51,8 +70,10 @@ def power_draw_function(time_passed, velocity):
 async def turn_on_note(note, velocity, delay=0):
 
     await asyncio.sleep(delay)  # this seems sketchy, but it works
-    print(f"turned on note {note}")
+    # print(f"turned on note {note}")
+    update_solenoid_value(note, 255)
     # this time is different from the midi time because it's used as the independent variable for the power draw function
+    '''
     t0 = datetime.datetime.now()
     for i in range(10):
         t1 = datetime.datetime.now()
@@ -60,12 +81,13 @@ async def turn_on_note(note, velocity, delay=0):
         # print(note)
         update_solenoid_value(note, pwm_value)
         await asyncio.sleep(0.01)
+    '''
 
 
 async def turn_off_note(note, delay=0):
 
     await asyncio.sleep(delay)
-    print(f"turned off note {note}")
+    # print(f"turned off note {note}")
     update_solenoid_value(note, 0)
 
 
@@ -103,10 +125,39 @@ async def turn_off_all():
         await turn_off_note(note + starting_note)
 
 
+
 @atexit.register
 def shutdown():
     asyncio.run(turn_off_all())
 
 
 # asyncio.run(play_midi_file("song.mid"))
-asyncio.run(play_midi_file("all_notes2.mid"))
+# asyncio.run(play_midi_file("all_notes2.mid"))
+# asyncio.run(play_midi_file("take5.mid"))
+# asyncio.run(play_midi_file("scale2.mid"))
+# asyncio.run(play_midi_file("Doja+Cat++Mooo+Official+Video.midi"))
+# asyncio.run(play_midi_file("c_repeated.mid"))
+
+
+
+
+
+
+# while(True):
+
+# arduino.write(struct.pack('>2B', 0, 255))
+# update_solenoid_value(2 + 48, 255)
+# arduino.write(struct.pack('>2B', int(15+48), int(255)))
+
+# for i in range(20):
+#
+#     for note in range(16):
+#         # print(note)
+#         update_solenoid_value(note + 48, 255)
+#
+#     time.sleep(0.1)
+#
+#     for note in range(16):
+#         update_solenoid_value(note + 48, 0)
+#
+#     time.sleep(0.1)
