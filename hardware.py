@@ -15,9 +15,13 @@ import serial
 import struct
 import time
 
+@atexit.register
+def shutdown():
+    asyncio.run(turn_off_all())
+
 
 starting_note = 48
-number_of_notes = 16
+number_of_notes = 32
 
 # https://discussions.apple.com/thread/7659162
 arduino = serial.Serial()
@@ -32,9 +36,7 @@ arduino.open()
 
 # port can be found via the command: ls /dev/
 
-def update_solenoid_value(note, pwm_value):
-
-    note_address = note - starting_note
+def update_solenoid_value(note_address, pwm_value):
 
     # ensure that note_address or pwm_value are always bewtween 1 and 255. 0 must be reserved for error codes in arduino (stupidest thing I ever heard).
     note_address +=1
@@ -48,7 +50,6 @@ def update_solenoid_value(note, pwm_value):
     if (note_address < 0+1) or (note_address > number_of_notes+1) or (note_address >= 254): return
 
     print(f'{note_address}, {int(pwm_value)}')
-    # print(struct.pack('>2B', int(note_address), int(pwm_value)))
     arduino.write(struct.pack('>3B', int(note_address), int(pwm_value), int(255)))
 
 
@@ -67,11 +68,13 @@ def power_draw_function(time_passed, velocity):
     return 255
 
 
-async def turn_on_note(note, velocity, delay=0):
+async def turn_on_note(note, velocity=255, delay=0):
+
+    note_address = note - starting_note
 
     await asyncio.sleep(delay)  # this seems sketchy, but it works
     # print(f"turned on note {note}")
-    update_solenoid_value(note, 255)
+    update_solenoid_value(note_address, 255)
     # this time is different from the midi time because it's used as the independent variable for the power draw function
     '''
     t0 = datetime.datetime.now()
@@ -86,9 +89,11 @@ async def turn_on_note(note, velocity, delay=0):
 
 async def turn_off_note(note, delay=0):
 
+    note_address = note - starting_note
+
     await asyncio.sleep(delay)
     # print(f"turned off note {note}")
-    update_solenoid_value(note, 0)
+    update_solenoid_value(note_address, 0)
 
 
 async def play_midi_file(midi_filename):
@@ -124,40 +129,36 @@ async def turn_off_all():
     for note in range(number_of_notes):
         await turn_off_note(note + starting_note)
 
+# async def turn_on_all():
+#     for note in range(number_of_notes):
+#         await turn_on_note(note + starting_note)
 
 
-@atexit.register
-def shutdown():
-    asyncio.run(turn_off_all())
+# asyncio.run(play_midi_file("midi/song.mid"))
+# asyncio.run(play_midi_file("midi/all_notes2.mid"))
+# asyncio.run(play_midi_file("midi/test_all_solenoids_at_once.mid"))
+# asyncio.run(play_midi_file("midi/take5.mid"))
+# asyncio.run(play_midi_file("midi/scale2.mid"))
+# asyncio.run(play_midi_file("midi/Doja+Cat++Mooo+Official+Video.midi"))
+# asyncio.run(play_midi_file("midi/c_repeated.mid"))
 
 
-# asyncio.run(play_midi_file("song.mid"))
-# asyncio.run(play_midi_file("all_notes2.mid"))
-# asyncio.run(play_midi_file("take5.mid"))
-asyncio.run(play_midi_file("scale2.mid"))
-# asyncio.run(play_midi_file("Doja+Cat++Mooo+Official+Video.midi"))
-# asyncio.run(play_midi_file("c_repeated.mid"))
-
-
-
-
-
-
-# while(True):
-
-# arduino.write(struct.pack('>2B', 0, 255))
-# update_solenoid_value(2 + 48, 255)
-# arduino.write(struct.pack('>2B', int(15+48), int(255)))
-
-# for i in range(20):
+### turn every note on and off
+# while True:
+#     for i in range(number_of_notes):
+#         update_solenoid_value(i, 255)
 #
-#     for note in range(16):
-#         # print(note)
-#         update_solenoid_value(note + 48, 255)
+#     time.sleep(2)
 #
-#     time.sleep(0.1)
+#     for i in range(number_of_notes):
+#         update_solenoid_value(i, 0)
 #
-#     for note in range(16):
-#         update_solenoid_value(note + 48, 0)
-#
-#     time.sleep(0.1)
+#     time.sleep(2)
+
+
+### turn on every note one at a time
+while True:
+    for note in range(number_of_notes):
+        update_solenoid_value(note, 255)
+        time.sleep(0.2)
+        update_solenoid_value(note, 0)

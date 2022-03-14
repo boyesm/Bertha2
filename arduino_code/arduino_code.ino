@@ -2,13 +2,11 @@
 #include "PCA9685.h"
 
 PCA9685 pwmController1(B000000);
-//PCA9685 pwmController2(B000001);
 PCA9685 pwmController2(B000010);
-//PCA9685 pwmController3(B000011);
+//PCA9685 pwmController3(B000001);
 
 const unsigned long int i2c_freq = 115200;  // this is the max(?) i2c freq the arduino supports
-//const unsigned long int serial_baudrate = 500000;
-const unsigned long int serial_baudrate = 115200;
+const unsigned long int serial_baudrate = 115200; // 500 000
 const unsigned int pwm_freq = 1600;
 
 //#define I2C_FREQ 400000;
@@ -30,10 +28,16 @@ void setup() {
   Wire.begin();
   
   pwmController1.resetDevices();       // Resets all PCA9685 devices on i2c line
-  
   pwmController1.init();               // Initializes module using default totem-pole driver mode, and default phase balancer
-  
   pwmController1.setPWMFrequency(500); // Set PWM freq to 500Hz (default is 200Hz, supports 24Hz to 1526Hz)
+  
+  pwmController2.resetDevices();       // Resets all PCA9685 devices on i2c line
+  pwmController2.init();               // Initializes module using default totem-pole driver mode, and default phase balancer
+  pwmController2.setPWMFrequency(500); // Set PWM freq to 500Hz (default is 200Hz, supports 24Hz to 1526Hz)
+
+//  pwmController3.resetDevices();       // Resets all PCA9685 devices on i2c line
+//  pwmController3.init();               // Initializes module using default totem-pole driver mode, and default phase balancer
+//  pwmController3.setPWMFrequency(500); // Set PWM freq to 500Hz (default is 200Hz, supports 24Hz to 1526Hz)
   
   while (!Serial) {
     ; // wait for serial port to connect. Needed for native USB
@@ -43,6 +47,7 @@ void setup() {
 void read_serial_data(){
   Serial.readBytes(temp, 1);
   if (temp[0] == 0){
+    Serial.print("error");
     read_serial_data();
   }
   return;
@@ -77,15 +82,18 @@ void loop() {
     
     buff[0] -= 1;
     buff[1] -= 1;
+
+//    if(0 <= buff[0] && buff[0] < 16){
+//        pwmController1.setChannelPWM(buff[0], buff[1] << 4);
+//    }
     
     if(0 <= buff[0] && buff[0] < 16){
         pwmController1.setChannelPWM(buff[0], buff[1] << 4);
-    }
-    
-//    if(0 <= buff[0] && buff[0] < 16){
-//        pwmController1.setChannelPWM(buff[0], buff[1] << 4);
-//    } else if (16 <= buff[0] && buff[0] < 32){
-//        pwmController2.setChannelPWM(buff[0], buff[1] << 4);
+    } else if (16 <= buff[0] && buff[0] < 32){
+        pwmController2.setChannelPWM(buff[0], buff[1] << 4);
+    } 
+//    else if (32 <= buff[0] && buff[0] < 48){
+//        pwmController3.setChannelPWM(buff[0], buff[1] << 4);
 //    }
 
 
