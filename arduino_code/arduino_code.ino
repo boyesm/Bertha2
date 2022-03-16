@@ -3,7 +3,10 @@
 
 PCA9685 pwmController1(B000000);
 PCA9685 pwmController2(B000010);
-//PCA9685 pwmController3(B000001);
+PCA9685 pwmController3(B000001);
+
+// Not a real device, will act as a proxy to pwmController1 and pwmController2, using all-call i2c address 0xE0, and default Wire @400kHz
+PCA9685 pwmControllerAll(PCA9685_I2C_DEF_ALLCALL_PROXYADR);
 
 const unsigned long int i2c_freq = 115200;  // this is the max(?) i2c freq the arduino supports
 const unsigned long int serial_baudrate = 115200; // 500 000
@@ -27,17 +30,30 @@ void setup() {
   Serial.setTimeout(1);
   Wire.begin();
   
-  pwmController1.resetDevices();       // Resets all PCA9685 devices on i2c line
-  pwmController1.init();               // Initializes module using default totem-pole driver mode, and default phase balancer
-  pwmController1.setPWMFrequency(500); // Set PWM freq to 500Hz (default is 200Hz, supports 24Hz to 1526Hz)
-  
-  pwmController2.resetDevices();       // Resets all PCA9685 devices on i2c line
-  pwmController2.init();               // Initializes module using default totem-pole driver mode, and default phase balancer
-  pwmController2.setPWMFrequency(500); // Set PWM freq to 500Hz (default is 200Hz, supports 24Hz to 1526Hz)
+  pwmControllerAll.resetDevices();    // Resets all PCA9685 devices on i2c line
 
-//  pwmController3.resetDevices();       // Resets all PCA9685 devices on i2c line
-//  pwmController3.init();               // Initializes module using default totem-pole driver mode, and default phase balancer
-//  pwmController3.setPWMFrequency(500); // Set PWM freq to 500Hz (default is 200Hz, supports 24Hz to 1526Hz)
+  pwmController1.init();              // Initializes first module using default totem-pole driver mode, and default disabled phase balancer
+  pwmController2.init();              // Initializes second module using default totem-pole driver mode, and default disabled phase balancer
+  pwmController3.init();
+
+  pwmControllerAll.initAsProxyAddresser(); // Initializes 'fake' module as all-call proxy addresser
+
+  // Enables all-call support to module from 'fake' all-call proxy addresser
+  pwmController1.enableAllCallAddress(pwmControllerAll.getI2CAddress());
+  pwmController2.enableAllCallAddress(pwmControllerAll.getI2CAddress()); // On both
+  pwmController3.enableAllCallAddress(pwmControllerAll.getI2CAddress()); // On both
+
+  for(int i = 0; i < 48; i++){
+    if(0 <= i && i < 16){
+        pwmController1.setChannelPWM(i, 0);
+    } else if (16 <= i && i < 32){
+        pwmController2.setChannelPWM(i-16, 0);
+    } else if (32 <= i && i < 48){
+        pwmController3.setChannelPWM(i-32, 0);
+    }
+  }
+
+  
   
   while (!Serial) {
     ; // wait for serial port to connect. Needed for native USB
@@ -90,11 +106,10 @@ void loop() {
     if(0 <= buff[0] && buff[0] < 16){
         pwmController1.setChannelPWM(buff[0], buff[1] << 4);
     } else if (16 <= buff[0] && buff[0] < 32){
-        pwmController2.setChannelPWM(buff[0], buff[1] << 4);
-    } 
-//    else if (32 <= buff[0] && buff[0] < 48){
-//        pwmController3.setChannelPWM(buff[0], buff[1] << 4);
-//    }
+        pwmController2.setChannelPWM(buff[0]-16, buff[1] << 4);
+    } else if (32 <= buff[0] && buff[0] < 48){
+        pwmController3.setChannelPWM(buff[0]-32, buff[1] << 4);
+    }
 
 
   

@@ -21,15 +21,15 @@ def shutdown():
 
 
 starting_note = 48
-number_of_notes = 32
+number_of_notes = 16
 
 # https://discussions.apple.com/thread/7659162
 arduino = serial.Serial()
-try:
-    arduino.port='/dev/cu.usbmodem1101'  # TODO: add port config in settings.py
-except:
-    arduino.port='/dev/cu.usbmodem101'  # TODO: add port config in settings.py
-
+# try:
+#     arduino.port='/dev/cu.usbmodem1101'  # TODO: add port config in settings.py
+# except:
+#     arduino.port='/dev/cu.usbmodem101'  # TODO: add port config in settings.py
+arduino.port='/dev/cu.usbmodem1101'  # TODO: add port config in settings.py
 arduino.baudrate=115200 # current bug is independent of baudrate
 arduino.timeout=0.1
 arduino.open()
@@ -148,17 +148,17 @@ async def turn_off_all():
 #     for i in range(number_of_notes):
 #         update_solenoid_value(i, 255)
 #
-#     time.sleep(2)
+#     time.sleep(5)
 #
 #     for i in range(number_of_notes):
 #         update_solenoid_value(i, 0)
 #
-#     time.sleep(2)
+#     time.sleep(1)
 
 
 ### turn on every note one at a time
-while True:
-    for note in range(number_of_notes):
-        update_solenoid_value(note, 255)
-        time.sleep(0.2)
-        update_solenoid_value(note, 0)
+# while True:
+#     for note in range(number_of_notes):
+#         update_solenoid_value(note, 255)
+#         time.sleep(0.2)
+#         update_solenoid_value(note, 0)
