@@ -1,5 +1,6 @@
 from multiprocessing import Process, Queue
-import os, shutil
+import os
+# import shutil
 from pathlib import Path
 from settings import dirs
 
@@ -15,7 +16,6 @@ def create_dirs(dirs):
     #
     # except:
     #     pass
-
     for dir in dirs:
         file_dir = Path(dir)
         if not os.path.exists(file_dir):
@@ -23,6 +23,7 @@ def create_dirs(dirs):
 
 
 if __name__ == '__main__':
+
     print("Initializing Bertha2...")
 
     create_dirs(dirs)
