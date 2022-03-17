@@ -1,8 +1,10 @@
 import socket
 import time
 from pytube import YouTube
-from settings import nickname, token, channel
-
+from settings import channel
+from dotenv import load_dotenv
+import os
+from multiprocessing import Queue
 
 def is_valid_youtube_video(user_input):
 
@@ -43,6 +45,12 @@ def chat_process(link_q):
     :param link_q: The Queue that the Youtube links from chat should be added to
     :return:
     """
+    load_dotenv()
+
+    token = os.getenv("TOKEN")
+    nickname = os.getenv("NICKNAME")
+
+    print(nickname)
 
     sock = socket.socket()
     sock.connect(("irc.chat.twitch.tv", 6667))
@@ -83,3 +91,8 @@ def chat_process(link_q):
 
         except:
             pass
+
+if __name__ == "__main__":
+
+    play_queue = Queue()
+    chat_process(play_queue)

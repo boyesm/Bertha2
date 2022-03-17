@@ -11,8 +11,11 @@ dirs = [midi_file_path, audio_file_path, video_file_path]  # add any other file 
 
 # TODO: move Twitch login and proxy data to a .env file
 
+<<<<<<< Updated upstream
 nickname = 'berthatwo'
 token = 'oauth:efnlrqvy824hqq4h5hczse0ekvms0e'
+=======
+>>>>>>> Stashed changes
 # channel = '#berthatwo'
 channel = "#mizkif"
 
