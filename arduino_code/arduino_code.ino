@@ -8,25 +8,18 @@ PCA9685 pwmController3(B000001);
 // Not a real device, will act as a proxy to pwmController1 and pwmController2, using all-call i2c address 0xE0, and default Wire @400kHz
 PCA9685 pwmControllerAll(PCA9685_I2C_DEF_ALLCALL_PROXYADR);
 
-const unsigned long int i2c_freq = 115200;  // this is the max(?) i2c freq the arduino supports
-const unsigned long int serial_baudrate = 115200; // 500 000
-const unsigned int pwm_freq = 1600;
-
-//#define I2C_FREQ 400000;
-//#define SERIAL_BAUDRATE 500000;
+#define I2C_FREQ 115200; // this is the max(?) i2c freq the arduino supports
+#define SERIAL_BAUDRATE 115200;
+#define PWM_FREQ 1600;
 
 byte temp[1];
 byte buff[3];  // position byte, value byte, buffer byte
 byte pos;
 byte val;
 
-unsigned x = 0;
-
-int ab;
-
 void setup() {
 
-  Serial.begin(serial_baudrate);
+  Serial.begin(SERIAL_BAUDRATE);
   Serial.setTimeout(1);
   Wire.begin();
   
@@ -52,7 +45,6 @@ void setup() {
         pwmController3.setChannelPWM(i-32, 0);
     }
   }
-
   
   
   while (!Serial) {
@@ -98,10 +90,6 @@ void loop() {
     
     buff[0] -= 1;
     buff[1] -= 1;
-
-//    if(0 <= buff[0] && buff[0] < 16){
-//        pwmController1.setChannelPWM(buff[0], buff[1] << 4);
-//    }
     
     if(0 <= buff[0] && buff[0] < 16){
         pwmController1.setChannelPWM(buff[0], buff[1] << 4);
@@ -110,8 +98,6 @@ void loop() {
     } else if (32 <= buff[0] && buff[0] < 48){
         pwmController3.setChannelPWM(buff[0]-32, buff[1] << 4);
     }
-
-
   
   }
 }
