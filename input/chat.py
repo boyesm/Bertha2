@@ -6,6 +6,8 @@ from settings import nickname, token, channel
 
 def is_valid_youtube_video(user_input):
 
+    print(user_input)
+
     try:
         # TEST CASE: https://www.youtube.com/watch?v=KRbsco8M7Fc
         yt = YouTube(user_input)
@@ -48,6 +50,8 @@ def chat_process(link_q):
     sock.send(f"NICK {nickname}\n".encode("utf-8"))
     sock.send(f"JOIN {channel}\n".encode("utf-8"))
 
+    print("Ready and waiting for twitch commands...")
+
     while True:
         resp = sock.recv(2048).decode("utf-8")
 
@@ -56,7 +60,10 @@ def chat_process(link_q):
             sock.send("PONG\n".encode("utf-8"))
 
         try:
-            message = resp.split(":")[2]
+            for temp in range(2):
+                resp = resp[resp.find(":")+1:]
+
+            message = resp
 
             if message[:1] == "!":
 
@@ -64,6 +71,8 @@ def chat_process(link_q):
                 command_arg = message.split(" ")[1]
 
                 if command == "!play":
+
+                    print(message)
 
                     if is_valid_youtube_video(command_arg):
                         # Queue.put adds command_arg to the global Queue variable, not a local Queue.

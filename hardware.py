@@ -49,7 +49,7 @@ def update_solenoid_value(note_address, pwm_value):
     # this will ensure only valid notes are toggled, preventing memory address not found errors
     if (note_address < 0+1) or (note_address > number_of_notes+1) or (note_address >= 254): return
 
-    print(f'{note_address}, {int(pwm_value)}')
+    # print(f'{note_address}, {int(pwm_value)}')
     arduino.write(struct.pack('>3B', int(note_address), int(pwm_value), int(255)))
 
 
@@ -126,8 +126,11 @@ def hardware_process(play_q):
 
 
 async def turn_off_all():
+    # print("Shutting off all solenoids...")
     for note in range(number_of_notes):
         await turn_off_note(note + starting_note)
+    print("All solenoids are off...")
+
 
 # async def turn_on_all():
 #     for note in range(number_of_notes):

@@ -12,9 +12,9 @@ dirs = [midi_file_path, audio_file_path, video_file_path]  # add any other file 
 # TODO: move Twitch login and proxy data to a .env file
 
 nickname = 'berthatwo'
-token = 'oauth:in0hpn521ekxrnmhxkzwz64swmein9'
+token = 'oauth:efnlrqvy824hqq4h5hczse0ekvms0e'
 # channel = '#berthatwo'
-channel = "#tmol"
+channel = "#mizkif"
 
 proxy_port = '22225'
 proxy_username = 'lum-customer-hl_65bf90ee-zone-data_center'
