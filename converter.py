@@ -109,6 +109,8 @@ async def convert_audio_to_midi(file_name):
 
 def video_to_midi(youtube_url):
 
+    #TODO: add a feature that checks if the youtube video has already been converted
+
     yt = YouTube(youtube_url)
     file_name = video_id(youtube_url)
 

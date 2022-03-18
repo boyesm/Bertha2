@@ -17,7 +17,7 @@ import time
 
 @atexit.register
 def shutdown():
-    asyncio.run(turn_off_all())
+    turn_off_all()
 
 
 starting_note = 48
@@ -70,12 +70,10 @@ def power_draw_function(time_passed, velocity):
 
     return 255
 
-
-async def turn_on_note(note, velocity=255, delay=0):
+def turn_on_note(note, velocity=255):
 
     note_address = note - starting_note
 
-    await asyncio.sleep(delay)  # this seems sketchy, but it works
     # print(f"turned on note {note}")
     update_solenoid_value(note_address, 255)
     # this time is different from the midi time because it's used as the independent variable for the power draw function
@@ -90,16 +88,17 @@ async def turn_on_note(note, velocity=255, delay=0):
     '''
 
 
-async def turn_off_note(note, delay=0):
+def turn_off_note(note):
 
     note_address = note - starting_note
-
-    await asyncio.sleep(delay)
     # print(f"turned off note {note}")
     update_solenoid_value(note_address, 0)
 
 
-async def play_midi_file(midi_filename):
+def play_midi_file(midi_filename):
+
+    # TODO: be able to start playback from a certain point in the video (10 seconds in)
+    # TODO: add a 30 second limit to video playback
 
     mid = mido.MidiFile(midi_filename)
 
@@ -110,20 +109,11 @@ async def play_midi_file(midi_filename):
     tasks = []
     time = 0
 
-    i = 0
-
-    for msg in msgs:
-
-        i+=1
-        # print(msg)
-        time += msg.time / 1000
+    for msg in mid.play():
         if msg.type == "note_on":
-            tasks.append(turn_on_note(msg.note, msg.velocity, time))
+            turn_on_note(msg.note, msg.velocity)
         if msg.type == "note_off":
-            tasks.append(turn_off_note(msg.note, time))
-
-    print(i)
-    await asyncio.gather(*tasks)
+            turn_off_note(msg.note)
 
 
 def hardware_process(play_q):
@@ -132,14 +122,14 @@ def hardware_process(play_q):
 
         # TODO: this needs to be in sync with video (video can be implemented later)
         print("HARDWARE: starting playback of song on hardware")
-        asyncio.run(play_midi_file(filepath))
+        play_midi_file(filepath)
         print("HARDWARE: finished playback of song on hardware")
 
 
-async def turn_off_all():
+def turn_off_all():
     # print("Shutting off all solenoids...")
     for note in range(number_of_notes):
-        await turn_off_note(note + starting_note)
+        turn_off_note(note + starting_note)
     print("HARDWARE: All solenoids should be off...")
 
 
@@ -155,7 +145,7 @@ async def turn_off_all():
 # asyncio.run(play_midi_file("midi/scale2.mid"))
 # asyncio.run(play_midi_file("midi/Doja+Cat++Mooo+Official+Video.midi"))
 # asyncio.run(play_midi_file("midi/c_repeated.mid"))
-asyncio.run(play_midi_file("files/midi/9Ko-nEYJ1GE.midi"))
+# asyncio.run(play_midi_file("files/midi/9Ko-nEYJ1GE.midi"))
 
 
 ### turn every note on and off
