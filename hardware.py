@@ -106,9 +106,6 @@ def play_midi_file(midi_filename):
     msgs = mid.tracks[0]
     # msgs = mid.tracks[1]
 
-    tasks = []
-    time = 0
-
     for msg in mid.play():
         if msg.type == "note_on":
             turn_on_note(msg.note, msg.velocity)
