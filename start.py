@@ -24,11 +24,12 @@ def create_dirs(dirs):
 
 if __name__ == '__main__':
 
-    print("Initializing Bertha2...")
+    print("START: Initializing Bertha2...")
+
 
     create_dirs(dirs)
 
-    print("Created directories")
+    print("START: Created directories")
 
     link_q = Queue()  # we need a queue for youtube links
     play_q = Queue()  # this is the queue of ready to play videos
@@ -52,4 +53,4 @@ if __name__ == '__main__':
     converter_p.join()
     hardware_p.join()
 
-    print("Initializing completed...")
+    print("START: Initializing completed...")

@@ -29,6 +29,9 @@ arduino = serial.Serial()
 #     arduino.port='/dev/cu.usbmodem1101'  # TODO: add port config in settings.py
 # except:
 #     arduino.port='/dev/cu.usbmodem101'  # TODO: add port config in settings.py
+
+# /dev/cu.usbserial-110
+
 arduino.port='/dev/cu.usbmodem1101'  # TODO: add port config in settings.py
 arduino.baudrate=115200 # current bug is independent of baudrate
 arduino.timeout=0.1
@@ -49,7 +52,7 @@ def update_solenoid_value(note_address, pwm_value):
     # this will ensure only valid notes are toggled, preventing memory address not found errors
     if (note_address < 0+1) or (note_address > number_of_notes+1) or (note_address >= 254): return
 
-    # print(f'{note_address}, {int(pwm_value)}')
+    print(f'{note_address}, {int(pwm_value)}')
     arduino.write(struct.pack('>3B', int(note_address), int(pwm_value), int(255)))
 
 
@@ -107,13 +110,19 @@ async def play_midi_file(midi_filename):
     tasks = []
     time = 0
 
+    i = 0
+
     for msg in msgs:
+
+        i+=1
+        # print(msg)
         time += msg.time / 1000
         if msg.type == "note_on":
             tasks.append(turn_on_note(msg.note, msg.velocity, time))
         if msg.type == "note_off":
             tasks.append(turn_off_note(msg.note, time))
 
+    print(i)
     await asyncio.gather(*tasks)
 
 
@@ -122,14 +131,16 @@ def hardware_process(play_q):
         filepath = play_q.get()
 
         # TODO: this needs to be in sync with video (video can be implemented later)
+        print("HARDWARE: starting playback of song on hardware")
         asyncio.run(play_midi_file(filepath))
+        print("HARDWARE: finished playback of song on hardware")
 
 
 async def turn_off_all():
     # print("Shutting off all solenoids...")
     for note in range(number_of_notes):
         await turn_off_note(note + starting_note)
-    print("All solenoids are off...")
+    print("HARDWARE: All solenoids should be off...")
 
 
 # async def turn_on_all():
@@ -144,6 +155,7 @@ async def turn_off_all():
 # asyncio.run(play_midi_file("midi/scale2.mid"))
 # asyncio.run(play_midi_file("midi/Doja+Cat++Mooo+Official+Video.midi"))
 # asyncio.run(play_midi_file("midi/c_repeated.mid"))
+asyncio.run(play_midi_file("files/midi/9Ko-nEYJ1GE.midi"))
 
 
 ### turn every note on and off

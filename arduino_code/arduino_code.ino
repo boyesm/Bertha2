@@ -1,5 +1,8 @@
-//#include <Wire.h>
 #include "PCA9685.h"
+
+#define I2C_FREQ 115200
+#define SERIAL_BAUDRATE 115200
+#define PWM_FREQ 1600
 
 PCA9685 pwmController1(B000000);
 PCA9685 pwmController2(B000010);
@@ -7,10 +10,6 @@ PCA9685 pwmController3(B000001);
 
 // Not a real device, will act as a proxy to pwmController1 and pwmController2, using all-call i2c address 0xE0, and default Wire @400kHz
 PCA9685 pwmControllerAll(PCA9685_I2C_DEF_ALLCALL_PROXYADR);
-
-#define I2C_FREQ 115200; // this is the max(?) i2c freq the arduino supports
-#define SERIAL_BAUDRATE 115200;
-#define PWM_FREQ 1600;
 
 byte temp[1];
 byte buff[3];  // position byte, value byte, buffer byte
