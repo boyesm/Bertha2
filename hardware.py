@@ -21,7 +21,7 @@ def shutdown():
 
 
 starting_note = 48
-number_of_notes = 16
+number_of_notes = 48
 
 # https://discussions.apple.com/thread/7659162
 arduino = serial.Serial()
@@ -31,9 +31,10 @@ arduino = serial.Serial()
 #     arduino.port='/dev/cu.usbmodem101'  # TODO: add port config in settings.py
 
 # /dev/cu.usbserial-110
-
-arduino.port='/dev/cu.usbmodem1101'  # TODO: add port config in settings.py
-arduino.baudrate=115200 # current bug is independent of baudrate
+# arduino.port = "/dev/cu.usbserial-110"
+arduino.port = "/dev/cu.usbserial-10"
+# arduino.port='/dev/cu.usbmodem1101'  # TODO: add port config in settings.py
+arduino.baudrate=115200
 arduino.timeout=0.1
 arduino.open()
 
@@ -70,27 +71,36 @@ def power_draw_function(time_passed, velocity):
 
     return 255
 
-def turn_on_note(note, velocity=255):
+# async def turn_on_note(note, velocity=255):
+#
+#     note_address = note - starting_note
+#
+#     # print(f"turned on note {note}")
+#     update_solenoid_value(note_address, 255)
+#     # this time is different from the midi time because it's used as the independent variable for the power draw function
+#     '''
+#     t0 = datetime.datetime.now()
+#     for i in range(10):
+#         t1 = datetime.datetime.now()
+#         pwm_value = power_draw_function((t1 - t0).total_seconds(), velocity)
+#         # print(note)
+#         update_solenoid_value(note, pwm_value)
+#         await asyncio.sleep(0.01)
+#     '''
 
+async def turn_on_note(note, velocity=255, delay=0):
     note_address = note - starting_note
 
+    await asyncio.sleep(delay)  # this seems sketchy, but it works
     # print(f"turned on note {note}")
     update_solenoid_value(note_address, 255)
-    # this time is different from the midi time because it's used as the independent variable for the power draw function
-    '''
-    t0 = datetime.datetime.now()
-    for i in range(10):
-        t1 = datetime.datetime.now()
-        pwm_value = power_draw_function((t1 - t0).total_seconds(), velocity)
-        # print(note)
-        update_solenoid_value(note, pwm_value)
-        await asyncio.sleep(0.01)
-    '''
 
 
-def turn_off_note(note):
+async def turn_off_note(note, delay=0):
 
     note_address = note - starting_note
+
+    await asyncio.sleep(delay)
     # print(f"turned off note {note}")
     update_solenoid_value(note_address, 0)
 
@@ -106,8 +116,13 @@ def play_midi_file(midi_filename):
     msgs = mid.tracks[0]
     # msgs = mid.tracks[1]
 
+    tasks = {
+
+    }
+
     for msg in mid.play():
         if msg.type == "note_on":
+            tasks.append()
             turn_on_note(msg.note, msg.velocity)
         if msg.type == "note_off":
             turn_off_note(msg.note)
@@ -138,22 +153,40 @@ def turn_off_all():
 # asyncio.run(play_midi_file("midi/song.mid"))
 # asyncio.run(play_midi_file("midi/all_notes2.mid"))
 # asyncio.run(play_midi_file("midi/test_all_solenoids_at_once.mid"))
-# asyncio.run(play_midi_file("midi/take5.mid"))
-# asyncio.run(play_midi_file("midi/scale2.mid"))
-# asyncio.run(play_midi_file("midi/Doja+Cat++Mooo+Official+Video.midi"))
+# play_midi_file("midi/take5.mid")
+# play_midi_file("midi/Shape of You.mid")
+
+# Pirate not working
+# play_midi_file("midi/Pirate.mid")
+# play_midi_file("midi/scale2.mid")
+play_midi_file("midi/Wii Channels - Mii Channel.mid")
+# play_midi_file("midi/The Legend of Zelda Ocarina of Time - Song of Storms.mid")
+# play_midi_file("midi/linkin_park-numb.mid")
+# play_midi_file("midi/Doja+Cat++Mooo+Official+Video.midi")
 # asyncio.run(play_midi_file("midi/c_repeated.mid"))
 # asyncio.run(play_midi_file("files/midi/9Ko-nEYJ1GE.midi"))
 
 
-### turn every note on and off
+# turn every note on and off
 # while True:
 #     for i in range(number_of_notes):
 #         update_solenoid_value(i, 255)
 #
-#     time.sleep(5)
+#     time.sleep(1)
 #
 #     for i in range(number_of_notes):
 #         update_solenoid_value(i, 0)
+#
+#     time.sleep(1)
+
+# while True:
+#     for i in range(16):
+#         update_solenoid_value(i + 32, 255)
+#
+#     time.sleep(1)
+#
+#     for i in range(16):
+#         update_solenoid_value(i + 32, 0)
 #
 #     time.sleep(1)
 
