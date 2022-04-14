@@ -105,27 +105,43 @@ async def turn_off_note(note, delay=0):
     update_solenoid_value(note_address, 0)
 
 
-def play_midi_file(midi_filename):
+async def play_midi_file(midi_filename):
 
     # TODO: be able to start playback from a certain point in the video (10 seconds in)
     # TODO: add a 30 second limit to video playback
 
     mid = mido.MidiFile(midi_filename)
 
+    tasks = []
+    time = 0
+
     # this should be the track with the piano roll, but check with midi files from converter
     msgs = mid.tracks[0]
     # msgs = mid.tracks[1]
 
-    tasks = {
+    i = 0
 
-    }
+    tempo = 0 # set this later
 
-    for msg in mid.play():
-        if msg.type == "note_on":
-            tasks.append()
-            turn_on_note(msg.note, msg.velocity)
-        if msg.type == "note_off":
-            turn_off_note(msg.note)
+    for msg in msgs:
+
+        if msg.is_meta:
+
+
+
+
+        i += 1
+        print(mido.tick2second(msg.time, ))
+        time += (mido.tick2second(msg.time))  # msg.time is ticks (https://mido.readthedocs.io/en/latest/midi_files.html#tempo-and-beat-resolution)
+
+    # if msg.type == "note_on":
+    #     tasks.append(turn_on_note(msg.note, msg.velocity, time))
+    #     turn_on_note(msg.note, msg.velocity)
+    # if msg.type == "note_off":
+    #     tasks.append(turn_off_note(msg.note, time))
+
+    # print(i)
+    # await asyncio.gather(*tasks)
 
 
 def hardware_process(play_q):
@@ -158,8 +174,8 @@ def turn_off_all():
 
 # Pirate not working
 # play_midi_file("midi/Pirate.mid")
-# play_midi_file("midi/scale2.mid")
-play_midi_file("midi/Wii Channels - Mii Channel.mid")
+asyncio.run(play_midi_file("midi/scale2.mid"))
+# play_midi_file("midi/Wii Channels - Mii Channel.mid")
 # play_midi_file("midi/The Legend of Zelda Ocarina of Time - Song of Storms.mid")
 # play_midi_file("midi/linkin_park-numb.mid")
 # play_midi_file("midi/Doja+Cat++Mooo+Official+Video.midi")
