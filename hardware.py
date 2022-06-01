@@ -17,7 +17,7 @@ import time
 
 @atexit.register
 def shutdown():
-    turn_off_all()
+    asyncio.run(turn_off_all())
 
 
 starting_note = 48
@@ -88,10 +88,16 @@ def power_draw_function(time_passed, velocity):
 #         await asyncio.sleep(0.01)
 #     '''
 
-async def turn_on_note(note, velocity=255, delay=0):
+# async def turn_on_note(note, velocity=255, delay=0):
+#     note_address = note - starting_note
+#
+#     await asyncio.sleep(delay)  # this seems sketchy, but it works
+#     # print(f"turned on note {note}")
+#     update_solenoid_value(note_address, 255)
+
+def turn_on_note1(note, velocity=255):
     note_address = note - starting_note
 
-    await asyncio.sleep(delay)  # this seems sketchy, but it works
     # print(f"turned on note {note}")
     update_solenoid_value(note_address, 255)
 
@@ -104,45 +110,76 @@ async def turn_off_note(note, delay=0):
     # print(f"turned off note {note}")
     update_solenoid_value(note_address, 0)
 
+def turn_off_note1(note):
+
+    note_address = note - starting_note
+
+    # print(f"turned off note {note}")
+    update_solenoid_value(note_address, 0)
+
 
 async def play_midi_file(midi_filename):
 
     # TODO: be able to start playback from a certain point in the video (10 seconds in)
     # TODO: add a 30 second limit to video playback
+    # create a loop inside of each turn note on function that updates the value of the function every n seconds.
+        # one way of doing this would be to create every note as a task, add delay in the press note function, and then
+        # modify the actuator hardness after the function is initiated.
 
     mid = mido.MidiFile(midi_filename)
 
+    for msg in mid.play():
+        if msg.type == "note_on":
+            turn_on_note1(msg.note, msg.velocity)
+
+        if msg.type == "note_off":
+            turn_off_note1(msg.note)
+
+
+
+
+    '''
     tasks = []
-    time = 0
+    time = 0.0
 
     # this should be the track with the piano roll, but check with midi files from converter
-    msgs = mid.tracks[0]
+    msgs = mid.tracks[16]
     # msgs = mid.tracks[1]
 
     i = 0
 
-    tempo = 0 # set this later
+    tempo = 0  # set this later
 
     for msg in msgs:
-
         if msg.is_meta:
+            print(msg)
+
+        if msg.type == 'set_tempo':
+            tempo = msg.tempo
 
 
+        # if msg.type == 'end_of_track':
+        #    ppq = msg.time
 
-
+    for msg in msgs:
         i += 1
-        print(mido.tick2second(msg.time, ))
-        time += (mido.tick2second(msg.time))  # msg.time is ticks (https://mido.readthedocs.io/en/latest/midi_files.html#tempo-and-beat-resolution)
 
-    # if msg.type == "note_on":
-    #     tasks.append(turn_on_note(msg.note, msg.velocity, time))
-    #     turn_on_note(msg.note, msg.velocity)
-    # if msg.type == "note_off":
-    #     tasks.append(turn_off_note(msg.note, time))
+        print(msg.time)
+        time += mido.tick2second(msg.time, 480, 500000)
+        print(time)
 
-    # print(i)
-    # await asyncio.gather(*tasks)
+        # 0.03125 per note
 
+        # ((60000 / (mido.tempo2bpm(tempo) * )) * ticks) * 100
+
+        if msg.type == "note_on":
+            tasks.append(turn_on_note(msg.note, msg.velocity, time))
+        if msg.type == "note_off":
+            tasks.append(turn_off_note(msg.note, time))
+
+    await asyncio.gather(*tasks)
+        
+ '''
 
 def hardware_process(play_q):
     while True:
@@ -150,14 +187,14 @@ def hardware_process(play_q):
 
         # TODO: this needs to be in sync with video (video can be implemented later)
         print("HARDWARE: starting playback of song on hardware")
-        play_midi_file(filepath)
+        asyncio.run(play_midi_file(filepath))
         print("HARDWARE: finished playback of song on hardware")
 
 
-def turn_off_all():
+async def turn_off_all():
     # print("Shutting off all solenoids...")
     for note in range(number_of_notes):
-        turn_off_note(note + starting_note)
+        await turn_off_note(note + starting_note)
     print("HARDWARE: All solenoids should be off...")
 
 
@@ -169,18 +206,22 @@ def turn_off_all():
 # asyncio.run(play_midi_file("midi/song.mid"))
 # asyncio.run(play_midi_file("midi/all_notes2.mid"))
 # asyncio.run(play_midi_file("midi/test_all_solenoids_at_once.mid"))
-# play_midi_file("midi/take5.mid")
+# asyncio.run(play_midi_file("midi/take5.mid"))
+# asyncio.run(play_midi_file("midi/Guns n Roses - Sweet Child O Mine.mid"))
 # play_midi_file("midi/Shape of You.mid")
 
 # Pirate not working
 # play_midi_file("midi/Pirate.mid")
-asyncio.run(play_midi_file("midi/scale2.mid"))
-# play_midi_file("midi/Wii Channels - Mii Channel.mid")
-# play_midi_file("midi/The Legend of Zelda Ocarina of Time - Song of Storms.mid")
-# play_midi_file("midi/linkin_park-numb.mid")
+# asyncio.run(play_midi_file("midi/scale2.mid"))
+# asyncio.run(play_midi_file("midi/Wii Channels - Mii Channel.mid"))
+# asyncio.run(play_midi_file("midi/The Legend of Zelda Ocarina of Time - Song of Storms.mid"))
+# asyncio.run(play_midi_file("midi/linkin_park-numb.mid"))
 # play_midi_file("midi/Doja+Cat++Mooo+Official+Video.midi")
 # asyncio.run(play_midi_file("midi/c_repeated.mid"))
 # asyncio.run(play_midi_file("files/midi/9Ko-nEYJ1GE.midi"))
+# asyncio.run(play_midi_file("midi/Super Mario Bros.mid"))
+
+asyncio.run(play_midi_file("files/midi/dQw4w9WgXcQ.midi"))
 
 
 # turn every note on and off
