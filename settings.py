@@ -16,8 +16,8 @@ load_dotenv()
 
 nickname = 'berthatwo'
 token = 'oauth:efnlrqvy824hqq4h5hczse0ekvms0e'
-# channel = '#berthatwo'
-channel = "#lashieloo12"
+channel = '#berthatwo'  # the channel of which chat is being monitored
+# channel = "#lashieloo12"
 
 proxy_port = '22225'
 proxy_username = 'lum-customer-hl_65bf90ee-zone-data_center'

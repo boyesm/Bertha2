@@ -149,3 +149,4 @@ dmypy.json
 secrets.env
 
 .DS_Store
+/midi/

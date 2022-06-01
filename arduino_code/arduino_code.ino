@@ -5,8 +5,8 @@
 #define PWM_FREQ 1600
 
 PCA9685 pwmController1(B000000);
-PCA9685 pwmController2(B000010);
-PCA9685 pwmController3(B000001);
+PCA9685 pwmController2(B000001);
+PCA9685 pwmController3(B000010);
 
 // Not a real device, will act as a proxy to pwmController1 and pwmController2, using all-call i2c address 0xE0, and default Wire @400kHz
 PCA9685 pwmControllerAll(PCA9685_I2C_DEF_ALLCALL_PROXYADR);
@@ -54,7 +54,7 @@ void setup() {
 void read_serial_data(){
   Serial.readBytes(temp, 1);
   if (temp[0] == 0){
-    Serial.print("error");
+    Serial.println("error");
     read_serial_data();
   }
   return;
