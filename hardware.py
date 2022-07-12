@@ -17,7 +17,7 @@ import time
 
 @atexit.register
 def shutdown():
-    asyncio.run(turn_off_all())
+    turn_off_all()
 
 
 starting_note = 48
@@ -57,64 +57,46 @@ def update_solenoid_value(note_address, pwm_value):
     arduino.write(struct.pack('>3B', int(note_address), int(pwm_value), int(255)))
 
 
-def power_draw_function(time_passed, velocity):
-    # a function to produce an optimal duty cycle value for the solenoid so it doesn't draw unnecessary current
-    # velocity should impact the speed at which voltage is applied to the solenoids (duH!)
-    # pwm_at_t = math.log(time_passed + 1) + velocity  # this must have a max value of 4095  # this is just an example function, not the final one!
+def power_draw_function(velocity, time_passed):
+    # create a function that will determine the power emitted at different points in time
+    # max output value should be 255?
 
-    # if time_passed < 0.1:
-    #     pwm_at_t = (-40000 * time_passed) + 4065
-    # else:
-    #     pwm_at_t = 500
-    #
-    # return pwm_at_t  # max value is 65535, min is 0\
+    a = 250
+    b = 1.05
+    c = 90
+    d = 100
+    e = 10
 
-    return 255
+    pwm_at_t = (b ** (c + (velocity / e) - (a * time_passed))) + d
+    ## y=1.05^{\left(90+\frac{t}{10}-250x\right)}+100
 
-# async def turn_on_note(note, velocity=255):
-#
-#     note_address = note - starting_note
-#
-#     # print(f"turned on note {note}")
-#     update_solenoid_value(note_address, 255)
-#     # this time is different from the midi time because it's used as the independent variable for the power draw function
-#     '''
-#     t0 = datetime.datetime.now()
-#     for i in range(10):
-#         t1 = datetime.datetime.now()
-#         pwm_value = power_draw_function((t1 - t0).total_seconds(), velocity)
-#         # print(note)
-#         update_solenoid_value(note, pwm_value)
-#         await asyncio.sleep(0.01)
-#     '''
+    return pwm_at_t
 
-# async def turn_on_note(note, velocity=255, delay=0):
-#     note_address = note - starting_note
-#
-#     await asyncio.sleep(delay)  # this seems sketchy, but it works
-#     # print(f"turned on note {note}")
-#     update_solenoid_value(note_address, 255)
+async def trigger_note(note, init_note_delay=0, velocity=255, hold_note_time=1):
 
-def turn_on_note1(note, velocity=255):
-    note_address = note - starting_note
+    # delay until the note should be turned on
+    await asyncio.sleep(init_note_delay)
 
-    # print(f"turned on note {note}")
-    update_solenoid_value(note_address, 255)
+    # start loop that will initiate and adjust power output to solenoid
+    start_time = time.time()
+
+    while True:
+        curr_time = time.time()
+        passed_time = curr_time - start_time
+
+        if passed_time > hold_note_time:
+            update_solenoid_value(0, note)
+            return
+        else:
+            y = power_draw_function(velocity, passed_time)
+            update_solenoid_value(y, note)
+
+        await asyncio.sleep(0.1)
 
 
-async def turn_off_note(note, delay=0):
+def turn_off_note(note):
 
     note_address = note - starting_note
-
-    await asyncio.sleep(delay)
-    # print(f"turned off note {note}")
-    update_solenoid_value(note_address, 0)
-
-def turn_off_note1(note):
-
-    note_address = note - starting_note
-
-    # print(f"turned off note {note}")
     update_solenoid_value(note_address, 0)
 
 
@@ -122,64 +104,48 @@ async def play_midi_file(midi_filename):
 
     # TODO: be able to start playback from a certain point in the video (10 seconds in)
     # TODO: add a 30 second limit to video playback
-    # create a loop inside of each turn note on function that updates the value of the function every n seconds.
-        # one way of doing this would be to create every note as a task, add delay in the press note function, and then
-        # modify the actuator hardness after the function is initiated.
 
-    mid = mido.MidiFile(midi_filename)
-
-    for msg in mid.play():
-        if msg.type == "note_on":
-            turn_on_note1(msg.note, msg.velocity)
-
-        if msg.type == "note_off":
-            turn_off_note1(msg.note)
-
-
-
-
-    '''
     tasks = []
-    time = 0.0
-
-    # this should be the track with the piano roll, but check with midi files from converter
-    msgs = mid.tracks[16]
-    # msgs = mid.tracks[1]
+    start_time = time.time()
+    input_time = 0.0
+    mid = mido.MidiFile(midi_filename)
+    ticks_per_beat = mid.ticks_per_beat
+    tempo = mid.tempo
+    temp_lengs = {}
 
     i = 0
 
-    tempo = 0  # set this later
+    for msg in mido.merge_tracks(mid.tracks):
 
-    for msg in msgs:
-        if msg.is_meta:
-            print(msg)
+        # find the time between turning a note on and off
+        # temp_lengs = {note:{vel:127, time_on:0.0}}
 
-        if msg.type == 'set_tempo':
-            tempo = msg.tempo
+        input_time += mido.tick2second(msg.time, ticks_per_beat, tempo)
 
+        if isinstance(msg, mido.MetaMessage):
+            continue
+        else:
+            i += 1
+            if msg.type == 'note_on':
+                print(f'note_on {msg.note} {msg.velocity} {input_time}')
+                temp_lengs.update({msg.note: {"velocity": msg.velocity, "init_note_delay": input_time}})
 
-        # if msg.type == 'end_of_track':
-        #    ppq = msg.time
+            elif msg.type == 'note_off':
+                print(f'note_off {msg.note}')
+                print(temp_lengs)
 
-    for msg in msgs:
-        i += 1
+                ## error checks
+                # make sure temp_lengs[msg.note] exists and isn't from some past note.
 
-        print(msg.time)
-        time += mido.tick2second(msg.time, 480, 500000)
-        print(time)
+                init_note_delay = temp_lengs[msg.note]["init_note_delay"]
+                note = msg.note
+                velocity = temp_lengs[msg.note]["velocity"]
+                hold_note_time = input_time - temp_lengs[msg.note]["init_note_delay"]
 
-        # 0.03125 per note
+                tasks.append(trigger_note(note, init_note_delay, velocity, hold_note_time))
 
-        # ((60000 / (mido.tempo2bpm(tempo) * )) * ticks) * 100
-
-        if msg.type == "note_on":
-            tasks.append(turn_on_note(msg.note, msg.velocity, time))
-        if msg.type == "note_off":
-            tasks.append(turn_off_note(msg.note, time))
-
+    # gather tasks and run
     await asyncio.gather(*tasks)
-        
- '''
 
 def hardware_process(play_q):
     while True:
@@ -191,10 +157,10 @@ def hardware_process(play_q):
         print("HARDWARE: finished playback of song on hardware")
 
 
-async def turn_off_all():
+def turn_off_all():
     # print("Shutting off all solenoids...")
     for note in range(number_of_notes):
-        await turn_off_note(note + starting_note)
+        turn_off_note(note + starting_note)
     print("HARDWARE: All solenoids should be off...")
 
 
@@ -221,7 +187,7 @@ async def turn_off_all():
 # asyncio.run(play_midi_file("files/midi/9Ko-nEYJ1GE.midi"))
 # asyncio.run(play_midi_file("midi/Super Mario Bros.mid"))
 
-asyncio.run(play_midi_file("files/midi/dQw4w9WgXcQ.midi"))
+# asyncio.run(play_midi_file("files/midi/dQw4w9WgXcQ.midi"))
 
 
 # turn every note on and off
