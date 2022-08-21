@@ -1,25 +1,26 @@
-from global_vars import midi_file_path, audio_file_path, video_file_path, queue_table, tl
-from pytube import YouTube, extract
+from multiprocessing import Queue
+from is_valid_youtube_link import is_valid_youtube_video
 
+def cli_process(link_q):
 
-def get_file_name(link):
-    return str(extract.video_id(link))
+    print("CLI: Ready and waiting for links...")
 
-def check_if_valid_youtube_link(user_input):
-    try:
-        yt = YouTube(user_input) # YouTube("https://www.youtube.com/watch?v=KRbsco8M7Fc")
-        yt.check_availability()
-        if yt.length <= 180:
-            return True
-        else:
-            return False
-    except:
-        return False
+    while True:
+        command_arg = input()
 
-def input_links(link):  # this is for testing purposes only
-    if check_if_valid_youtube_link(link):
-        print('valid input!')
-        create_row = queue_table.insert().values(username='malcolm', link=link, filename=get_file_name(link), isconverted=False, isqueued=False)
-        conn.execute(create_row)
-    else:
-        print('invalid input :(')
+        try:
+            if is_valid_youtube_video(command_arg):
+                # Queue.put adds command_arg to the global Queue variable, not a local Queue.
+                # See multiprocessing.Queue for more info.
+                link_q.put(command_arg)
+                print(f"CHAT: the video follow video has been queued: {command_arg}")
+            else:
+                print("CHAT: invalid youtube video")
+
+        except:
+            pass
+
+if __name__ == "__main__":
+
+    play_queue = Queue()
+    cli_process(play_queue)

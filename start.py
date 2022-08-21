@@ -9,6 +9,10 @@ from input.chat import chat_process
 from converter import converter_process
 from hardware import hardware_process
 
+# TODO: create function that saves that state of queues on shutdown. shutdown could be intentional or otherwise.
+def save_state():
+    print("savestate")
+
 
 def create_dirs(dirs):
     # try:  # TODO: don't delete this directory if it already exists! don't want to lose a bunch of files
