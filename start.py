@@ -10,6 +10,9 @@ from converter import converter_process
 from hardware import hardware_process
 
 
+## TODO: create a database that stores queue stuff and can act as a backup
+
+
 def create_dirs(dirs):
     # try:  # TODO: don't delete this directory if it already exists! don't want to lose a bunch of files
     #     shutil.rmtree('files')
@@ -25,7 +28,6 @@ def create_dirs(dirs):
 if __name__ == '__main__':
 
     print("START: Initializing Bertha2...")
-
 
     create_dirs(dirs)
 

@@ -85,11 +85,11 @@ async def trigger_note(note, init_note_delay=0, velocity=255, hold_note_time=1):
         passed_time = curr_time - start_time
 
         if passed_time > hold_note_time:
-            update_solenoid_value(0, note)
+            update_solenoid_value(note, 0)
             return
         else:
             y = power_draw_function(velocity, passed_time)
-            update_solenoid_value(y, note)
+            update_solenoid_value(note, y)
 
         await asyncio.sleep(0.1)
 
@@ -134,7 +134,7 @@ async def play_midi_file(midi_filename):
                 print(f'note_off {msg.note}')
                 print(temp_lengs)
 
-                ## error checks
+                ## TODO: error checks
                 # make sure temp_lengs[msg.note] exists and isn't from some past note.
 
                 init_note_delay = temp_lengs[msg.note]["init_note_delay"]
@@ -163,12 +163,6 @@ def turn_off_all():
         turn_off_note(note + starting_note)
     print("HARDWARE: All solenoids should be off...")
 
-
-# async def turn_on_all():
-#     for note in range(number_of_notes):
-#         await turn_on_note(note + starting_note)
-
-
 # asyncio.run(play_midi_file("midi/song.mid"))
 # asyncio.run(play_midi_file("midi/all_notes2.mid"))
 # asyncio.run(play_midi_file("midi/test_all_solenoids_at_once.mid"))
@@ -191,16 +185,17 @@ def turn_off_all():
 
 
 # turn every note on and off
-# while True:
-#     for i in range(number_of_notes):
-#         update_solenoid_value(i, 255)
-#
-#     time.sleep(1)
-#
-#     for i in range(number_of_notes):
-#         update_solenoid_value(i, 0)
-#
-#     time.sleep(1)
+async def turn_them_on_off():
+    while True:
+        tasks = []
+        for i in range(number_of_notes):
+            # update_solenoid_value(i, 255)
+            tasks.append(trigger_note(i, velocity=90))
+
+        await asyncio.gather(*tasks)
+        await asyncio.sleep(1)
+
+asyncio.run(turn_them_on_off())
 
 # while True:
 #     for i in range(16):
