@@ -10,6 +10,8 @@ video_file_path = cwd / Path("files") / Path("video")
 
 dirs = [midi_file_path, audio_file_path, video_file_path]  # add any other file paths to this variable
 
+queue_save_file = "saved_queues"
+
 load_dotenv()
 # nickname = getenv("NICKNAME")
 # token = getenv("TOKEN")

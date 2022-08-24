@@ -146,15 +146,17 @@ async def turn_off_note(note, delay=0):
 #     # await asyncio.gather(*tasks)
 '''
 
-def hardware_process(play_q):
-    while True:
+def hardware_process(sigint_e,play_q):
+    print("HARDWARE: Hardware process has been started.")
+    while not sigint_e.is_set():
         filepath = play_q.get()
-
         # TODO: this needs to be in sync with video (video can be implemented later)
         print("HARDWARE: starting playback of song on hardware")
-        # play_midi_file(filepath)
+        # play_midi_file(filepath)  # TODO: This should be protected from KeyboardInterrupts.
         time.sleep(10)
         print("HARDWARE: finished playback of song on hardware")
+    else:
+        print("HARDWARE: Hardware process has been shut down.")
 
 '''
 def turn_off_all():

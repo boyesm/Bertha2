@@ -3,7 +3,7 @@ import time
 from pytube import YouTube
 from settings import channel, nickname, token
 from multiprocessing import Queue
-from is_valid_youtube_link import is_valid_youtube_video
+from input.valid_link import is_valid_youtube_video
 
 
 def chat_process(link_q):
@@ -23,13 +23,14 @@ def chat_process(link_q):
     print("CHAT: Ready and waiting for twitch commands...")
 
     while True:
-        resp = sock.recv(2048).decode("utf-8")
-
-        # this code ensures the IRC server knows the bot is still listening
-        if resp.startswith("PING"):
-            sock.send("PONG\n".encode("utf-8"))
-
         try:
+            resp = sock.recv(2048).decode("utf-8")
+
+            # this code ensures the IRC server knows the bot is still listening
+            if resp.startswith("PING"):
+                sock.send("PONG\n".encode("utf-8"))
+
+
             for temp in range(2):
                 resp = resp[resp.find(":")+1:]
 
@@ -52,7 +53,8 @@ def chat_process(link_q):
                     else:
                         print("CHAT: invalid youtube video")
 
-        except:
+        except Exception as e:
+            print(f"CHAT: Error{e}")
             pass
 
 if __name__ == "__main__":

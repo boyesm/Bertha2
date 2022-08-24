@@ -1,12 +1,12 @@
 from multiprocessing import Queue
-from is_valid_youtube_link import is_valid_youtube_video
+from input.valid_link import is_valid_youtube_video
 
 def cli_process(link_q):
 
     print("CLI: Ready and waiting for links...")
 
     while True:
-        command_arg = input()
+        command_arg = input("Enter link here: ")
 
         try:
             if is_valid_youtube_video(command_arg):
@@ -18,7 +18,9 @@ def cli_process(link_q):
                 print("CHAT: invalid youtube video")
 
         except:
+            print("CHAT: failed to read input")
             pass
+
 
 if __name__ == "__main__":
 

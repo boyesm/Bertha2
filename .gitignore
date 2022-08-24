@@ -151,3 +151,4 @@ secrets.env
 
 .DS_Store
 /midi/
+/saved_queues.json

@@ -16,7 +16,6 @@ from settings import (
     proxy_password,
 )
 
-
 def download_video_audio(youtube_url):
     print("CONVERTER: Converting YouTube URL into audio file...")
 
@@ -129,14 +128,18 @@ def video_to_midi(youtube_url):
     return filepath
 
 
-def converter_process(link_q, play_q):
-    while True:
-        # TODO: add some error checking here so that if it fails, something doesn't get incorrectly added to the q
+def converter_process(sigint_e,link_q, play_q):
+    print("CONVERTER: Converter process has been started.")
+    while not sigint_e.is_set():
         link = link_q.get()
         print("CONVERTER: starting to convert YT link to MIDI")
-        filepath = video_to_midi(link)
+        # filepath = video_to_midi(link)  # TODO: if this fails, don't add the video to play_q
+        time.sleep(10)
         print("CONVERTER: completed the conversion of YT link to MIDI")
-        play_q.put(filepath)
+        # play_q.put(filepath)
+        play_q.put("test")
+    else:
+        print("CONVERTER: Converter process has been shut down.")
 
 
 # TODO: test longer videos and see how they work
