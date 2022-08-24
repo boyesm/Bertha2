@@ -1,5 +1,7 @@
 import logging
 # logging.basicConfig(level=logging.DEBUG)
+import time
+
 logging.basicConfig()
 import asyncio
 import simpleobsws
@@ -19,7 +21,7 @@ songs = ['Sexy frog',
 
 SCENE_NAME = 'Scene'
 MEDIA_NAME = 'Video'
-MAX_VIDEO_TITLE_LENGTH_QUEUE = 30
+MAX_VIDEO_TITLE_LENGTH_QUEUE = 45
 MAX_VIDEO_TITLE_LENGTH_CURRENT = 45
 VIDEO_WIDTH = 1280
 VIDEO_HEIGHT = 720
@@ -45,6 +47,17 @@ async def change_text(input_name, input_string:str):
         'sceneName':SCENE_NAME,
         'sourceName':input_name,
     }
+    get_arguments = {
+        'inputKind':"text_ft2_source_v2",
+        'inputSettings':{
+            'text':input_string,
+            'font':{
+                'face':'Helvetica',
+                'size':'128',
+            }
+
+        }
+    }
     change_arguments = {
         'inputName':input_name,
         'inputSettings':{
@@ -58,7 +71,11 @@ async def change_text(input_name, input_string:str):
     # request = simpleobsws.Request('GetSceneItemId', get_item_arguments)
     # ret = await ws.call(request) # Perform the request
     # # pprint(ret)
+    request = simpleobsws.Request('GetInputDefaultSettings', get_arguments)
+    ret = await ws.call(request) # Perform the request
+    pprint(ret)
 
+    # The type of the input is "text_ft2_source_v2"
     request = simpleobsws.Request('SetInputSettings', change_arguments)
     ret = await ws.call(request) # Perform the request
     # pprint(ret)
@@ -133,7 +150,14 @@ async def change_video_source(media_name, media_filepath:str):
     await ws.disconnect() # Disconnect from the websocket server cleanly
 
 
-if __name__ == "__main__":
+def video_name_process(video_name_q, video_name_list:list):
+    while True:
+        if len(video_name_list) < 10:
+            video_name_list.append(video_name_q.get())
+            update_song_queue(video_name_list)
+
+
+# if __name__ == "__main__":
     # while True:
         # input_string = input("Enter some text")
 
@@ -142,7 +166,7 @@ if __name__ == "__main__":
     # loop = asyncio.get_event_loop()
     # loop.run_until_complete(change_text('Current Song', 'Current song: ' + input_string))
 
-    filepath1 = '/Users/owner/Downloads/Xie Hua Piao Piao Comes In Clutch.mp4'
-    filepath2 = '/Users/owner/Downloads/Sledgehammer in office.mp4'
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(change_video_source(MEDIA_NAME, filepath2))
+    # filepath1 = '/Users/owner/Downloads/Xie Hua Piao Piao Comes In Clutch.mp4'
+    # filepath2 = '/Users/owner/Downloads/Sledgehammer in office.mp4'
+    # loop = asyncio.get_event_loop()
+    # loop.run_until_complete(change_video_source(MEDIA_NAME, filepath2))

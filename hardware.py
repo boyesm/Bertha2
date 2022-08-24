@@ -33,6 +33,9 @@ arduino.baudrate=115200
 arduino.timeout=0.1
 arduino.open()
 
+try:
+    os.
+
 
 # port can be found via the command: ls /dev/
 

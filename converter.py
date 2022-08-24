@@ -1,7 +1,7 @@
 import asyncio
+from pprint import pprint
+
 import wget
-import time
-import os
 import random
 from pyppeteer import launch
 from pytube import YouTube
@@ -111,7 +111,9 @@ def video_to_midi(youtube_url):
     #TODO: add a feature that checks if the youtube video has already been converted
 
     yt = YouTube(youtube_url)
-    file_name = video_id(youtube_url)
+    video_name = yt.vid_info['videoDetails']['title']
+    # video_name = yt.vid_info
+    # file_name = video_id(youtube_url)
 
     # if it's been converted and found in files, return filepath (temporarily disabled for testing)
     # if os.path.isfile(str(midi_file_path / (file_name + ".midi"))):
@@ -125,21 +127,19 @@ def video_to_midi(youtube_url):
 
     filepath = str(midi_file_path / (file_name + ".midi"))
 
-    return filepath
+    return filepath, video_name
 
 
-def converter_process(sigint_e,link_q, play_q):
-    print("CONVERTER: Converter process has been started.")
-    while not sigint_e.is_set():
+def converter_process(link_q, play_q, video_name_q):
+    while True:
+        # TODO: add some error checking here so that if it fails, something doesn't get incorrectly added to the q
         link = link_q.get()
         print("CONVERTER: starting to convert YT link to MIDI")
-        # filepath = video_to_midi(link)  # TODO: if this fails, don't add the video to play_q
-        time.sleep(10)
+        # TODO Make video_to_midi() return video_name
+        filepath, video_name = video_to_midi(link)
         print("CONVERTER: completed the conversion of YT link to MIDI")
-        # play_q.put(filepath)
-        play_q.put("test")
-    else:
-        print("CONVERTER: Converter process has been shut down.")
+        play_q.put(filepath)
+        video_name_q.put(video_name)
 
 
 # TODO: test longer videos and see how they work
