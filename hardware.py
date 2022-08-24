@@ -118,8 +118,6 @@ async def play_midi_file(midi_filename):
     tempo = 500000 # mid.tempo
     temp_lengs = {}
 
-    i = 0
-
     for msg in mido.merge_tracks(mid.tracks):
 
         # find the time between turning a note on and off
@@ -130,7 +128,6 @@ async def play_midi_file(midi_filename):
         if isinstance(msg, mido.MetaMessage):
             continue
         else:
-            i += 1
             if msg.type == 'note_on':
                 print(f'note_on {msg.note} {msg.velocity} {input_time}')
                 temp_lengs.update({msg.note: {"velocity": msg.velocity, "init_note_delay": input_time}})
