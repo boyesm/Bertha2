@@ -48,6 +48,7 @@ def chat_process(link_q):
                     if is_valid_youtube_video(command_arg):
                         # Queue.put adds command_arg to the global Queue variable, not a local Queue.
                         # See multiprocessing.Queue for more info.
+                        # TODO: we can add video_name_q.put() here instead. just use the youtube link that we have here and create a youtube object
                         link_q.put(command_arg)
                         print(f"CHAT: the video follow video has been queued: {command_arg}")
                         # TODO: send a message to twitch chat that says this ^^

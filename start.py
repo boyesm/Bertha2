@@ -11,12 +11,9 @@ from input.chat import chat_process
 from input.cli import cli_process
 from converter import converter_process
 from hardware import hardware_process
-from obsws import video_name_process
+from livestream import video_name_process
 
 os.environ['IMAGEIO_VAR_NAME'] = 'ffmpeg'
-
-## TODO: create a database that stores queue stuff and can act as a backup
-
 
 def create_dirs(dirs):
     for dir in dirs:
@@ -25,6 +22,7 @@ def create_dirs(dirs):
             os.makedirs(file_dir)
 
     print("START: Created directories")
+
 
 def save_queues(lq, pq):
 
@@ -81,11 +79,10 @@ if __name__ == '__main__':
     default_handler = signal.getsignal(signal.SIGINT)
     signal.signal(signal.SIGINT, signal.SIG_IGN)
 
-
     link_q = load_queue("link_q")  # we need a queue for youtube links
     play_q = load_queue("play_q")  # this is the queue of ready to play videos
     video_name_q = Queue() # queue of video names for obs to display
-    video_name_list = []  # The list is only 10 items long
+    video_name_list = []  # The list is only 10 items long  # TODO: this doesn't need to be created here (it doesn't seem like it anyway). it should just be created in livestream.py
 
     sigint_e = Event()
     # TODO: if processes crash, restart them automatically
@@ -111,14 +108,12 @@ if __name__ == '__main__':
 
     try:
         signal.pause()
-        print("HERE3")
     except KeyboardInterrupt:
         print("START: Shutting down gracefully...")
         # input_p.join()
         sigint_e.set()
         converter_p.join()
         hardware_p.join()
-        print("HERE4")
         # video_name_p.join()
     except Exception as e:
         print(f"START: Error has occurred. {e}")

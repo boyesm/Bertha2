@@ -126,6 +126,8 @@ def video_to_midi(youtube_url):
     # TODO: if this fails, rerun the function
     midi_file_url = asyncio.run(convert_audio_to_midi(file_name))
 
+    # TODO: why is midi_file_url not used? That seems like an issue.
+
     filepath = str(midi_file_path / (file_name + ".midi"))
 
     return filepath, video_name

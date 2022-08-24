@@ -1,6 +1,8 @@
 import logging
 # logging.basicConfig(level=logging.DEBUG)
 
+import time
+
 logging.basicConfig()
 import asyncio
 import simpleobsws
@@ -18,6 +20,7 @@ songs = ['Sexy frog',
          '',
          ]
 
+# TODO: Could these be added to settings?
 SCENE_NAME = 'Scene'
 MEDIA_NAME = 'Video'
 MAX_VIDEO_TITLE_LENGTH_QUEUE = 45
@@ -25,43 +28,12 @@ MAX_VIDEO_TITLE_LENGTH_CURRENT = 45
 VIDEO_WIDTH = 1280
 VIDEO_HEIGHT = 720
 
-
 parameters = simpleobsws.IdentificationParameters(ignoreNonFatalRequestChecks = False) # Create an IdentificationParameters object (optional for connecting)
 ws = simpleobsws.WebSocketClient(url = 'ws://localhost:4455', identification_parameters = parameters) # Every possible argument has been passed, but none are required. See lib code for defaults.
 
-
-async def change_text(input_name, input_string:str):
-    """
-    Changes the text of a Text object on the screen.
-    :param input_name: The name of the Text object to change.
-    :param input_string: The text to set for the input
-    :return:
-    """
-    # print("Changing string in OBS to [", input_string + ']')
-
-    await ws.connect() # Make the connection to obs-websocket
-    await ws.wait_until_identified() # Wait for the identification handshake to complete
-
-    get_item_arguments = {
-        'sceneName':SCENE_NAME,
-        'sourceName':input_name,
-    }
-    get_arguments = {
-        'inputKind':"text_ft2_source_v2",
-        'inputSettings':{
-            'text':input_string,
-        }
-    }
-    change_arguments = {
-        'inputName':input_name,
-        'inputSettings':{
-            'text':input_string,
-            'font': {
-                'face': 'Helvetica',
-                'size': '128',
-            }
-        }
-    }
+async def update_obs_obj_args(change_args):
+    await ws.connect()  # Make the connection to obs-websocket
+    await ws.wait_until_identified()  # Wait for the identification handshake to complete
 
 
     # request = simpleobsws.Request('GetSceneItemId', get_item_arguments)
@@ -72,30 +44,50 @@ async def change_text(input_name, input_string:str):
     # pprint(ret)
 
     # The type of the input is "text_ft2_source_v2"
-    request = simpleobsws.Request('SetInputSettings', change_arguments)
-    ret = await ws.call(request) # Perform the request
+    request = simpleobsws.Request('SetInputSettings', change_args)
+    ret = await ws.call(request)  # Perform the request
     # pprint(ret)
 
-
-    if ret.ok(): # Check if the request succeeded
-        print("Request succeeded! Response data: {}".format(ret.responseData))
+    if ret.ok():  # Check if the request succeeded
+        print(f"Request succeeded! Response data: {ret.responseData}")
     else:
         print("There was an error setting the text in OBS")
 
-    await ws.disconnect() # Disconnect from the websocket server cleanly
+    await ws.disconnect()  # Disconnect from the websocket server cleanly
 
 
-def update_song_queue(queue_object):
+def change_text_obj_value(text_obj_id, text_obj_value:str):
+    """
+    Changes the text of a Text object on the screen.
+    :param text_obj_id: The name of the Media object to change.
+    :param text_obj_value: The text to set for the input
+    :return:
+    """
 
-    input_string = 'Videos playing next: \n'
-    index = 0
-    for song in queue_object:
-        index += 1
-        if len(song) > MAX_VIDEO_TITLE_LENGTH_QUEUE:
-            song = song[0:(MAX_VIDEO_TITLE_LENGTH_QUEUE-3)] + "..."
-        input_string += str(index) + ". " + song + "\n"
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(change_text('Queue', input_string))
+    get_item_arguments = {
+        'sceneName': SCENE_NAME,
+        'sourceName': text_obj_id,
+    }
+
+    get_arguments = {
+        'inputKind': "text_ft2_source_v2",
+        'inputSettings': {
+            'text': text_obj_value,
+        }
+    }
+
+    change_arguments = {
+        'inputName': text_obj_id,
+        'inputSettings': {
+            'text': text_obj_value,
+            'font': {
+                'face': 'Helvetica',
+                'size': '128',
+            }
+        }
+    }
+
+    asyncio.run(update_obs_obj_args(change_arguments))
 
 
 async def change_video_source(media_name, media_filepath:str):
@@ -105,10 +97,6 @@ async def change_video_source(media_name, media_filepath:str):
     :param media_filepath: The full filepath for the video that is going to be shown
     :return:
     """
-    # print("Changing string in OBS to [", input_string + ']')
-
-    await ws.connect() # Make the connection to obs-websocket
-    await ws.wait_until_identified() # Wait for the identification handshake to complete
 
     get_item_arguments = {
         'sceneName':SCENE_NAME,
@@ -128,29 +116,35 @@ async def change_video_source(media_name, media_filepath:str):
         }
     }
 
-
-    # request = simpleobsws.Request('GetInputSettings', get_item_arguments)
-    # ret = await ws.call(request) # Perform the request
-    # pprint(ret)
-
-    request = simpleobsws.Request('SetInputSettings', change_arguments)
-    ret = await ws.call(request) # Perform the request
-    pprint(ret)
+    asyncio.run(update_obs_obj_args(change_arguments))
 
 
-    if ret.ok(): # Check if the request succeeded
-        print("Request succeeded! Response data: {}".format(ret.responseData))
-    else:
-        print("There was an error setting the text in OBS")
+def shorten_title(title):
+    if len(title) > MAX_VIDEO_TITLE_LENGTH_QUEUE:
+        title = title[0:(MAX_VIDEO_TITLE_LENGTH_QUEUE - 3)] + "..."
 
-    await ws.disconnect() # Disconnect from the websocket server cleanly
+    return title
+
+def update_playing_next(playing_next_object):
+
+    # what does this do?: This function takes a list of the names of videos playing next and updates the next playing visual on the screen
+
+    input_string = 'Videos playing next: \n'
+
+    for video_title, index in enumerate(playing_next_object):
+
+        input_string += f"{str(index)}. {shorten_title(video_title)}\n"
+
+    change_text_obj_value('Queue', input_string)
 
 
 def video_name_process(video_name_q, video_name_list:list):
     while True:
-        if len(video_name_list) < 10:
+        # we could just move this conditional to the update queue function. only display the first 10 items.
+        if len(video_name_list) < 10:  # TODO: this is an infinite loop with little pause. this could be better.
             video_name_list.append(video_name_q.get())
-            update_song_queue(video_name_list[1:-1])
+            update_playing_next(video_name_list[1:-1])
+        time.sleep(1)  # TODO: this is a bad temp fix
 
 
 # if __name__ == "__main__":
