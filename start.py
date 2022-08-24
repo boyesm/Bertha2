@@ -98,15 +98,14 @@ if __name__ == '__main__':
     video_name_p = Process(target=video_name_process, args=(video_name_q,video_name_list,))
 
 
-
     input_p.daemon = True
     converter_p.daemon = True
-    # hardware_p.daemon = True
+    hardware_p.daemon = True
     video_name_p.daemon = True
 
     input_p.start()
     converter_p.start()
-    # hardware_p.start()
+    hardware_p.start()
     video_name_p.start()
 
     # Since we spawned all the necessary processes already,

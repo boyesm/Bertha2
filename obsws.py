@@ -154,7 +154,7 @@ def video_name_process(video_name_q, video_name_list:list):
     while True:
         if len(video_name_list) < 10:
             video_name_list.append(video_name_q.get())
-            update_song_queue(video_name_list)
+            update_song_queue(video_name_list[1:-1])
 
 
 # if __name__ == "__main__":

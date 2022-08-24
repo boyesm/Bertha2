@@ -14,28 +14,27 @@ import atexit
 import serial
 import struct
 import time
+import obsws
 
 starting_note = 48
 number_of_notes = 48
 
-# https://discussions.apple.com/thread/7659162
-arduino = serial.Serial()
-# try:
-#     arduino.port='/dev/cu.usbmodem1101'  # TODO: add port config in settings.py
-# except:
-#     arduino.port='/dev/cu.usbmodem101'  # TODO: add port config in settings.py
-
-# /dev/cu.usbserial-110
-# arduino.port = "/dev/cu.usbserial-110"
-arduino.port = "/dev/cu.usbserial-10"
-# arduino.port='/dev/cu.usbmodem1101'  # TODO: add port config in settings.py
-arduino.baudrate=115200
-arduino.timeout=0.1
-arduino.open()
 
 try:
-    os.
+    arduino = serial.Serial()
+    # Find the usb port to use
+    port_to_use = os.popen("ls -a /dev/cu.usbserial*").read().split('\n')[0]
+    print(type(port_to_use))
 
+    arduino.port = port_to_use
+except:
+    raise Warning("Unable to find arduino plugged in")
+try:
+    arduino.baudrate=115200
+    arduino.timeout=0.1
+    arduino.open()
+except:
+    raise Warning("Arduino cannot be opened. Is it plugged in?")
 
 # port can be found via the command: ls /dev/
 
@@ -69,7 +68,7 @@ async def test_every_note(hold_note_time=0.25):
 def update_solenoid_value(note_address, pwm_value):
 
     # ensure that note_address or pwm_value are always bewtween 1 and 255. 0 must be reserved for error codes in arduino (stupidest thing I ever heard).
-    note_address +=1
+    note_address += 1
     pwm_value += 1
 
     # this will ensure pwm_value does not exceed the bounds of 8-bit int
@@ -164,9 +163,13 @@ async def play_midi_file(midi_filename):
     # gather tasks and run
     await asyncio.gather(*tasks)
 
-def hardware_process(play_q):
+def hardware_process(play_q, video_name_q):
     while True:
+        current_video = video_name_q.get()
         filepath = play_q.get()
+
+        obsws.change_text('Current Song', current_video)
+
         # TODO: this needs to be in sync with video (video can be implemented later)
         print("HARDWARE: starting playback of song on hardware")
         asyncio.run(play_midi_file(filepath))
