@@ -12,6 +12,9 @@ from converter import converter_process
 from hardware import hardware_process
 
 
+## TODO: create a database that stores queue stuff and can act as a backup
+
+
 def create_dirs(dirs):
     for dir in dirs:
         file_dir = Path(dir)

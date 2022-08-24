@@ -50,8 +50,10 @@ def chat_process(link_q):
                         # See multiprocessing.Queue for more info.
                         link_q.put(command_arg)
                         print(f"CHAT: the video follow video has been queued: {command_arg}")
+                        # TODO: send a message to twitch chat that says this ^^
                     else:
                         print("CHAT: invalid youtube video")
+                        # TODO: send a message to twitch chat that says this ^^ 
 
         except Exception as e:
             print(f"CHAT: Error{e}")
