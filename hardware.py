@@ -31,14 +31,20 @@ arduino_connection = None
 try:
     # TODO Why is this running multiple times? THis only gets imported by start.py once
     potential_ports = subprocess.check_output(["ls -a /dev/cu.usbserial*"], shell=True,stderr=subprocess.DEVNULL).decode('ascii')
-    pprint(potential_ports)
-    port_to_use = potential_ports.split("\n")[0]
-    arduino_connection = serial.Serial(port=port_to_use)
-    pprint("HARDWARE: Connecting to arduino on port:" + port_to_use)
 
+    print("HARDWARE: Setting serial up")
+    arduino_connection = serial.Serial()
+    # pprint(potential_ports)
+    port_to_use = potential_ports.split("\n")[0]
+    print("HARDWARE: Setting Arduino port to: " + port_to_use)
+    arduino_connection.port = port_to_use
+    print("HARDWARE: Setting Arduino baudrate and timeout:" + port_to_use)
     arduino_connection.baudrate=115200
     arduino_connection.timeout=0.1
+    print("HARDWARE: Connecting to arduino on port:" + port_to_use)
     arduino_connection.open()
+
+
 except:
     print("HARDWARE: Unable to connect to Arduino. Is it plugged in?")
 
@@ -58,6 +64,7 @@ def turn_off_note(note):
 def shutdown():
     # Run twice because sometimes some don't shut off
     turn_off_all()
+    time.sleep(0.5)
     turn_off_all()
 
 async def test_every_note(hold_note_time=0.25):
@@ -136,7 +143,7 @@ async def play_midi_file(midi_filename):
     input_time = 0.0
     mid = mido.MidiFile(midi_filename)
     ticks_per_beat = mid.ticks_per_beat
-    tempo = 500000 # mid.tempo
+    tempo = 10000 # mid.tempo
     temp_lengs = {}
 
     for msg in mido.merge_tracks(mid.tracks):
@@ -150,12 +157,12 @@ async def play_midi_file(midi_filename):
             continue
         else:
             if msg.type == 'note_on':
-                print(f'note_on {msg.note} {msg.velocity} {input_time}')
+                # print(f'note_on {msg.note} {msg.velocity} {input_time}')
                 temp_lengs.update({msg.note: {"velocity": msg.velocity, "init_note_delay": input_time}})
 
             elif msg.type == 'note_off':
-                print(f'note_off {msg.note}')
-                print(temp_lengs)
+                # print(f'note_off {msg.note}')
+                # print(temp_lengs)
 
                 ## TODO: error checks
                 # make sure temp_lengs[msg.note] exists and isn't from some past note.
@@ -187,7 +194,8 @@ if __name__ == '__main__':
 
     print("HARDWARE: Running some tests.")
 
-    asyncio.run(test_every_note())
+    # asyncio.run(test_every_note())
+    asyncio.run(play_midi_file("./midi/take5.mid"))
 
     '''
     midi_filename = "midi/all_notes.mid"

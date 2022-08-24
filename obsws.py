@@ -50,19 +50,16 @@ async def change_text(input_name, input_string:str):
         'inputKind':"text_ft2_source_v2",
         'inputSettings':{
             'text':input_string,
-            'font':{
-                'face':'Helvetica',
-                'size':'128',
-            }
-
         }
     }
     change_arguments = {
         'inputName':input_name,
         'inputSettings':{
             'text':input_string,
-            # 'font':'Helvetica'
-
+            'font': {
+                'face': 'Helvetica',
+                'size': '128',
+            }
         }
     }
 
@@ -70,9 +67,9 @@ async def change_text(input_name, input_string:str):
     # request = simpleobsws.Request('GetSceneItemId', get_item_arguments)
     # ret = await ws.call(request) # Perform the request
     # # pprint(ret)
-    request = simpleobsws.Request('GetInputDefaultSettings', get_arguments)
-    ret = await ws.call(request) # Perform the request
-    pprint(ret)
+    # request = simpleobsws.Request('GetInputDefaultSettings', get_arguments)
+    # ret = await ws.call(request) # Perform the request
+    # pprint(ret)
 
     # The type of the input is "text_ft2_source_v2"
     request = simpleobsws.Request('SetInputSettings', change_arguments)
