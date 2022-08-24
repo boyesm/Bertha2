@@ -15,7 +15,6 @@ import serial
 import struct
 import time
 
-
 starting_note = 48
 number_of_notes = 48
 
@@ -51,6 +50,18 @@ def turn_off_note(note):
 @atexit.register
 def shutdown():
     turn_off_all()
+    turn_off_all()
+
+async def test_every_note(hold_note_time=0.25):
+
+    tasks = []
+    input_time = 0.0
+
+    for note in range(number_of_notes):
+        tasks.append(trigger_note(note, input_time, 127, hold_note_time))
+        input_time += hold_note_time
+
+    await asyncio.gather(*tasks)
 
 def update_solenoid_value(note_address, pwm_value):
 
@@ -157,3 +168,16 @@ def hardware_process(play_q):
         print("HARDWARE: starting playback of song on hardware")
         asyncio.run(play_midi_file(filepath))
         print("HARDWARE: finished playback of song on hardware")
+
+
+if __name__ == '__main__':
+
+    print("HARDWARE: Running some tests.")
+
+    asyncio.run(test_every_note())
+
+    '''
+    midi_filename = "midi/all_notes.mid"
+
+    asyncio.run(play_midi_file(midi_filename))
+    '''
