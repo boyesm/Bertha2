@@ -1,10 +1,8 @@
 from multiprocessing import Process, Queue, Event
 import os
 import time
-# import shutil
 from pathlib import Path
 from settings import dirs, queue_save_file
-import atexit
 import signal
 import json
 
@@ -51,8 +49,6 @@ def save_queues(lq, pq):
 
 def load_queue(queue_name):
 
-    # TODO: Write some error checking code here. If this loads incorrectly, we should know.
-
     print(f"START: Loading queue: {queue_name}")
 
     q = Queue()
@@ -64,8 +60,8 @@ def load_queue(queue_name):
         # save it into a queue
         for item in o[queue_name]:
             q.put(item)
-    except:
-        print("START: Queue could not be loaded.")
+    except Exception as e:
+        print(f"START: Queue could not be loaded. {e}")
 
     return q
 
@@ -84,11 +80,6 @@ if __name__ == '__main__':
     play_q = load_queue("play_q")  # this is the queue of ready to play videos
 
     sigint_e = Event()
-
-    link_q.put("https://www.youtube.com/watch?v=KRbsco8M7Fc")
-    link_q.put("https://www.youtube.com/watch?v=KRbsco8M7Fc")
-    link_q.put("https://www.youtube.com/watch?v=KRbsco8M7Fc")
-    link_q.put("https://www.youtube.com/watch?v=KRbsco8M7Fc")
 
     # TODO: if processes crash, restart them automatically
     input_p = Process(target=chat_process, args=(link_q,))
@@ -115,8 +106,8 @@ if __name__ == '__main__':
         sigint_e.set()
         converter_p.join()
         hardware_p.join()
-    except:
-        print("START: Error has occurred.")
+    except Exception as e:
+        print(f"START: Error has occurred. {e}")
     finally:
         save_queues(link_q, play_q)
         print("START: Shut down.")
