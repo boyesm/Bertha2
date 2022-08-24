@@ -15,10 +15,6 @@ import serial
 import struct
 import time
 
-@atexit.register
-def shutdown():
-    turn_off_all()
-
 
 starting_note = 48
 number_of_notes = 48
@@ -39,6 +35,21 @@ arduino.timeout=0.1
 arduino.open()
 
 # port can be found via the command: ls /dev/
+
+def turn_off_all():
+    # print("Shutting off all solenoids...")
+    for note in range(number_of_notes):
+        turn_off_note(note + starting_note)
+    print("HARDWARE: All solenoids should be off...")
+
+def turn_off_note(note):
+
+    note_address = note - starting_note
+    update_solenoid_value(note_address, 0)
+
+@atexit.register
+def shutdown():
+    turn_off_all()
 
 def update_solenoid_value(note_address, pwm_value):
 
@@ -94,12 +105,6 @@ async def trigger_note(note, init_note_delay=0, velocity=255, hold_note_time=1):
         await asyncio.sleep(0.1)
 
 
-def turn_off_note(note):
-
-    note_address = note - starting_note
-    update_solenoid_value(note_address, 0)
-
-
 async def play_midi_file(midi_filename):
 
     # TODO: be able to start playback from a certain point in the video (10 seconds in)
@@ -110,7 +115,7 @@ async def play_midi_file(midi_filename):
     input_time = 0.0
     mid = mido.MidiFile(midi_filename)
     ticks_per_beat = mid.ticks_per_beat
-    tempo = mid.tempo
+    tempo = 500000 # mid.tempo
     temp_lengs = {}
 
     i = 0
@@ -155,63 +160,3 @@ def hardware_process(play_q):
         print("HARDWARE: starting playback of song on hardware")
         asyncio.run(play_midi_file(filepath))
         print("HARDWARE: finished playback of song on hardware")
-
-
-def turn_off_all():
-    # print("Shutting off all solenoids...")
-    for note in range(number_of_notes):
-        turn_off_note(note + starting_note)
-    print("HARDWARE: All solenoids should be off...")
-
-# asyncio.run(play_midi_file("midi/song.mid"))
-# asyncio.run(play_midi_file("midi/all_notes2.mid"))
-# asyncio.run(play_midi_file("midi/test_all_solenoids_at_once.mid"))
-# asyncio.run(play_midi_file("midi/take5.mid"))
-# asyncio.run(play_midi_file("midi/Guns n Roses - Sweet Child O Mine.mid"))
-# play_midi_file("midi/Shape of You.mid")
-
-# Pirate not working
-# play_midi_file("midi/Pirate.mid")
-# asyncio.run(play_midi_file("midi/scale2.mid"))
-# asyncio.run(play_midi_file("midi/Wii Channels - Mii Channel.mid"))
-# asyncio.run(play_midi_file("midi/The Legend of Zelda Ocarina of Time - Song of Storms.mid"))
-# asyncio.run(play_midi_file("midi/linkin_park-numb.mid"))
-# play_midi_file("midi/Doja+Cat++Mooo+Official+Video.midi")
-# asyncio.run(play_midi_file("midi/c_repeated.mid"))
-# asyncio.run(play_midi_file("files/midi/9Ko-nEYJ1GE.midi"))
-# asyncio.run(play_midi_file("midi/Super Mario Bros.mid"))
-
-# asyncio.run(play_midi_file("files/midi/dQw4w9WgXcQ.midi"))
-
-
-# turn every note on and off
-async def turn_them_on_off():
-    while True:
-        tasks = []
-        for i in range(number_of_notes):
-            # update_solenoid_value(i, 255)
-            tasks.append(trigger_note(i, velocity=90))
-
-        await asyncio.gather(*tasks)
-        await asyncio.sleep(1)
-
-asyncio.run(turn_them_on_off())
-
-# while True:
-#     for i in range(16):
-#         update_solenoid_value(i + 32, 255)
-#
-#     time.sleep(1)
-#
-#     for i in range(16):
-#         update_solenoid_value(i + 32, 0)
-#
-#     time.sleep(1)
-
-
-### turn on every note one at a time
-# while True:
-#     for note in range(number_of_notes):
-#         update_solenoid_value(note, 255)
-#         time.sleep(0.2)
-#         update_solenoid_value(note, 0)
