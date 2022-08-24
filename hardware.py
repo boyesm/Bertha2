@@ -27,7 +27,7 @@ arduino = serial.Serial()
 
 # /dev/cu.usbserial-110
 # arduino.port = "/dev/cu.usbserial-110"
-arduino.port = "/dev/cu.usbserial-10"
+arduino.port = "/dev/cu.usbserial-1120"
 # arduino.port='/dev/cu.usbmodem1101'  # TODO: add port config in settings.py
 arduino.baudrate=115200
 arduino.timeout=0.1
@@ -63,6 +63,7 @@ async def test_every_note(hold_note_time=0.25):
 
     await asyncio.gather(*tasks)
 
+
 def update_solenoid_value(note_address, pwm_value):
 
     # ensure that note_address or pwm_value are always bewtween 1 and 255. 0 must be reserved for error codes in arduino (stupidest thing I ever heard).
@@ -72,6 +73,16 @@ def update_solenoid_value(note_address, pwm_value):
     # this will ensure pwm_value does not exceed the bounds of 8-bit int
     if pwm_value > 254: pwm_value = 254
     if pwm_value < 1: pwm_value = 1
+
+    # if a note is up to an octave below what is available to be played, shift it up an octave
+    if (note_address < 0+1):
+        print(f"HARDWARE: too low! for now... {note_address}")
+        note_address+=24
+
+    # if a note is up to an octave below what is available to be played, shift it up an octave
+    if (note_address > number_of_notes+1):
+        print(f"HARDWARE: too high! for now... {note_address}")
+        note_address -= 24
 
     # this will ensure only valid notes are toggled, preventing memory address not found errors
     if (note_address < 0+1) or (note_address > number_of_notes+1) or (note_address >= 254): return
@@ -127,7 +138,8 @@ async def play_midi_file(midi_filename):
     input_time = 0.0
     mid = mido.MidiFile(midi_filename)
     ticks_per_beat = mid.ticks_per_beat
-    tempo = 500000 # mid.tempo
+    tempo = 500000 # this is the default MIDI tempo
+    # tempo = 350000
     temp_lengs = {}
 
     for msg in mido.merge_tracks(mid.tracks):
@@ -141,20 +153,21 @@ async def play_midi_file(midi_filename):
             continue
         else:
             if msg.type == 'note_on':
-                print(f'note_on {msg.note} {msg.velocity} {input_time}')
-                temp_lengs.update({msg.note: {"velocity": msg.velocity, "init_note_delay": input_time}})
+                note = msg.note - starting_note
+                print(f'note_on {note} {msg.velocity} {input_time}')
+                temp_lengs.update({note: {"velocity": msg.velocity, "init_note_delay": input_time}})
 
             elif msg.type == 'note_off':
-                print(f'note_off {msg.note}')
-                print(temp_lengs)
+                note = msg.note - starting_note
+                print(f'note_off {note}')
+                # print(temp_lengs)
 
                 ## TODO: error checks
                 # make sure temp_lengs[msg.note] exists and isn't from some past note.
 
-                init_note_delay = temp_lengs[msg.note]["init_note_delay"]
-                note = msg.note
-                velocity = temp_lengs[msg.note]["velocity"]
-                hold_note_time = input_time - temp_lengs[msg.note]["init_note_delay"]
+                init_note_delay = temp_lengs[note]["init_note_delay"]
+                velocity = temp_lengs[note]["velocity"]
+                hold_note_time = input_time - temp_lengs[note]["init_note_delay"]
 
                 tasks.append(trigger_note(note, init_note_delay, velocity, hold_note_time))
 
@@ -174,10 +187,14 @@ if __name__ == '__main__':
 
     print("HARDWARE: Running some tests.")
 
-    asyncio.run(test_every_note())
+    # asyncio.run(test_every_note())
 
-    '''
-    midi_filename = "midi/all_notes.mid"
+
+    # midi_filename = "midi/all_notes.mid"
+    midi_filename = "midi/take5.mid"
+    midi_filename = "midi/Wii Channels - Mii Channel.mid"
+    midi_filename = "midi/The Entertainer.mid"
+    midi_filename = "midi/graze_the_roof.mid"
 
     asyncio.run(play_midi_file(midi_filename))
-    '''
+
