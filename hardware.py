@@ -7,6 +7,9 @@ what this file should do:
 
 import os
 import asyncio
+import subprocess
+from pprint import pprint
+
 import mido
 import math
 import datetime
@@ -15,45 +18,58 @@ import serial
 import struct
 import time
 
+
+import livestream
+
 starting_note = 48
 number_of_notes = 48
 
-# https://discussions.apple.com/thread/7659162
-arduino = serial.Serial()
-# try:
-#     arduino.port='/dev/cu.usbmodem1101'  # TODO: add port config in settings.py
-# except:
-#     arduino.port='/dev/cu.usbmodem101'  # TODO: add port config in settings.py
+arduino_connection = None
+    # Find the usb port that has something plugged in to use from /dev/ (only works with unix)
+    # port can be found via the command: ls /dev/
+    # port_to_use = os.popen("ls -a /dev/cu.usbserial*", ).read().split('\n')[0]
 
-# /dev/cu.usbserial-110
-# arduino.port = "/dev/cu.usbserial-110"
-arduino.port = "/dev/cu.usbserial-1120"
-# arduino.port='/dev/cu.usbmodem1101'  # TODO: add port config in settings.py
-arduino.baudrate=115200
-arduino.timeout=0.1
-arduino.open()
+try:
+    # TODO Why is this running multiple times? THis only gets imported by start.py once
+    potential_ports = subprocess.check_output(["ls -a /dev/cu.usbserial*"], shell=True,stderr=subprocess.DEVNULL).decode('ascii')
 
+    print("HARDWARE: Setting serial up")
+    arduino_connection = serial.Serial()
+    # pprint(potential_ports)
+    port_to_use = potential_ports.split("\n")[0]
+    print("HARDWARE: Setting Arduino port to: " + port_to_use)
+    arduino_connection.port = port_to_use
+    print("HARDWARE: Setting Arduino baudrate and timeout:" + port_to_use)
+    arduino_connection.baudrate=115200
+    arduino_connection.timeout=0.1
+    print("HARDWARE: Connecting to arduino on port:" + port_to_use)
+    arduino_connection.open()
 
-# port can be found via the command: ls /dev/
+except:
+    print("HARDWARE: Unable to connect to Arduino. Is it plugged in?")
+    # TODO: should we end the program here? or keep searching for an arduino to be connected?
+
 
 def turn_off_all():
-    # print("Shutting off all solenoids...")
     for note in range(number_of_notes):
         turn_off_note(note + starting_note)
     print("HARDWARE: All solenoids should be off...")
 
-def turn_off_note(note):
 
+def turn_off_note(note):
     note_address = note - starting_note
     update_solenoid_value(note_address, 0)
 
+
 @atexit.register
 def shutdown():
+    # Run twice because sometimes some don't shut off
     turn_off_all()
+    time.sleep(0.5)
     turn_off_all()
+
 
 async def test_every_note(hold_note_time=0.25):
-
     tasks = []
     input_time = 0.0
 
@@ -67,7 +83,7 @@ async def test_every_note(hold_note_time=0.25):
 def update_solenoid_value(note_address, pwm_value):
 
     # ensure that note_address or pwm_value are always bewtween 1 and 255. 0 must be reserved for error codes in arduino (stupidest thing I ever heard).
-    note_address +=1
+    note_address += 1
     pwm_value += 1
 
     # this will ensure pwm_value does not exceed the bounds of 8-bit int
@@ -87,8 +103,9 @@ def update_solenoid_value(note_address, pwm_value):
     # this will ensure only valid notes are toggled, preventing memory address not found errors
     if (note_address < 0+1) or (note_address > number_of_notes+1) or (note_address >= 254): return
 
-    print(f'{note_address}, {int(pwm_value)}')
-    arduino.write(struct.pack('>3B', int(note_address), int(pwm_value), int(255)))
+    # print(f'{note_address}, {int(pwm_value)}')
+    if arduino_connection != None:
+        arduino_connection.write(struct.pack('>3B', int(note_address), int(pwm_value), int(255)))
 
 
 def power_draw_function(velocity, time_passed):
@@ -105,6 +122,7 @@ def power_draw_function(velocity, time_passed):
     ## y=1.05^{\left(90+\frac{t}{10}-250x\right)}+100
 
     return pwm_at_t
+
 
 async def trigger_note(note, init_note_delay=0, velocity=255, hold_note_time=1):
 
@@ -169,18 +187,22 @@ async def play_midi_file(midi_filename):
                 velocity = temp_lengs[note]["velocity"]
                 hold_note_time = input_time - temp_lengs[note]["init_note_delay"]
 
-                tasks.append(trigger_note(note, init_note_delay, velocity, hold_note_time))
+                tasks.append(trigger_note(note, int(init_note_delay), velocity, int(hold_note_time)))
 
     # gather tasks and run
     await asyncio.gather(*tasks)
 
-def hardware_process(play_q):
-    while True:
+def hardware_process(sigint_e, play_q, video_name_q,):
+    while not sigint_e.is_set():
+        current_video = video_name_q.get()
         filepath = play_q.get()
+
+        livestream.change_text('Current Song', current_video)
+
         # TODO: this needs to be in sync with video (video can be implemented later)
-        print("HARDWARE: starting playback of song on hardware")
+        print("HARDWARE: Starting playback of song on hardware")
         asyncio.run(play_midi_file(filepath))
-        print("HARDWARE: finished playback of song on hardware")
+        print("HARDWARE: Finished playback of song on hardware")
 
 
 if __name__ == '__main__':
@@ -189,11 +211,10 @@ if __name__ == '__main__':
 
     # asyncio.run(test_every_note())
 
-
     # midi_filename = "midi/all_notes.mid"
-    midi_filename = "midi/take5.mid"
-    midi_filename = "midi/Wii Channels - Mii Channel.mid"
-    midi_filename = "midi/The Entertainer.mid"
+    # midi_filename = "midi/take5.mid"
+    # midi_filename = "midi/Wii Channels - Mii Channel.mid"
+    # midi_filename = "midi/The Entertainer.mid"
     midi_filename = "midi/graze_the_roof.mid"
 
     asyncio.run(play_midi_file(midi_filename))

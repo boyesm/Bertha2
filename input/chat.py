@@ -20,7 +20,7 @@ def chat_process(link_q):
     sock.send(f"NICK {nickname}\n".encode("utf-8"))
     sock.send(f"JOIN {channel}\n".encode("utf-8"))
 
-    print("CHAT: Ready and waiting for twitch commands...")
+    print("CHAT: Ready and waiting for twitch commands in [" + channel + "]...")
 
     while True:
         try:
