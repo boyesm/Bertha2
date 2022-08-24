@@ -75,13 +75,11 @@ def load_queue(queue_name):
 if __name__ == '__main__':
 
     print("START: Initializing Bertha2...")
-
     create_dirs(dirs)
 
     # Set signal handling of SIGINT to ignore mode.
     default_handler = signal.getsignal(signal.SIGINT)
     signal.signal(signal.SIGINT, signal.SIG_IGN)
-
 
 
     link_q = load_queue("link_q")  # we need a queue for youtube links
@@ -92,11 +90,10 @@ if __name__ == '__main__':
     sigint_e = Event()
     # TODO: if processes crash, restart them automatically
     input_p = Process(target=chat_process, args=(link_q,))
-    input_p = Process(target=cli_process, args=(link_q,))
+    # input_p = Process(target=cli_process, args=(link_q,))
     converter_p = Process(target=converter_process, args=(sigint_e,link_q, play_q,video_name_q))
     hardware_p = Process(target=hardware_process, args=(sigint_e,play_q,video_name_q,))  # TODO: this might need to be changed to the livestream process, which can in-turn call hardware and play video
     video_name_p = Process(target=video_name_process, args=(video_name_q,video_name_list,))
-
 
     input_p.daemon = True
     converter_p.daemon = True
@@ -114,13 +111,15 @@ if __name__ == '__main__':
 
     try:
         signal.pause()
+        print("HERE3")
     except KeyboardInterrupt:
         print("START: Shutting down gracefully...")
-        input_p.join()
+        # input_p.join()
         sigint_e.set()
         converter_p.join()
         hardware_p.join()
-        video_name_p.join()
+        print("HERE4")
+        # video_name_p.join()
     except Exception as e:
         print(f"START: Error has occurred. {e}")
     finally:

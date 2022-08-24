@@ -1,4 +1,5 @@
 import asyncio
+import time
 from pprint import pprint
 
 import wget
@@ -130,17 +131,19 @@ def video_to_midi(youtube_url):
     return filepath, video_name
 
 
-def converter_process(link_q, play_q, video_name_q):
-    while True:
-        # TODO: add some error checking here so that if it fails, something doesn't get incorrectly added to the q
+def converter_process(sigint_e,link_q, play_q, video_name_q):
+    print("CONVERTER: Converter process has been started.")
+    while not sigint_e.is_set():
         link = link_q.get()
         print("CONVERTER: starting to convert YT link to MIDI")
-        # TODO Make video_to_midi() return video_name
         filepath, video_name = video_to_midi(link)
+        # time.sleep(10)
         print("CONVERTER: completed the conversion of YT link to MIDI")
-        play_q.put(filepath)
+        # play_q.put(filepath)
+        play_q.put("test")
         video_name_q.put(video_name)
-
+    else:
+        print("CONVERTER: Converter process has been shut down.")
 
 # TODO: test longer videos and see how they work
 # yt_links = [
