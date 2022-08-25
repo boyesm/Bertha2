@@ -127,8 +127,8 @@ def power_draw_function(velocity, time_passed):
 
     a = 250
     b = 1.05
-    c = 90
-    d = 100
+    c = 90 + 8.75
+    d = 25
     e = 10
 
     pwm_at_t = (b ** (c + (velocity / e) - (a * time_passed))) + d
