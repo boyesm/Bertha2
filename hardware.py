@@ -125,15 +125,16 @@ def power_draw_function(velocity, time_passed):
     # create a function that will determine the power emitted at different points in time
     # max output value should be 255?
 
-    a = 250
+    a = 100
     b = 1.05
-    c = 90 + 8.75
-    d = 25
+    c = 100
+    d = 30
     e = 10
 
     pwm_at_t = (b ** (c + (velocity / e) - (a * time_passed))) + d
     ## y=1.05^{\left(90+\frac{t}{10}-250x\right)}+100
 
+    print(f"PWM: {pwm_at_t}")
     return pwm_at_t
 
 
@@ -156,7 +157,7 @@ async def trigger_note(note, init_note_delay=0, velocity=255, hold_note_time=1):
             y = power_draw_function(velocity, passed_time)
             update_solenoid_value(note, y)
 
-        await asyncio.sleep(0.1)
+        await asyncio.sleep(0.01)
 
 
 async def play_midi_file(midi_filename):
@@ -203,6 +204,7 @@ async def play_midi_file(midi_filename):
 
     # gather tasks and run
     await asyncio.gather(*tasks)
+    await asyncio.sleep(30)
 
 def hardware_process(sigint_e, done_conn, play_q, title_q):
     while not sigint_e.is_set():
@@ -235,10 +237,19 @@ if __name__ == '__main__':
     # midi_filename = "midi/all_notes.mid"
     # midi_filename = "midi/take5.mid"
     # midi_filename = "midi/Wii Channels - Mii Channel.mid"
-    # midi_filename = "midi/The Entertainer.mid"
+    midi_filename = "midi/The Entertainer.mid"
     # midi_filename = "midi/graze_the_roof.mid"
     # midi_filename = "files/midi/mJdeFEog-YQ.midi"
 
-    # asyncio.run(play_midi_file(midi_filename))
+    asyncio.run(play_midi_file(midi_filename))
+    asyncio.run(play_midi_file(midi_filename))
+    asyncio.run(play_midi_file(midi_filename))
+    asyncio.run(play_midi_file(midi_filename))
+    asyncio.run(play_midi_file(midi_filename))
+    asyncio.run(play_midi_file(midi_filename))
+    asyncio.run(play_midi_file(midi_filename))
+    asyncio.run(play_midi_file(midi_filename))
+    asyncio.run(play_midi_file(midi_filename))
+
 
 
