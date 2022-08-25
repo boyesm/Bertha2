@@ -77,15 +77,20 @@ async def test_every_note(hold_note_time=0.25):
     await asyncio.gather(*tasks)
 
 
-def test_every_note_at_once(note_hold_time=2):
-    for repeat in range(20):
-        print("I'm doing it!")
-        for i in range(number_of_notes):
-            update_solenoid_value(i, 255)
-        time.sleep(note_hold_time)
-        for i in range(number_of_notes):
-            update_solenoid_value(i,  0)
-        time.sleep(note_hold_time)
+async def test_every_note_at_once(hold_note_time=10, number_of_notes=5):
+    tasks = []
+    input_time = 0.0
+
+    for note in range(number_of_notes):
+        tasks.append(trigger_note(note, input_time, 127, hold_note_time))
+    # input_time+=(hold_note_time*2)
+
+    await asyncio.gather(*tasks)
+
+
+def turn_on_some_notes():
+    for note in range(20):
+        update_solenoid_value(note, 254)
 
 
 def update_solenoid_value(note_address, pwm_value):
@@ -223,15 +228,17 @@ if __name__ == '__main__':
     print("HARDWARE: Running some tests.")
 
     # asyncio.run(test_every_note())
-    # test_every_note_at_once()
+    # asyncio.run(test_every_note_at_once())
+
+    # turn_on_some_notes()  # NOTE: Don't run this with power enabled
 
     # midi_filename = "midi/all_notes.mid"
     # midi_filename = "midi/take5.mid"
     # midi_filename = "midi/Wii Channels - Mii Channel.mid"
-    midi_filename = "midi/The Entertainer.mid"
+    # midi_filename = "midi/The Entertainer.mid"
     # midi_filename = "midi/graze_the_roof.mid"
     # midi_filename = "files/midi/mJdeFEog-YQ.midi"
 
-    asyncio.run(play_midi_file(midi_filename))
+    # asyncio.run(play_midi_file(midi_filename))
 
 
