@@ -3,9 +3,11 @@ import time
 import asyncio
 import simpleobsws
 from pprint import *
+from os import getcwd
 
 # An example list of songs to show on the screen.
 songs = ['Sexy frog',
+         'Sexy frog',
          'Crazy frog',
          'Happy frog',
          'Yolo beans',
@@ -42,8 +44,6 @@ async def update_obs_obj_args(change_args):
     await ws.wait_until_identified()  # Wait for the identification handshake to complete
 
 
-
-
     # request = simpleobsws.Request('GetSceneItemId', get_item_arguments)
     # ret = await ws.call(request) # Perform the request
     # # pprint(ret)
@@ -54,12 +54,14 @@ async def update_obs_obj_args(change_args):
     # The type of the input is "text_ft2_source_v2"
     request = simpleobsws.Request('SetInputSettings', change_args)
     ret = await ws.call(request)  # Perform the request
-    pprint(ret)
+    # pprint(ret)
 
+    '''
     if ret.ok():  # Check if the request succeeded
         print(f"Request succeeded! Response data: {ret.responseData}")
     else:
         print("There was an error setting the text in OBS")
+    '''
 
     await ws.disconnect()  # Disconnect from the websocket server cleanly
 
@@ -95,27 +97,22 @@ def change_text_obj_value(text_obj_id, text_obj_value:str):
         }
     }
 
-    loop = asyncio.get_event_loop()
+    loop = asyncio.get_event_loop()  # NOTE: Async function must be called like this.
     loop.run_until_complete(update_obs_obj_args(change_arguments))
 
 
-async def change_video_source(media_name, media_filepath:str):
-    """
-    Changes the text of a Text object on the screen.
-    :param media_name: The name of the Media object to change.
-    :param media_filepath: The full filepath for the video that is going to be shown
-    :return:
-    """
+def change_video_source(media_obj_id, media_filepath:str):
 
     get_item_arguments = {
         'sceneName':SCENE_NAME,
-        'sourceName':media_name,
+        'sourceName':media_obj_id,
     }
 
     # Use this as a reference for the different options available:
     #     https://github.com/Elektordi/obs-websocket-py/blob/e92960a475d3f1096a4ea41763cbc776b23f0a37/obswebsocket/requests.py#L1480
+
     change_arguments = {
-        'inputName':'Video',
+        'inputName':media_obj_id,
         'inputSettings':{
             'local_file':media_filepath,
             'width':VIDEO_WIDTH,
@@ -123,7 +120,7 @@ async def change_video_source(media_name, media_filepath:str):
         }
     }
 
-    loop = asyncio.get_event_loop()
+    loop = asyncio.get_event_loop()  # NOTE: Async function must be called like this.
     loop.run_until_complete(update_obs_obj_args(change_arguments))
 
 
@@ -149,31 +146,50 @@ def update_playing_next(playing_next_list:list):
     change_text_obj_value('queue', input_string)
 
 
-def visuals_process(conn, video_name_q):
+def visuals_process(conn, done_conn, video_name_q):
     # this process should control visuals.
-    video_name_list = []
+    video_name_list = []  # TODO: merge this into l
+    l = []
 
     while True:
 
-        o = conn.recv()  # receive input from hardware on when to update
+        # this receives all the latest processed data
+        while conn.poll():
+            o = conn.recv()  # receive input from hardware on when to update
+            video_name_list.append(o['title'])
+            l.append(o)
 
-        print(f"VISUALS: Received object from hardware process {o}")
-
-        # when input is received:
-            # play next video
-        # add that here
-            # update play next
-        video_name_list.append(o['title'])
+        # TODO: only refresh when l has changed
+        # print("VISUALS: Refreshing visuals.")
+        # we always want to update the queue:
         update_playing_next(video_name_list)
-            # update currently playing
-        change_text_obj_value("current_song", f"Current Song: {video_name_list[0]}")
+        # we should always update the current song as well. just make sure video name list[0] is removed when the song is over
+        if l != []:
+            print(l[0])
+            change_text_obj_value("current_song", f"Current Song: {l[0]['title']}")
+            change_video_source("playing_video", l[0]["filepath"])
+        else:
+            change_text_obj_value("current_song", f"Current Song: not playing")
+            change_video_source("playing_video", "")
+        # all of this ^^ should happen at the same time this \/\/ is happening.
+
+        if len(l) > 0:
+            done_conn.recv() # this will be received once the hardware is done playing the video
+            print("VISUALS: Done playing file.")
+            l.pop(0) # remove the video that has just been played
+            video_name_list.pop(0)
+
+        time.sleep(0.5)
 
 
 
 if __name__ == "__main__":
-    change_text_obj_value("this_is_my_id", "this is some ttext")
-
+    # these are just some tests
     update_playing_next(songs)
+
+    media_filepath = f"{getcwd()}/files/video/_I5pKnI-WJc.mp4"
+    change_video_source("playing_video", media_filepath)
+
 
 
 

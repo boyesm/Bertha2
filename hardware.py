@@ -190,23 +190,25 @@ async def play_midi_file(midi_filename):
     # gather tasks and run
     await asyncio.gather(*tasks)
 
-def hardware_process(sigint_e, conn, play_q, title_q):
-    while not sigint_e.is_set():
+def hardware_process(sigint_e, done_conn, play_q, title_q):
+    while not sigint_e.is_set():  # TODO: fix the edge case where this won't end unless there is something in the queue
+        try:
+            # title = title_q.get()
+            filepath = play_q.get(timeout=10)
 
+            print("HARDWARE: Starting playback of song on hardware")
 
+            time.sleep(10)
+            # asyncio.run(play_midi_file(filepath))
+            done_conn.send("done")
+            print("HARDWARE: Finished playback of song on hardware")
 
-        # TODO: send a signal to visuals_process to play the next song
-            # this process can send the other process the filepath and title of the video
-            # maybe this should just be one queue because the queues could maybe get out of sync
+            #  should we just move visuals here?
+        except:
+            pass
+    else:
+        print("HARDWARE: Hardware process has been shut down.")
 
-        title = title_q.get()
-        filepath = play_q.get()
-
-        print("HARDWARE: Starting playback of song on hardware")
-        conn.send({"title": title, "filepath": filepath})
-        time.sleep(10)
-        # asyncio.run(play_midi_file(filepath))
-        print("HARDWARE: Finished playback of song on hardware")
 
 
 if __name__ == '__main__':

@@ -79,20 +79,23 @@ if __name__ == '__main__':
     default_handler = signal.getsignal(signal.SIGINT)
     signal.signal(signal.SIGINT, signal.SIG_IGN)
 
+    # TODO: refactor this so that we have a shared state among all the processes instead of weird queue and pipe systems.
+
     link_q = load_queue("link_q")  # we need a queue for youtube links
     play_q = load_queue("play_q")  # this is the queue of ready to play videos
     title_q = Queue() # queue of video names for obs to display
     video_name_list = []  # The list is only 10 items long  # TODO: this doesn't need to be created here (it doesn't seem like it anyway). it should just be created in livestream.py
 
     parent_conn, child_conn = Pipe()
+    p1_conn, c1_conn = Pipe()
 
     sigint_e = Event()
     # TODO: if processes crash, restart them automatically
     input_p = Process(target=chat_process, args=(link_q,))
     # input_p = Process(target=cli_process, args=(link_q,))
-    converter_p = Process(target=converter_process, args=(sigint_e,link_q,play_q,title_q))
-    hardware_p = Process(target=hardware_process, args=(sigint_e,child_conn, play_q,title_q,))  # TODO: this might need to be changed to the livestream process, which can in-turn call hardware and play video
-    visuals_p = Process(target=visuals_process, args=(parent_conn,title_q,))
+    converter_p = Process(target=converter_process, args=(sigint_e,child_conn, link_q,play_q,title_q))
+    hardware_p = Process(target=hardware_process, args=(sigint_e,c1_conn,play_q,title_q,))  # TODO: this might need to be changed to the livestream process, which can in-turn call hardware and play video
+    visuals_p = Process(target=visuals_process, args=(parent_conn,p1_conn,title_q,))
 
     input_p.daemon = True
     converter_p.daemon = True
@@ -112,11 +115,9 @@ if __name__ == '__main__':
         signal.pause()
     except KeyboardInterrupt:
         print("START: Shutting down gracefully...")
-        # input_p.join()
         sigint_e.set()
         converter_p.join()
         hardware_p.join()
-        # video_name_p.join()
     except Exception as e:
         print(f"START: Error has occurred. {e}")
     finally:
