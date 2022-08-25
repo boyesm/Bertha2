@@ -14,6 +14,16 @@ songs = ['Sexy frog',
          '2203455',
          'video',
          '',
+         'Epic finger dance (Must watch!)',
+         'Goodnight moon',
+         '2203455',
+         'video',
+         '',
+         'Epic finger dance (Must watch!)',
+         'Goodnight moon',
+         '2203455',
+         'video',
+         '',
          ]
 
 # TODO: Could these be added to settings?
@@ -78,16 +88,14 @@ def change_text_obj_value(text_obj_id, text_obj_value:str):
         'inputName': text_obj_id,
         'inputSettings': {
             'text': text_obj_value,
-            'font': {
-                'face': 'Helvetica',
-                'size': '128',
-            }
+            # 'font': {
+            #     'face': 'Helvetica',
+            #     'size': '128',
+            # }
         }
     }
 
-    # asyncio.run(update_obs_obj_args(change_arguments))
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
+    loop = asyncio.get_event_loop()
     loop.run_until_complete(update_obs_obj_args(change_arguments))
 
 
@@ -115,28 +123,30 @@ async def change_video_source(media_name, media_filepath:str):
         }
     }
 
-    asyncio.run(update_obs_obj_args(change_arguments))
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(update_obs_obj_args(change_arguments))
 
 
-def shorten_title(title):
+def shorten_title(title:str):
     if len(title) > MAX_VIDEO_TITLE_LENGTH_QUEUE:
         title = title[0:(MAX_VIDEO_TITLE_LENGTH_QUEUE - 3)] + "..."
 
     return title
 
 
-def update_playing_next(playing_next_object):
+def update_playing_next(playing_next_list:list):
 
     # what does this do?: This function takes a list of the names of videos playing next and updates the next playing visual on the screen
-    input_string = 'Videos playing next: \n'
+    input_string = 'Next Up:\n'
 
     # TODO: remove the first item of the array, that's the currently playing video. ([1:])
     # TODO: only display the first 10 items.
 
-    for video_title, index in enumerate(playing_next_object):
-        input_string += f"{str(index)}. {shorten_title(video_title)}\n"
+    for index, video_title in enumerate(playing_next_list):
+        if index < 10:
+            input_string += f"{str(index+1)}. {shorten_title(video_title)}\n"
 
-    change_text_obj_value('Queue', input_string)
+    change_text_obj_value('queue', input_string)
 
 
 def visuals_process(conn, video_name_q):
@@ -156,14 +166,14 @@ def visuals_process(conn, video_name_q):
         video_name_list.append(o['title'])
         update_playing_next(video_name_list)
             # update currently playing
-        change_text_obj_value('Current Song: ', video_name_list[0])
+        change_text_obj_value("current_song", f"Current Song: {video_name_list[0]}")
 
 
 
 if __name__ == "__main__":
-    change_text_obj_value("this_is_my_id", "this is some text")
+    change_text_obj_value("this_is_my_id", "this is some ttext")
 
-
+    update_playing_next(songs)
 
 
 

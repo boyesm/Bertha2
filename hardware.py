@@ -19,8 +19,6 @@ import struct
 import time
 
 
-import livestream
-
 starting_note = 48
 number_of_notes = 48
 

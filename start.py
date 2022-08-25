@@ -92,7 +92,7 @@ if __name__ == '__main__':
     # input_p = Process(target=cli_process, args=(link_q,))
     converter_p = Process(target=converter_process, args=(sigint_e,link_q,play_q,title_q))
     hardware_p = Process(target=hardware_process, args=(sigint_e,child_conn, play_q,title_q,))  # TODO: this might need to be changed to the livestream process, which can in-turn call hardware and play video
-    visuals_p = Process(target=visuals_process, args=(parent_conn,))
+    visuals_p = Process(target=visuals_process, args=(parent_conn,title_q,))
 
     input_p.daemon = True
     converter_p.daemon = True
