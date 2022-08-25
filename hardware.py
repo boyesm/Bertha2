@@ -22,22 +22,6 @@ import time
 starting_note = 48
 number_of_notes = 48
 
-arduino_connection = serial.Serial()
-# try:
-#     arduino_connection.port='/dev/cu.usbmodem1101'  # TODO: add port config in settings.py
-# except:
-#     arduino_connection.port='/dev/cu.usbmodem101'  # TODO: add port config in settings.py
-
-# /dev/cu.usbserial-110
-# arduino_connection.port = "/dev/cu.usbserial-110"
-arduino_connection.port = "/dev/cu.usbserial-10"
-# arduino_connection.port = "/dev/cu.usbserial-1120"
-# arduino_connection.port='/dev/cu.usbmodem1101'  # TODO: add port config in settings.py
-arduino_connection.baudrate=115200
-arduino_connection.timeout=0.1
-arduino_connection.open()
-
-'''
 arduino_connection = None
     # Find the usb port that has something plugged in to use from /dev/ (only works with unix)
     # port can be found via the command: ls /dev/
@@ -62,7 +46,6 @@ try:
 except:
     print("HARDWARE: Unable to connect to Arduino. Is it plugged in?")
     # TODO: should we end the program here? or keep searching for an arduino to be connected?
-'''
 
 def turn_off_all():
     for note in range(number_of_notes):
