@@ -198,8 +198,8 @@ def hardware_process(sigint_e, done_conn, play_q, title_q):
 
             print("HARDWARE: Starting playback of song on hardware")
 
-            time.sleep(10)
-            # asyncio.run(play_midi_file(filepath))
+            # time.sleep(10)
+            asyncio.run(play_midi_file(filepath))
             done_conn.send("done")
             print("HARDWARE: Finished playback of song on hardware")
 

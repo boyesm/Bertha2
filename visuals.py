@@ -166,10 +166,10 @@ def visuals_process(conn, done_conn, video_name_q):
         # we should always update the current song as well. just make sure video name list[0] is removed when the song is over
         if l != []:
             print(l[0])
-            change_text_obj_value("current_song", f"Current Song: {l[0]['title']}")
+            change_text_obj_value("current_song", f"Current Video: {l[0]['title']}")
             change_video_source("playing_video", l[0]["filepath"])
         else:
-            change_text_obj_value("current_song", f"Current Song: not playing")
+            change_text_obj_value("current_song", f"Current Video: not playing")
             change_video_source("playing_video", "")
         # all of this ^^ should happen at the same time this \/\/ is happening.
 
