@@ -90,12 +90,12 @@ def update_solenoid_value(note_address, pwm_value):
 
     # if a note is up to an octave below what is available to be played, shift it up an octave
     if (note_address < 0+1):
-        print(f"HARDWARE: too low! for now... {note_address}")
+        # print(f"HARDWARE: too low! for now... {note_address}")
         note_address+=24
 
     # if a note is up to an octave below what is available to be played, shift it up an octave
     if (note_address > number_of_notes+1):
-        print(f"HARDWARE: too high! for now... {note_address}")
+        # print(f"HARDWARE: too high! for now... {note_address}")
         note_address -= 24
 
     # this will ensure only valid notes are toggled, preventing memory address not found errors
@@ -155,7 +155,6 @@ async def play_midi_file(midi_filename):
     mid = mido.MidiFile(midi_filename)
     ticks_per_beat = mid.ticks_per_beat
     tempo = 500000 # this is the default MIDI tempo
-    # tempo = 350000
     temp_lengs = {}
 
     for msg in mido.merge_tracks(mid.tracks):
@@ -170,12 +169,12 @@ async def play_midi_file(midi_filename):
         else:
             if msg.type == 'note_on':
                 note = msg.note - starting_note
-                print(f'note_on {note} {msg.velocity} {input_time}')
+                # print(f'note_on {note} {msg.velocity} {input_time}')
                 temp_lengs.update({note: {"velocity": msg.velocity, "init_note_delay": input_time}})
 
             elif msg.type == 'note_off':
                 note = msg.note - starting_note
-                print(f'note_off {note}')
+                # print(f'note_off {note}')
                 # print(temp_lengs)
 
                 ## TODO: error checks
@@ -191,14 +190,12 @@ async def play_midi_file(midi_filename):
     await asyncio.gather(*tasks)
 
 def hardware_process(sigint_e, done_conn, play_q, title_q):
-    while not sigint_e.is_set():  # TODO: fix the edge case where this won't end unless there is something in the queue
+    while not sigint_e.is_set():
         try:
             # title = title_q.get()
             filepath = play_q.get(timeout=10)
 
             print("HARDWARE: Starting playback of song on hardware")
-
-            # time.sleep(10)
             asyncio.run(play_midi_file(filepath))
             done_conn.send("done")
             print("HARDWARE: Finished playback of song on hardware")
@@ -221,7 +218,8 @@ if __name__ == '__main__':
     # midi_filename = "midi/take5.mid"
     # midi_filename = "midi/Wii Channels - Mii Channel.mid"
     # midi_filename = "midi/The Entertainer.mid"
-    midi_filename = "midi/graze_the_roof.mid"
+    # midi_filename = "midi/graze_the_roof.mid"
+    midi_filename = "files/midi/mJdeFEog-YQ.midi"
 
     asyncio.run(play_midi_file(midi_filename))
 

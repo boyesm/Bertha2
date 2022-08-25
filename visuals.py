@@ -123,6 +123,19 @@ def change_video_source(media_obj_id, media_filepath:str):
     loop = asyncio.get_event_loop()  # NOTE: Async function must be called like this.
     loop.run_until_complete(update_obs_obj_args(change_arguments))
 
+def process_title(title:str):
+    new_title = filter_cuss_words(title)
+    new_title = shorten_title(title)
+    return new_title
+
+
+def filter_cuss_words(title:str):
+    new_title = title
+    cuss_words = ["nigga", "nigger", "cunt", "fuck", "shit", "cracker", "incel", "virgin", "simp"] # TODO: add some more banned twitch words here
+    for word in cuss_words:
+        new_title = new_title.replace(word, "****")
+    return new_title
+
 
 def shorten_title(title:str):
     if len(title) > MAX_VIDEO_TITLE_LENGTH_QUEUE:
@@ -139,9 +152,16 @@ def update_playing_next(playing_next_list:list):
     # TODO: remove the first item of the array, that's the currently playing video. ([1:])
     # TODO: only display the first 10 items.
 
+    max_items = 5
+
+    # TODO: **** out bad words
+
     for index, video_title in enumerate(playing_next_list):
-        if index < 10:
-            input_string += f"{str(index+1)}. {shorten_title(video_title)}\n"
+        if (index < max_items) and (index > 0):
+            input_string += f"{str(index+1)}. {process_title(video_title)}\n"
+
+    if(len(playing_next_list) > max_items):
+        input_string += f"{len(playing_next_list) - max_items} more video(s) queued..."
 
     change_text_obj_value('queue', input_string)
 
@@ -189,9 +209,6 @@ if __name__ == "__main__":
 
     media_filepath = f"{getcwd()}/files/video/_I5pKnI-WJc.mp4"
     change_video_source("playing_video", media_filepath)
-
-
-
 
 
     # while True:
