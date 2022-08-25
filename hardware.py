@@ -22,6 +22,22 @@ import time
 starting_note = 48
 number_of_notes = 48
 
+arduino_connection = serial.Serial()
+# try:
+#     arduino_connection.port='/dev/cu.usbmodem1101'  # TODO: add port config in settings.py
+# except:
+#     arduino_connection.port='/dev/cu.usbmodem101'  # TODO: add port config in settings.py
+
+# /dev/cu.usbserial-110
+# arduino_connection.port = "/dev/cu.usbserial-110"
+arduino_connection.port = "/dev/cu.usbserial-10"
+# arduino_connection.port = "/dev/cu.usbserial-1120"
+# arduino_connection.port='/dev/cu.usbmodem1101'  # TODO: add port config in settings.py
+arduino_connection.baudrate=115200
+arduino_connection.timeout=0.1
+arduino_connection.open()
+
+'''
 arduino_connection = None
     # Find the usb port that has something plugged in to use from /dev/ (only works with unix)
     # port can be found via the command: ls /dev/
@@ -46,7 +62,7 @@ try:
 except:
     print("HARDWARE: Unable to connect to Arduino. Is it plugged in?")
     # TODO: should we end the program here? or keep searching for an arduino to be connected?
-
+'''
 
 def turn_off_all():
     for note in range(number_of_notes):
@@ -59,12 +75,12 @@ def turn_off_note(note):
     update_solenoid_value(note_address, 0)
 
 
-@atexit.register
-def shutdown():
-    # Run twice because sometimes some don't shut off
-    turn_off_all()
-    time.sleep(0.5)
-    turn_off_all()
+# @atexit.register
+# def shutdown():
+#     # Run twice because sometimes some don't shut off
+#     turn_off_all()
+#     time.sleep(0.5)
+#     turn_off_all()
 
 
 async def test_every_note(hold_note_time=0.25):
@@ -76,6 +92,17 @@ async def test_every_note(hold_note_time=0.25):
         input_time += hold_note_time
 
     await asyncio.gather(*tasks)
+
+
+def test_every_note_at_once(note_hold_time=2):
+    for repeat in range(20):
+        print("I'm doing it!")
+        for i in range(number_of_notes):
+            update_solenoid_value(i, 255)
+        time.sleep(note_hold_time)
+        for i in range(number_of_notes):
+            update_solenoid_value(i,  0)
+        time.sleep(note_hold_time)
 
 
 def update_solenoid_value(note_address, pwm_value):
@@ -90,18 +117,18 @@ def update_solenoid_value(note_address, pwm_value):
 
     # if a note is up to an octave below what is available to be played, shift it up an octave
     if (note_address < 0+1):
-        # print(f"HARDWARE: too low! for now... {note_address}")
+        print(f"HARDWARE: too low! for now... {note_address}")
         note_address+=24
 
     # if a note is up to an octave below what is available to be played, shift it up an octave
     if (note_address > number_of_notes+1):
-        # print(f"HARDWARE: too high! for now... {note_address}")
+        print(f"HARDWARE: too high! for now... {note_address}")
         note_address -= 24
 
     # this will ensure only valid notes are toggled, preventing memory address not found errors
     if (note_address < 0+1) or (note_address > number_of_notes+1) or (note_address >= 254): return
 
-    # print(f'{note_address}, {int(pwm_value)}')
+    print(f'{note_address}, {int(pwm_value)}')
     if arduino_connection != None:
         arduino_connection.write(struct.pack('>3B', int(note_address), int(pwm_value), int(255)))
 
@@ -169,12 +196,12 @@ async def play_midi_file(midi_filename):
         else:
             if msg.type == 'note_on':
                 note = msg.note - starting_note
-                # print(f'note_on {note} {msg.velocity} {input_time}')
+                print(f'note_on {note} {msg.velocity} {input_time}')
                 temp_lengs.update({note: {"velocity": msg.velocity, "init_note_delay": input_time}})
 
             elif msg.type == 'note_off':
                 note = msg.note - starting_note
-                # print(f'note_off {note}')
+                print(f'note_off {note}')
                 # print(temp_lengs)
 
                 ## TODO: error checks
@@ -184,7 +211,7 @@ async def play_midi_file(midi_filename):
                 velocity = temp_lengs[note]["velocity"]
                 hold_note_time = input_time - temp_lengs[note]["init_note_delay"]
 
-                tasks.append(trigger_note(note, int(init_note_delay), velocity, int(hold_note_time)))
+                tasks.append(trigger_note(note, init_note_delay, velocity, hold_note_time))
 
     # gather tasks and run
     await asyncio.gather(*tasks)
@@ -213,13 +240,15 @@ if __name__ == '__main__':
     print("HARDWARE: Running some tests.")
 
     # asyncio.run(test_every_note())
+    # test_every_note_at_once()
 
     # midi_filename = "midi/all_notes.mid"
     # midi_filename = "midi/take5.mid"
     # midi_filename = "midi/Wii Channels - Mii Channel.mid"
-    # midi_filename = "midi/The Entertainer.mid"
+    midi_filename = "midi/The Entertainer.mid"
     # midi_filename = "midi/graze_the_roof.mid"
-    midi_filename = "files/midi/mJdeFEog-YQ.midi"
+    # midi_filename = "files/midi/mJdeFEog-YQ.midi"
 
     asyncio.run(play_midi_file(midi_filename))
+
 

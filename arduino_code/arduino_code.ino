@@ -1,5 +1,6 @@
 #include "PCA9685.h"
 
+#define NUMBER_OF_CHANNELS 50
 #define I2C_FREQ 115200
 #define SERIAL_BAUDRATE 115200
 #define PWM_FREQ 1600
@@ -44,6 +45,11 @@ void setup() {
         pwmController3.setChannelPWM(i-32, 0);
     }
   }
+
+//  pwmController1.setChannelPWM(1, 254 << 4);
+//  change_channel_value(1, 254 << 4);
+//  delay(4000);
+//  change_channel_value(1, 0);
   
   
   while (!Serial) {
@@ -68,8 +74,34 @@ void read_end_byte(){
   return;
 }
 
+void change_channel_value(int channel, int value){
+  if(0 <= channel && channel < 16){
+      pwmController1.setChannelPWM(channel, value << 4);
+  } else if (16 <= channel && channel < 32){
+      pwmController2.setChannelPWM(channel-16, value << 4);
+  } else if (32 <= channel && channel < 48){
+      pwmController3.setChannelPWM(channel-32, value << 4);
+  }
+  return;
+}
+
+
+int on_for[NUMBER_OF_CHANNELS] = {}; // when each value was turned on last in ms. if off, value is 0
+int cur_time = 0;
 
 void loop() {
+
+  // get current time
+  // create array where each index corresponds with a pwm channel and the value is when the signal was turned on
+  cur_time = millis();
+  
+//  for(int i = 0; i < NUMBER_OF_CHANNELS; i++){
+//    if(on_for[i] == 0) continue;
+//    else if(cur_time - on_for[i] > 5000){  // if solenoid is on for more than 5 seconds
+//      change_channel_value(on_for[i], 0);
+//      
+//    }
+//  }
 
   if (Serial.available() > 0) {
 
@@ -89,14 +121,15 @@ void loop() {
     
     buff[0] -= 1;
     buff[1] -= 1;
+
+//    // change values of on_for here.
+//    if(buff[1] != 0){
+//      on_for[buff[0]] = cur_time;
+//    } else {
+//      on_for[buff[0]] = 0;
+//    }
     
-    if(0 <= buff[0] && buff[0] < 16){
-        pwmController1.setChannelPWM(buff[0], buff[1] << 4);
-    } else if (16 <= buff[0] && buff[0] < 32){
-        pwmController2.setChannelPWM(buff[0]-16, buff[1] << 4);
-    } else if (32 <= buff[0] && buff[0] < 48){
-        pwmController3.setChannelPWM(buff[0]-32, buff[1] << 4);
-    }
+    change_channel_value(buff[0], buff[1]);
   
   }
 }
