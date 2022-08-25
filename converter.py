@@ -133,17 +133,17 @@ def video_to_midi(youtube_url):
     return filepath, video_name
 
 
-def converter_process(sigint_e,link_q, play_q, video_name_q):
+def converter_process(sigint_e,link_q, play_q, title_q):
     print("CONVERTER: Converter process has been started.")
     while not sigint_e.is_set():
         link = link_q.get()
         print("CONVERTER: starting to convert YT link to MIDI")
-        filepath, video_name = video_to_midi(link)
+        filepath, video_title = video_to_midi(link)
         # time.sleep(10)
         print("CONVERTER: completed the conversion of YT link to MIDI")
         # play_q.put(filepath)
         play_q.put("test")
-        video_name_q.put(video_name)
+        title_q.put(video_title)
     else:
         print("CONVERTER: Converter process has been shut down.")
 

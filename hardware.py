@@ -192,16 +192,22 @@ async def play_midi_file(midi_filename):
     # gather tasks and run
     await asyncio.gather(*tasks)
 
-def hardware_process(sigint_e, play_q, video_name_q,):
+def hardware_process(sigint_e, conn, play_q, title_q):
     while not sigint_e.is_set():
-        current_video = video_name_q.get()
+
+
+
+        # TODO: send a signal to visuals_process to play the next song
+            # this process can send the other process the filepath and title of the video
+            # maybe this should just be one queue because the queues could maybe get out of sync
+
+        title = title_q.get()
         filepath = play_q.get()
 
-        livestream.change_text('Current Song', current_video)
-
-        # TODO: this needs to be in sync with video (video can be implemented later)
         print("HARDWARE: Starting playback of song on hardware")
-        asyncio.run(play_midi_file(filepath))
+        conn.send({"title": title, "filepath": filepath})
+        time.sleep(10)
+        # asyncio.run(play_midi_file(filepath))
         print("HARDWARE: Finished playback of song on hardware")
 
 

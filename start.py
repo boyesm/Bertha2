@@ -1,4 +1,4 @@
-from multiprocessing import Process, Queue, Event
+from multiprocessing import Process, Queue, Event, Pipe
 import os
 import time
 from pathlib import Path
@@ -11,7 +11,7 @@ from input.chat import chat_process
 from input.cli import cli_process
 from converter import converter_process
 from hardware import hardware_process
-from livestream import video_name_process
+from visuals import visuals_process
 
 os.environ['IMAGEIO_VAR_NAME'] = 'ffmpeg'
 
@@ -81,26 +81,28 @@ if __name__ == '__main__':
 
     link_q = load_queue("link_q")  # we need a queue for youtube links
     play_q = load_queue("play_q")  # this is the queue of ready to play videos
-    video_name_q = Queue() # queue of video names for obs to display
+    title_q = Queue() # queue of video names for obs to display
     video_name_list = []  # The list is only 10 items long  # TODO: this doesn't need to be created here (it doesn't seem like it anyway). it should just be created in livestream.py
+
+    parent_conn, child_conn = Pipe()
 
     sigint_e = Event()
     # TODO: if processes crash, restart them automatically
     input_p = Process(target=chat_process, args=(link_q,))
     # input_p = Process(target=cli_process, args=(link_q,))
-    converter_p = Process(target=converter_process, args=(sigint_e,link_q, play_q,video_name_q))
-    hardware_p = Process(target=hardware_process, args=(sigint_e,play_q,video_name_q,))  # TODO: this might need to be changed to the livestream process, which can in-turn call hardware and play video
-    video_name_p = Process(target=video_name_process, args=(video_name_q,video_name_list,))
+    converter_p = Process(target=converter_process, args=(sigint_e,link_q,play_q,title_q))
+    hardware_p = Process(target=hardware_process, args=(sigint_e,child_conn, play_q,title_q,))  # TODO: this might need to be changed to the livestream process, which can in-turn call hardware and play video
+    visuals_p = Process(target=visuals_process, args=(parent_conn,))
 
     input_p.daemon = True
     converter_p.daemon = True
     hardware_p.daemon = True
-    video_name_p.daemon = True
+    visuals_p.daemon = True
 
     input_p.start()
     converter_p.start()
     hardware_p.start()
-    video_name_p.start()
+    visuals_p.start()
 
     # Since we spawned all the necessary processes already,
     # restore default signal handling for the parent process.

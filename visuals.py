@@ -1,9 +1,5 @@
 import logging
-# logging.basicConfig(level=logging.DEBUG)
-
 import time
-
-logging.basicConfig()
 import asyncio
 import simpleobsws
 from pprint import *
@@ -36,6 +32,8 @@ async def update_obs_obj_args(change_args):
     await ws.wait_until_identified()  # Wait for the identification handshake to complete
 
 
+
+
     # request = simpleobsws.Request('GetSceneItemId', get_item_arguments)
     # ret = await ws.call(request) # Perform the request
     # # pprint(ret)
@@ -46,7 +44,7 @@ async def update_obs_obj_args(change_args):
     # The type of the input is "text_ft2_source_v2"
     request = simpleobsws.Request('SetInputSettings', change_args)
     ret = await ws.call(request)  # Perform the request
-    # pprint(ret)
+    pprint(ret)
 
     if ret.ok():  # Check if the request succeeded
         print(f"Request succeeded! Response data: {ret.responseData}")
@@ -87,7 +85,10 @@ def change_text_obj_value(text_obj_id, text_obj_value:str):
         }
     }
 
-    asyncio.run(update_obs_obj_args(change_arguments))
+    # asyncio.run(update_obs_obj_args(change_arguments))
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    loop.run_until_complete(update_obs_obj_args(change_arguments))
 
 
 async def change_video_source(media_name, media_filepath:str):
@@ -111,8 +112,6 @@ async def change_video_source(media_name, media_filepath:str):
             'local_file':media_filepath,
             'width':VIDEO_WIDTH,
             'height':VIDEO_HEIGHT,
-
-
         }
     }
 
@@ -125,29 +124,50 @@ def shorten_title(title):
 
     return title
 
+
 def update_playing_next(playing_next_object):
 
     # what does this do?: This function takes a list of the names of videos playing next and updates the next playing visual on the screen
-
     input_string = 'Videos playing next: \n'
 
-    for video_title, index in enumerate(playing_next_object):
+    # TODO: remove the first item of the array, that's the currently playing video. ([1:])
+    # TODO: only display the first 10 items.
 
+    for video_title, index in enumerate(playing_next_object):
         input_string += f"{str(index)}. {shorten_title(video_title)}\n"
 
     change_text_obj_value('Queue', input_string)
 
 
-def video_name_process(video_name_q, video_name_list:list):
+def visuals_process(conn, video_name_q):
+    # this process should control visuals.
+    video_name_list = []
+
     while True:
-        # we could just move this conditional to the update queue function. only display the first 10 items.
-        if len(video_name_list) < 10:  # TODO: this is an infinite loop with little pause. this could be better.
-            video_name_list.append(video_name_q.get())
-            update_playing_next(video_name_list[1:-1])
-        time.sleep(1)  # TODO: this is a bad temp fix
+
+        o = conn.recv()  # receive input from hardware on when to update
+
+        print(f"VISUALS: Received object from hardware process {o}")
+
+        # when input is received:
+            # play next video
+        # add that here
+            # update play next
+        video_name_list.append(o['title'])
+        update_playing_next(video_name_list)
+            # update currently playing
+        change_text_obj_value('Current Song: ', video_name_list[0])
 
 
-# if __name__ == "__main__":
+
+if __name__ == "__main__":
+    change_text_obj_value("this_is_my_id", "this is some text")
+
+
+
+
+
+
     # while True:
         # input_string = input("Enter some text")
 
