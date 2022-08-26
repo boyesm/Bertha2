@@ -1,5 +1,6 @@
 #include "PCA9685.h"
 
+#define NUMBER_OF_CHANNELS 50
 #define I2C_FREQ 115200
 #define SERIAL_BAUDRATE 115200
 #define PWM_FREQ 1600
@@ -15,6 +16,44 @@ byte temp[1];
 byte buff[3];  // position byte, value byte, buffer byte
 byte pos;
 byte val;
+
+
+// TODO: Make sure that cur_time can be handled as a super big number. It gets really big. long long int is 25 days of milliseconds. works just fine.
+
+long long int on_at[50] = {0}; // when each value was turned on last in ms. if off, value is 0
+long long int cur_time = 0;
+
+
+void read_serial_data(){
+  Serial.readBytes(temp, 1);
+  if (temp[0] == 0){
+    Serial.println("error");
+    read_serial_data();
+  }
+  return;
+}
+
+
+void read_end_byte(){
+  Serial.readBytes(temp, 1);
+  if (temp[0] != 255){
+    read_end_byte();
+  }
+  return;
+}
+
+
+void change_channel_value(int channel, int value){
+  if(0 <= channel && channel < 16){
+      pwmController1.setChannelPWM(channel, value << 4);
+  } else if (16 <= channel && channel < 32){
+      pwmController2.setChannelPWM(channel-16, value << 4);
+  } else if (32 <= channel && channel < 48){
+      pwmController3.setChannelPWM(channel-32, value << 4);
+  }
+  return;
+}
+
 
 void setup() {
 
@@ -35,68 +74,89 @@ void setup() {
   pwmController2.enableAllCallAddress(pwmControllerAll.getI2CAddress()); // On both
   pwmController3.enableAllCallAddress(pwmControllerAll.getI2CAddress()); // On both
 
+  // set all solenoids to 0
   for(int i = 0; i < 48; i++){
-    if(0 <= i && i < 16){
-        pwmController1.setChannelPWM(i, 0);
-    } else if (16 <= i && i < 32){
-        pwmController2.setChannelPWM(i-16, 0);
-    } else if (32 <= i && i < 48){
-        pwmController3.setChannelPWM(i-32, 0);
-    }
+    change_channel_value(i, 0);
   }
   
   
   while (!Serial) {
     ; // wait for serial port to connect. Needed for native USB
   }
+
+//  delay(5000);
+  
+
+//  Serial.println("on_at:");
+  for(int i = 0; i < NUMBER_OF_CHANNELS; i++){
+//    Serial.print(on_at[i]);
+//    Serial.print(", ");
+  }
 }
 
-void read_serial_data(){
-  Serial.readBytes(temp, 1);
-  if (temp[0] == 0){
-    Serial.println("error");
-    read_serial_data();
-  }
-  return;
-}
-
-void read_end_byte(){
-  Serial.readBytes(temp, 1);
-  if (temp[0] != 255){
-    read_end_byte();
-  }
-  return;
-}
 
 
 void loop() {
 
+  // get current time
+  // create array where each index corresponds with a pwm channel and the value is when the signal was turned on
+  cur_time = millis();
+
+  // this code will shut off any solenoids that have been on for too long.
+//  Serial.print("Solenoids have been on for: ");
+  for(int i = 0; i < NUMBER_OF_CHANNELS; i++){
+    if(on_at[i] == 0){
+//      Serial.print(on_at[i]);
+//      Serial.print(", ");
+    } else if (cur_time - on_at[i] > 1000) {  // if solenoid is on for more than (.)5 seconds
+//      Serial.println("ON FOR TOO LONG");
+      on_at[i] = 0;
+      change_channel_value(i, 0);
+//      Serial.print(on_at[i]);
+//      Serial.print(", "); 
+    } else {
+//      Serial.print(cur_time - on_at[i]);
+//      Serial.print(", ");
+    }
+  }
+//  Serial.println();
+  ////////
+
   if (Serial.available() > 0) {
 
+//    Serial.println("Reading serial data here!");
+
     read_serial_data();
-    buff[0] = temp[0];
+    buff[0] = temp[0];  // channel
     read_serial_data();
-    buff[1] = temp[0];
+    buff[1] = temp[0];  // value to set
     read_end_byte();
     buff[2] = temp[0];
 
-    Serial.print(buff[0]);
-    Serial.print(" ");
-    Serial.print(buff[1]);
-    Serial.print(" ");
-    Serial.print(buff[2]);
-    Serial.print('\n');
+//    Serial.print(buff[0]);
+//    Serial.print(" ");
+//    Serial.print(buff[1]);
+//    Serial.print(" ");
+//    Serial.print(buff[2]);
+//    Serial.print('\n');
     
     buff[0] -= 1;
     buff[1] -= 1;
-    
-    if(0 <= buff[0] && buff[0] < 16){
-        pwmController1.setChannelPWM(buff[0], buff[1] << 4);
-    } else if (16 <= buff[0] && buff[0] < 32){
-        pwmController2.setChannelPWM(buff[0]-16, buff[1] << 4);
-    } else if (32 <= buff[0] && buff[0] < 48){
-        pwmController3.setChannelPWM(buff[0]-32, buff[1] << 4);
+
+
+    // this code will set an array value for the time the solenoid turned on    
+    if(buff[1] != 0 && on_at[buff[0]] == 0){  // if setting to a non-zero value and ...
+//      Serial.print("Set " + String(buff[0]) + " to ");
+//      Serial.println(cur_time);
+      on_at[buff[0]] = cur_time;
+    } else {
+//      Serial.println("Set " + String(buff[0]) + " to zero.");
+      on_at[buff[0]] = 0;
     }
+    //////////
+    
+    
+    change_channel_value(buff[0], buff[1]);
   
   }
 }

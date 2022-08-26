@@ -47,7 +47,6 @@ except:
     print("HARDWARE: Unable to connect to Arduino. Is it plugged in?")
     # TODO: should we end the program here? or keep searching for an arduino to be connected?
 
-
 def turn_off_all():
     for note in range(number_of_notes):
         turn_off_note(note + starting_note)
@@ -59,12 +58,12 @@ def turn_off_note(note):
     update_solenoid_value(note_address, 0)
 
 
-@atexit.register
-def shutdown():
-    # Run twice because sometimes some don't shut off
-    turn_off_all()
-    time.sleep(0.5)
-    turn_off_all()
+# @atexit.register
+# def shutdown():
+#     # Run twice because sometimes some don't shut off
+#     turn_off_all()
+#     time.sleep(0.5)
+#     turn_off_all()
 
 
 async def test_every_note(hold_note_time=0.25):
@@ -76,6 +75,22 @@ async def test_every_note(hold_note_time=0.25):
         input_time += hold_note_time
 
     await asyncio.gather(*tasks)
+
+
+async def test_every_note_at_once(hold_note_time=10, number_of_notes=5):
+    tasks = []
+    input_time = 0.0
+
+    for note in range(number_of_notes):
+        tasks.append(trigger_note(note, input_time, 127, hold_note_time))
+    # input_time+=(hold_note_time*2)
+
+    await asyncio.gather(*tasks)
+
+
+def turn_on_some_notes():
+    for note in range(20):
+        update_solenoid_value(note, 254)
 
 
 def update_solenoid_value(note_address, pwm_value):
@@ -101,7 +116,7 @@ def update_solenoid_value(note_address, pwm_value):
     # this will ensure only valid notes are toggled, preventing memory address not found errors
     if (note_address < 0+1) or (note_address > number_of_notes+1) or (note_address >= 254): return
 
-    # print(f'{note_address}, {int(pwm_value)}')
+    print(f'{note_address}, {int(pwm_value)}')
     if arduino_connection != None:
         arduino_connection.write(struct.pack('>3B', int(note_address), int(pwm_value), int(255)))
 
@@ -112,8 +127,8 @@ def power_draw_function(velocity, time_passed):
 
     a = 250
     b = 1.05
-    c = 90
-    d = 100
+    c = 90 + 8.75
+    d = 25
     e = 10
 
     pwm_at_t = (b ** (c + (velocity / e) - (a * time_passed))) + d
@@ -155,7 +170,6 @@ async def play_midi_file(midi_filename):
     mid = mido.MidiFile(midi_filename)
     ticks_per_beat = mid.ticks_per_beat
     tempo = 500000 # this is the default MIDI tempo
-    # tempo = 350000
     temp_lengs = {}
 
     for msg in mido.merge_tracks(mid.tracks):
@@ -185,20 +199,18 @@ async def play_midi_file(midi_filename):
                 velocity = temp_lengs[note]["velocity"]
                 hold_note_time = input_time - temp_lengs[note]["init_note_delay"]
 
-                tasks.append(trigger_note(note, int(init_note_delay), velocity, int(hold_note_time)))
+                tasks.append(trigger_note(note, init_note_delay, velocity, hold_note_time))
 
     # gather tasks and run
     await asyncio.gather(*tasks)
 
 def hardware_process(sigint_e, done_conn, play_q, title_q):
-    while not sigint_e.is_set():  # TODO: fix the edge case where this won't end unless there is something in the queue
+    while not sigint_e.is_set():
         try:
             # title = title_q.get()
             filepath = play_q.get(timeout=10)
 
             print("HARDWARE: Starting playback of song on hardware")
-
-            # time.sleep(10)
             asyncio.run(play_midi_file(filepath))
             done_conn.send("done")
             print("HARDWARE: Finished playback of song on hardware")
@@ -216,12 +228,17 @@ if __name__ == '__main__':
     print("HARDWARE: Running some tests.")
 
     # asyncio.run(test_every_note())
+    # asyncio.run(test_every_note_at_once())
+
+    # turn_on_some_notes()  # NOTE: Don't run this with power enabled
 
     # midi_filename = "midi/all_notes.mid"
     # midi_filename = "midi/take5.mid"
     # midi_filename = "midi/Wii Channels - Mii Channel.mid"
     # midi_filename = "midi/The Entertainer.mid"
-    midi_filename = "midi/graze_the_roof.mid"
+    # midi_filename = "midi/graze_the_roof.mid"
+    # midi_filename = "files/midi/mJdeFEog-YQ.midi"
 
-    asyncio.run(play_midi_file(midi_filename))
+    # asyncio.run(play_midi_file(midi_filename))
+
 

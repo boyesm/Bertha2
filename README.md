@@ -9,3 +9,11 @@ Bertha2 is a livestreamed player piano that integrates with Twitch. Twitch viewe
 
 * Load firmware onto Arduino
 * Install FFmpeg
+
+
+
+
+# TODO
+* [done?] MIDI Files aren't playing long enough. They're playing too fast.
+* Next Up: has the currently playing video as 1.
+* When videos are over, current video still says it's playing the video that's done.

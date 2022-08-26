@@ -138,7 +138,7 @@ def converter_process(sigint_e,conn, link_q, play_q, title_q):
     print("CONVERTER: Converter process has been started.")
     while not sigint_e.is_set():
         try:
-            link = link_q.get(timeout=10)  # add a timeout to these. every 10 seconds, if nothing comes through, unblock and skip all code
+            link = link_q.get(timeout=10)
             print("CONVERTER: starting to convert YT link to MIDI")
             filepath, video_title = video_to_midi(link)
             # time.sleep(10)
