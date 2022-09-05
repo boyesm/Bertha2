@@ -8,3 +8,11 @@ Bertha2 is a livestreamed player piano that integrates with Twitch. Twitch viewe
 * when working on a new feature, create a new sub-branch of the appropriate component branch
 * run the appropriate tests before creating a pull request to merge your branch with the branch below it
 * when a component version in complete, create a PR to merge it with dev-branch. from there, integration with other components will be tested, then is will be merged with main.
+
+## Example videos
+[![Video](https://youtube.com/shorts/zee0DOZKW70?feature=share)](https://youtube.com/shorts/zee0DOZKW70?feature=share)
+
+[![Video](https://youtube.com/shorts/vYvGbFORp4I?feature=share)](https://youtube.com/shorts/vYvGbFORp4I?feature=share)
+
+[![Video](https://youtube.com/shorts/F5GEH_fH9CI?feature=share)](https://youtube.com/shorts/F5GEH_fH9CI?feature=share)
+
