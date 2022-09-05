@@ -10,9 +10,10 @@ Bertha2 is a livestreamed player piano that integrates with Twitch. Twitch viewe
 * when a component version in complete, create a PR to merge it with dev-branch. from there, integration with other components will be tested, then is will be merged with main.
 
 ## Example videos
+###Plants vs. Zombies:
 [![Video](https://i9.ytimg.com/vi/zee0DOZKW70/mqdefault.jpg?sqp=CLzY2JgG&rs=AOn4CLBLEUf_eMGk2UfpHVegbcczMtLt3w)](https://youtube.com/shorts/zee0DOZKW70?feature=share)
-
+###Take 5:
 [![Video](https://i9.ytimg.com/vi/vYvGbFORp4I/mqdefault.jpg?sqp=CLzY2JgG&rs=AOn4CLCWPTwMBLkz1__RQJVTjdCZS_Ziyg)](https://youtube.com/shorts/vYvGbFORp4I?feature=share)
-
+###The entertainer:
 [![Video](https://i9.ytimg.com/vi/F5GEH_fH9CI/mqdefault.jpg?sqp=CLzY2JgG&rs=AOn4CLBZwZ-SCxcLkY0vrv6uGxhPSHo0nQ)](https://youtube.com/shorts/F5GEH_fH9CI?feature=share)
 
