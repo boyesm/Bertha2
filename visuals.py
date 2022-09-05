@@ -96,10 +96,11 @@ def change_text_obj_value(text_obj_id, text_obj_value:str):
             # }
         }
     }
-
-    loop = asyncio.get_event_loop()  # NOTE: Async function must be called like this.
-    loop.run_until_complete(update_obs_obj_args(change_arguments))
-
+    try:
+        loop = asyncio.get_event_loop()  # NOTE: Async function must be called like this.
+        loop.run_until_complete(update_obs_obj_args(change_arguments))
+    except:
+        print("VISUALS: Unable to connect to OBS. Is it running right now?")
 
 def change_video_source(media_obj_id, media_filepath:str):
 

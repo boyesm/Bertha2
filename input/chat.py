@@ -47,6 +47,7 @@ class Bot(commands.Bot):
 
 def chat_process(link_q:multiprocessing.Queue):
 
+
     bot = Bot()
     bot.run()
 
