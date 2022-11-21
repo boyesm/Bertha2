@@ -1,3 +1,16 @@
+# Custom
+example.png
+.DS_Store
+files
+files.old
+test.py
+anothertest.py
+*.mp4
+*.mkv
+*.midi
+*.db
+
+
 # IDE
 .idea
 .code-workspace
@@ -130,5 +143,12 @@ venv.bak/
 .dmypy.json
 dmypy.json
 
+node_modules
 # Pyre type checker
 .pyre/
+
+secrets.env
+
+.DS_Store
+/midi/
+/saved_queues.json
