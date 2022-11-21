@@ -237,7 +237,7 @@ if __name__ == '__main__':
     # midi_filename = "midi/all_notes.mid"
     # midi_filename = "midi/take5.mid"
     # midi_filename = "midi/Wii Channels - Mii Channel.mid"
-    midi_filename = "midi/The Entertainer.mid"
+    midi_filename = "midi-files/The Entertainer.mid"
     # midi_filename = "midi/graze_the_roof.mid"
     # midi_filename = "files/midi/mJdeFEog-YQ.midi"
 

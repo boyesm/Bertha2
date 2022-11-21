@@ -150,5 +150,5 @@ node_modules
 secrets.env
 
 .DS_Store
-/midi/
+/midi-files/
 /saved_queues.json
