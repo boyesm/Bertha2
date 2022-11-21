@@ -18,6 +18,7 @@ load_dotenv()
 
 nickname = 'berthatwo'
 token = 'oauth:efnlrqvy824hqq4h5hczse0ekvms0e'
+client_id = 'oqjx4qhulp84kvlv32rwggu7q2z2tb'
 channel = '#berthatwo'  # the channel of which chat is being monitored
 # channel = "#lashieloo12"
 

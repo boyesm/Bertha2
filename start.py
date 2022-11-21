@@ -7,7 +7,7 @@ from settings import dirs, queue_save_file
 import signal
 import json
 
-from input.chat import chat_process
+from input.oldchat import chat_process
 from input.cli import cli_process
 from converter import converter_process
 from hardware import hardware_process

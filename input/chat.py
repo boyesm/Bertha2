@@ -1,67 +1,59 @@
-import socket
-import time
-from pytube import YouTube
-from settings import channel, nickname, token
+import multiprocessing
 from multiprocessing import Queue
+from pprint import pprint
+
+from settings import token, nickname, channel, client_id
 from input.valid_link import is_valid_youtube_video
+from twitchio.ext import commands
 
 
-def chat_process(link_q):
-    """
-    Reads through twitch chat and parses out commands
+class Bot(commands.Bot):
 
-    :param link_q: The Queue that the Youtube links from chat should be added to
-    :return:
-    """
-
-    sock = socket.socket()
-    sock.connect(("irc.chat.twitch.tv", 6667))
-    sock.send(f"PASS {token}\n".encode("utf-8"))
-    sock.send(f"NICK {nickname}\n".encode("utf-8"))
-    sock.send(f"JOIN {channel}\n".encode("utf-8"))
-
-    print(f"CHAT: Ready and waiting for twitch commands in [{channel}]...")
-
-    while True:
-        try:
-            resp = sock.recv(2048).decode("utf-8")
-
-            # this code ensures the IRC server knows the bot is still listening
-            if resp.startswith("PING"):
-                sock.send("PONG\n".encode("utf-8"))
+    def __init__(self):
+        # Initialise our Bot with our access token, prefix and a list of channels to join on boot...
+        super().__init__(token=token, prefix='!', initial_channels=[channel])
 
 
-            for temp in range(2):
-                resp = resp[resp.find(":")+1:]
+    async def event_ready(self):
+        # We are logged in and ready to chat and use commands...
+        print(f'Logged in as | {self.nick}')
+        print(f'User id is | {self.user_id}')
 
-            message = resp
+    @commands.command()
+    async def hello(self, ctx: commands.Context):
+        # Send a hello back!
+        await ctx.send(f'Hello {ctx.author.name}!')
 
-            if message[:1] == "!":
 
-                command = message.split(" ")[0]
-                command_arg = message.split(" ")[1]
+    @commands.command()
+    async def play(self, ctx: commands.Context):
 
-                if command == "!play":
+        command_arg = ctx.message.content
+        print(command_arg)
 
-                    print(message)
+        if is_valid_youtube_video(command_arg):
+            # Queue.put adds command_arg to the global Queue variable, not a local Queue.
+            # See multiprocessing.Queue for more info.
+            # TODO: we can add video_name_q.put() here instead. just use the youtube link that we have here and create a youtube object
 
-                    if is_valid_youtube_video(command_arg):
-                        # Queue.put adds command_arg to the global Queue variable, not a local Queue.
-                        # See multiprocessing.Queue for more info.
-                        # TODO: we can add video_name_q.put() here instead. just use the youtube link that we have here and create a youtube object
+            link_q.put(command_arg)
+            print(f"CHAT: the video follow video has been queued: {command_arg}")
 
-                        link_q.put(command_arg)
-                        print(f"CHAT: the video follow video has been queued: {command_arg}")
-                        # TODO: send a message to twitch chat that says this ^^
-                    else:
-                        print("CHAT: invalid youtube video")
-                        # TODO: send a message to twitch chat that says this ^^ 
+            await ctx.send(f"{ctx.author.name}  Added the video to the queue. Thanks!")
 
-        except Exception as e:
-            print(f"CHAT: Error{e}")
-            pass
+        else:
+            await ctx.send(f"{ctx.author.name} Sorry, we couldn't find this video. Please try another link")
+            # print("CHAT: invalid youtube video")
+
+def chat_process(link_q:multiprocessing.Queue):
+
+
+    bot = Bot()
+    bot.run()
+
 
 if __name__ == "__main__":
 
-    play_queue = Queue()
-    chat_process(play_queue)
+
+    link_q = Queue()
+    chat_process(link_q)
