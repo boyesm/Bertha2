@@ -9,6 +9,10 @@ anothertest.py
 *.mkv
 *.midi
 *.db
+secrets.env
+**/.DS_Store
+/midi-files/
+/saved_queues.json
 
 
 # IDE
@@ -146,9 +150,3 @@ dmypy.json
 node_modules
 # Pyre type checker
 .pyre/
-
-secrets.env
-
-.DS_Store
-/midi-files/
-/saved_queues.json
