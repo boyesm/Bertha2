@@ -1,12 +1,14 @@
 # Bertha2
 
 Bertha2 is a hardware device that uses linear actuators to play the piano. It's essentially an external player piano.
-Here's a video that shows the device in action:
+We're able to do this using a microcontroller, 50 linear solenoids, solenoid control boards (essentially 2 transistors)
+and a 500W power supply. Here's a video that shows the device in action:
 
 [![Bertha2 plays "The Entertainer"](http://img.youtube.com/vi/F5GEH_fH9CI/0.jpg)](https://www.youtube.com/shorts/F5GEH_fH9CI)
 
 On top of the hardware platform, we've built an integration with Twitch.tv. The idea is that we can livestream the device,
-and viewers can control what is being played.
+and viewers can control what is being played. Viewers submit links to YouTube videos via Twitch chat and the audio from the
+video is converted to a MIDI file which is then played on the piano.
 
 
 ## More Footage
