@@ -22,6 +22,11 @@ video is converted to a MIDI file which is then played on the piano.
 [![Video](http://img.youtube.com/vi/vYvGbFORp4I/0.jpg)](https://youtube.com/shorts/vYvGbFORp4I)
 
 
+## Etymology
+
+f"Bertha{n}" is the personal naming scheme for my projects, the first Bertha being a robot I built in high school.
+
+
 ## Configuring
 
 * Ensure the latest firmware is loaded onto the Arduino
