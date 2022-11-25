@@ -2,18 +2,25 @@ from multiprocessing import Process, Queue, Event, Pipe
 import os
 import time
 from pathlib import Path
+from argparse import ArgumentParser
 
 from settings import dirs, queue_save_file
 import signal
 import json
 
-from input.oldchat import chat_process
-from input.cli import cli_process
+from input.chat import chat_process
+# from input.cli import cli_process
 from converter import converter_process
 from hardware import hardware_process
+from tests.hardware import test_hardware_process
 from visuals import visuals_process
 
 os.environ['IMAGEIO_VAR_NAME'] = 'ffmpeg'
+
+# Initialize command line args
+parser = ArgumentParser(prog = 'Bertha2')
+parser.add_argument('--disable_hardware', action='store_true')  # checks if the `--disable_hardware` flag is used
+
 
 def create_dirs(dirs):
     for dir in dirs:
@@ -75,6 +82,9 @@ if __name__ == '__main__':
     print("START: Initializing Bertha2...")
     create_dirs(dirs)
 
+    # Parse command line args
+    args = parser.parse_args()
+
     # Set signal handling of SIGINT to ignore mode.
     default_handler = signal.getsignal(signal.SIGINT)
     signal.signal(signal.SIGINT, signal.SIG_IGN)
@@ -104,7 +114,10 @@ if __name__ == '__main__':
 
     input_p.start()
     converter_p.start()
-    hardware_p.start()
+    if not args.disable_hardware:
+        hardware_p.start()
+    else:
+        test_hardware_process.start()
     visuals_p.start()
 
     # Since we spawned all the necessary processes already,
