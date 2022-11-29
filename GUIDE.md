@@ -7,10 +7,23 @@
 
 * Install `requirements.txt`
 * Ensure FFmpeg is installed. Use `brew install ffmpeg` to install.
-* Ensure TKinter is installed. Use `brew install python-tk` to install.
 * Ensure `secrets.env` is present in the main directory. If it's not, create it and input the proper information.
-* Import OBS scenes
-* Open OBS
+* Get OBS working
+  * Install version 28.xx of OBS. This will be default include version 5+ of `obs-websockets`. Ensure version 1+ of `simpleobsws` is installed.
+    * A verified combination of working services is OBS v28.xx, `obs-websockets` v5.x, and `simpleobsws` v1.x
+  * Configure `obs-websockets`. Set server port to `4444` in the `obs-websocket` settings. There are some issues with the default port.
+  * Import OBS scenes from the `obs-media` directory
+  * Input the B2 stream key. This can be found in `secrets.env`.
+
+
+## Setting Up Test Environment
+
+* When testing without hardware, open new terminal and enter netcat command:
+    `nc -dkl 8001`
+* Open OBS, import presets
+* Start streaming with B2 creds
+* Run B2 software in test mode
+* Run `test_stream.py` script
 
 
 ## Secrets.env File

@@ -9,7 +9,6 @@ import os
 import asyncio
 import subprocess
 from pprint import pprint
-
 import mido
 import math
 import datetime
@@ -17,55 +16,22 @@ import atexit
 import serial
 import struct
 import time
+import socket  # TODO: This shouldn't be imported by default. But this isn't super important
 
 
+### GLOBAL VARIABLES ###
 starting_note = 48
 number_of_notes = 48
-
 arduino_connection = None
-    # Find the usb port that has something plugged in to use from /dev/ (only works with unix)
-    # port can be found via the command: ls /dev/
-    # port_to_use = os.popen("ls -a /dev/cu.usbserial*", ).read().split('\n')[0]
+sock = None
+TEST_FLAG = False  # TODO: This should be False by default
 
-try:
-    # TODO Why is this running multiple times? THis only gets imported by start.py once
-    potential_ports = subprocess.check_output(["ls -a /dev/cu.usbserial*"], shell=True,stderr=subprocess.DEVNULL).decode('ascii')
+# TODO: this shouldn't be defined when not in test mode
+last_cl_update = time.time()
+sock = None
+note_values = [0]*number_of_notes
 
-    print("HARDWARE: Setting serial up")
-    arduino_connection = serial.Serial()
-    # pprint(potential_ports)
-    port_to_use = potential_ports.split("\n")[0]
-    print("HARDWARE: Setting Arduino port to: " + port_to_use)
-    arduino_connection.port = port_to_use
-    print("HARDWARE: Setting Arduino baudrate and timeout:" + port_to_use)
-    arduino_connection.baudrate=115200
-    arduino_connection.timeout=0.1
-    print("HARDWARE: Connecting to arduino on port:" + port_to_use)
-    arduino_connection.open()
-
-except:
-    print("HARDWARE: Unable to connect to Arduino. Is it plugged in?")
-    # TODO: should we end the program here? or keep searching for an arduino to be connected?
-
-def turn_off_all():
-    for note in range(number_of_notes):
-        turn_off_note(note + starting_note)
-    print("HARDWARE: All solenoids should be off...")
-
-
-def turn_off_note(note):
-    note_address = note - starting_note
-    update_solenoid_value(note_address, 0)
-
-
-# @atexit.register
-# def shutdown():
-#     # Run twice because sometimes some don't shut off
-#     turn_off_all()
-#     time.sleep(0.5)
-#     turn_off_all()
-
-
+### TEST PATTERN FUNCTIONS ###
 async def test_every_note(hold_note_time=0.25):
     tasks = []
     input_time = 0.0
@@ -92,33 +58,115 @@ def turn_on_some_notes():
     for note in range(20):
         update_solenoid_value(note, 254)
 
+'''
+def turn_off_all():
+    for note in range(number_of_notes):
+        turn_off_note(note + starting_note)
+    print("HARDWARE: All solenoids should be off...")
 
+
+def turn_off_note(note):
+    note_address = note - starting_note
+    update_solenoid_value(note_address, 0)
+
+
+# @atexit.register
+# def shutdown():
+#     # Run twice because sometimes some don't shut off
+#     turn_off_all()
+#     time.sleep(0.5)
+#     turn_off_all()
+'''
+
+
+### TEST MODE FUNCTIONS ###
+def generate_hardware_vis(arr, min_val=0, max_val=255, bar_length=30):
+    # all elements of arr should be ints
+    # generates percentage bars that correspond with output voltage of solenoids
+    out_str = ""
+
+    for i, el in enumerate(arr):
+        per = el / max_val
+
+        hashes = '#' * int(round(per * bar_length))
+        spaces = ' ' * int(round((1 - per) * bar_length))
+        out_str += f"[{hashes + spaces}]"
+        if (i) % 2:
+            out_str+="\n"
+        else:
+            out_str+=(" " * 5)
+
+    return out_str
+
+
+def update_cl_vis(out_str):
+    # rate limiting
+    global last_cl_update
+    print(f"TIME SINCE LAST CALL: {time.time() - last_cl_update}")
+    if (time.time() - last_cl_update < 0.005): return
+
+    sock.send(b"\033[H")  # sketchy way of clearing the screen
+    sock.send(out_str.encode())
+
+    last_cl_update = time.time()
+
+
+### IMPORTANT MAIN FUNCTIONS ###
 def update_solenoid_value(note_address, pwm_value):
 
-    # ensure that note_address or pwm_value are always bewtween 1 and 255. 0 must be reserved for error codes in arduino (stupidest thing I ever heard).
-    note_address += 1
-    pwm_value += 1
+    if TEST_FLAG:  # when testing, output doesn't go to the actual hardware, it's just visualized on the command line
 
-    # this will ensure pwm_value does not exceed the bounds of 8-bit int
-    if pwm_value > 254: pwm_value = 254
-    if pwm_value < 1: pwm_value = 1
+        # this will ensure pwm_value does not exceed the bounds of 8-bit int
+        if pwm_value > 254: pwm_value = 254
+        if pwm_value < 0: pwm_value = 0
 
-    # if a note is up to an octave below what is available to be played, shift it up an octave
-    if (note_address < 0+1):
-        print(f"HARDWARE: too low! for now... {note_address}")
-        note_address+=24
+        # if a note is up to an octave below what is available to be played, shift it up an octave
+        if (note_address < 0):
+            print(f"HARDWARE: too low! for now... {note_address}")
+            note_address += 24
 
-    # if a note is up to an octave below what is available to be played, shift it up an octave
-    if (note_address > number_of_notes+1):
-        print(f"HARDWARE: too high! for now... {note_address}")
-        note_address -= 24
+        # if a note is up to an octave below what is available to be played, shift it up an octave
+        if (note_address > number_of_notes):
+            print(f"HARDWARE: too high! for now... {note_address}")
+            note_address -= 24
 
-    # this will ensure only valid notes are toggled, preventing memory address not found errors
-    if (note_address < 0+1) or (note_address > number_of_notes+1) or (note_address >= 254): return
 
-    print(f'{note_address}, {int(pwm_value)}')
-    if arduino_connection != None:
-        arduino_connection.write(struct.pack('>3B', int(note_address), int(pwm_value), int(255)))
+        # this will ensure only valid notes are toggled, preventing memory address not found errors
+        if (note_address < 0) or (note_address > number_of_notes - 1) or (note_address >= 255): return
+
+        note_values[note_address] = pwm_value
+
+        print(note_values)
+
+        o = generate_hardware_vis(note_values)
+        # this part of the code will send hardware outputs to an open netcat terminal
+        update_cl_vis(o)
+
+    else:
+        # ensure that note_address or pwm_value are always bewtween 1 and 255. 0 must be reserved for error codes in arduino (stupidest thing I ever heard).
+        note_address += 1
+        pwm_value += 1
+
+        # this will ensure pwm_value does not exceed the bounds of 8-bit int
+        if pwm_value > 254: pwm_value = 254
+        if pwm_value < 1: pwm_value = 1
+
+        # if a note is up to an octave below what is available to be played, shift it up an octave
+        if (note_address < 0+1):
+            # print(f"HARDWARE: too low! for now... {note_address}")
+            note_address+=24
+
+        # if a note is up to an octave below what is available to be played, shift it up an octave
+        if (note_address > number_of_notes+1):
+            # print(f"HARDWARE: too high! for now... {note_address}")
+            note_address -= 24
+
+        # this will ensure only valid notes are toggled, preventing memory address not found errors
+        if (note_address < 0+1) or (note_address > number_of_notes+1) or (note_address >= 254): return
+
+        print(f'{note_address}, {int(pwm_value)}')
+        if arduino_connection != None:
+            arduino_connection.write(struct.pack('>3B', int(note_address), int(pwm_value), int(255)))
 
 
 def power_draw_function(velocity, time_passed):
@@ -206,7 +254,52 @@ async def play_midi_file(midi_filename):
     await asyncio.gather(*tasks)
     await asyncio.sleep(30)
 
-def hardware_process(sigint_e, done_conn, play_q, title_q):
+def hardware_process(sigint_e, done_conn, play_q, title_q, TEST_FLAG_param):
+
+    global TEST_FLAG
+    TEST_FLAG = TEST_FLAG_param
+    if TEST_FLAG:
+        global sock
+
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+        try:
+            sock.connect(('127.0.0.1', 8001))
+        except:
+            print("HARDWARE: Socket connection refused. Run netcat with `nc -dkl 8001`.")
+            # TODO: program shouldn't exit. it should be paused here until this condition has been met
+
+
+    else:  # test mode is disabled
+        global arduino_connection
+
+        # Find the usb port that has something plugged in to use from /dev/ (only works with unix)
+        # port can be found via the command: ls /dev/
+        # port_to_use = os.popen("ls -a /dev/cu.usbserial*", ).read().split('\n')[0]
+
+        try:
+            # TODO Why is this running multiple times? THis only gets imported by start.py once
+            potential_ports = subprocess.check_output(["ls -a /dev/cu.usbserial*"], shell=True,
+                                                      stderr=subprocess.DEVNULL).decode('ascii')
+
+            print("HARDWARE: Setting serial up")
+            arduino_connection = serial.Serial()
+            # pprint(potential_ports)
+            port_to_use = potential_ports.split("\n")[0]
+            print("HARDWARE: Setting Arduino port to: " + port_to_use)
+            arduino_connection.port = port_to_use
+            print("HARDWARE: Setting Arduino baudrate and timeout:" + port_to_use)
+            arduino_connection.baudrate = 115200
+            arduino_connection.timeout = 0.1
+            print("HARDWARE: Connecting to arduino on port:" + port_to_use)
+            arduino_connection.open()
+
+        except:
+            print("HARDWARE: Unable to connect to Arduino. Is it plugged in?")
+            # TODO: should we end the program here? or keep searching for an arduino to be connected?
+            return
+
+
     while not sigint_e.is_set():
         try:
             # title = title_q.get()
@@ -234,22 +327,11 @@ if __name__ == '__main__':
 
     # turn_on_some_notes()  # NOTE: Don't run this with power enabled
 
-    # midi_filename = "midi/all_notes.mid"
+    midi_filename = "midi-files/all_notes.mid"
     # midi_filename = "midi/take5.mid"
     # midi_filename = "midi/Wii Channels - Mii Channel.mid"
-    midi_filename = "midi-files/The Entertainer.mid"
+    # midi_filename = "midi-files/The Entertainer.mid"
     # midi_filename = "midi/graze_the_roof.mid"
     # midi_filename = "files/midi/mJdeFEog-YQ.midi"
 
     asyncio.run(play_midi_file(midi_filename))
-    asyncio.run(play_midi_file(midi_filename))
-    asyncio.run(play_midi_file(midi_filename))
-    asyncio.run(play_midi_file(midi_filename))
-    asyncio.run(play_midi_file(midi_filename))
-    asyncio.run(play_midi_file(midi_filename))
-    asyncio.run(play_midi_file(midi_filename))
-    asyncio.run(play_midi_file(midi_filename))
-    asyncio.run(play_midi_file(midi_filename))
-
-
-

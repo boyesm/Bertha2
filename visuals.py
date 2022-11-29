@@ -6,6 +6,7 @@ from pprint import *
 from os import getcwd
 
 # An example list of songs to show on the screen.
+# TODO remove these examples
 songs = ['Sexy frog',
          'Sexy frog',
          'Crazy frog',
@@ -36,12 +37,13 @@ MAX_VIDEO_TITLE_LENGTH_CURRENT = 45
 VIDEO_WIDTH = 1280
 VIDEO_HEIGHT = 720
 
-parameters = simpleobsws.IdentificationParameters(ignoreNonFatalRequestChecks = False) # Create an IdentificationParameters object (optional for connecting)
-ws = simpleobsws.WebSocketClient(url = 'ws://localhost:4455', identification_parameters = parameters) # Every possible argument has been passed, but none are required. See lib code for defaults.
+parameters = simpleobsws.IdentificationParameters(ignoreNonFatalRequestChecks=False) # Create an IdentificationParameters object (optional for connecting)
+ws = simpleobsws.WebSocketClient(url='ws://127.0.0.1:4444', identification_parameters=parameters) # Every possible argument has been passed, but none are required. See lib code for defaults.
 
 async def update_obs_obj_args(change_args):
     await ws.connect()  # Make the connection to obs-websocket
     await ws.wait_until_identified()  # Wait for the identification handshake to complete
+
 
 
     # request = simpleobsws.Request('GetSceneItemId', get_item_arguments)
@@ -96,11 +98,14 @@ def change_text_obj_value(text_obj_id, text_obj_value:str):
             # }
         }
     }
+
+    # TODO: create a function for updating OBS and include this in it \/
     try:
         loop = asyncio.get_event_loop()  # NOTE: Async function must be called like this.
         loop.run_until_complete(update_obs_obj_args(change_arguments))
-    except:
+    except Exception as e:
         print("VISUALS: Unable to connect to OBS. Is it running right now?")
+
 
 def change_video_source(media_obj_id, media_filepath:str):
 
@@ -121,8 +126,10 @@ def change_video_source(media_obj_id, media_filepath:str):
         }
     }
 
+    # TODO: replace this code with OBS update function
     loop = asyncio.get_event_loop()  # NOTE: Async function must be called like this.
     loop.run_until_complete(update_obs_obj_args(change_arguments))
+
 
 def process_title(title:str):
     new_title = filter_cuss_words(title)
@@ -132,7 +139,8 @@ def process_title(title:str):
 
 def filter_cuss_words(title:str):
     new_title = title
-    cuss_words = ["nigga", "nigger", "cunt", "fuck", "shit", "cracker", "incel", "virgin", "simp"] # TODO: add some more banned twitch words here
+    # TODO: move these words to a text file and import them. they shouldn't be listed explicitly here
+    cuss_words = ["nigga", "nigger", "cunt", "fuck", "shit", "cracker", "incel", "virgin", "simp"]  # TODO: add some more banned twitch words here
     for word in cuss_words:
         new_title = new_title.replace(word, "****")
     return new_title
@@ -154,8 +162,6 @@ def update_playing_next(playing_next_list:list):
     # TODO: only display the first 10 items.
 
     max_items = 5
-
-    # TODO: **** out bad words
 
     for index, video_title in enumerate(playing_next_list):
         if (index < max_items) and (index > 0):

@@ -7,16 +7,6 @@ from settings import channel, nickname, token
 from multiprocessing import Queue
 from input.valid_link import is_valid_youtube_video
 
-
-# This is around just in case I missed converting anything
-# - Jarvis Aug 25 2022
-
-
-
-
-
-
-
 def chat_process(link_q):
     """
     Reads through twitch chat and parses out commands
@@ -31,6 +21,11 @@ def chat_process(link_q):
     sock.send(f"NICK {nickname}\n".encode("utf-8"))
     sock.send(f"JOIN {channel}\n".encode("utf-8"))
 
+    resp = sock.recv(2048).decode("utf-8")
+    print(resp)
+
+    ## This should only say this if it's true. There are not auth checks here to confirm that it's actually connected
+    ## One error is "Improperly formatted auth", occurs when args aren't passed in the correct order
     print(f"CHAT: Ready and waiting for twitch commands in [{channel}]...")
 
     while True:
@@ -41,14 +36,18 @@ def chat_process(link_q):
             if resp.startswith("PING"):
                 sock.send("PONG\n".encode("utf-8"))
 
-
             for temp in range(2):
                 resp = resp[resp.find(":")+1:]
 
-            # if resp != '':
+            if resp == "Improperly formatted auth":
+                print("CHAT: Auth keys aren't working\nERROR: Improperly formatted auth")
+
+            if resp != '':
+                print(f"CHAT: {resp}")
             #     pprint("Resp:")
             #     pprint(resp)
             message = resp
+
 
             if message[:1] == "!":
 

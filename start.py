@@ -3,7 +3,7 @@ import os
 import time
 from pathlib import Path
 from argparse import ArgumentParser
-
+import logging
 from settings import dirs, queue_save_file
 import signal
 import json
@@ -12,7 +12,6 @@ from input.chat import chat_process
 # from input.cli import cli_process
 from converter import converter_process
 from hardware import hardware_process
-from tests.hardware import test_hardware_process
 from visuals import visuals_process
 
 os.environ['IMAGEIO_VAR_NAME'] = 'ffmpeg'
@@ -21,6 +20,9 @@ os.environ['IMAGEIO_VAR_NAME'] = 'ffmpeg'
 parser = ArgumentParser(prog = 'Bertha2')
 parser.add_argument('--disable_hardware', action='store_true')  # checks if the `--disable_hardware` flag is used
 
+# Initialize logging
+# A file to save logs to can be added here. Log line format can also be changed here.
+logging.basicConfig()
 
 def create_dirs(dirs):
     for dir in dirs:
@@ -89,8 +91,6 @@ if __name__ == '__main__':
     default_handler = signal.getsignal(signal.SIGINT)
     signal.signal(signal.SIGINT, signal.SIG_IGN)
 
-    # TODO: refactor this so that we have a shared state among all the processes instead of weird queue and pipe systems.
-
     link_q = load_queue("link_q")  # we need a queue for youtube links
     play_q = load_queue("play_q")  # this is the queue of ready to play videos
     title_q = Queue() # queue of video names for obs to display
@@ -104,7 +104,7 @@ if __name__ == '__main__':
     input_p = Process(target=chat_process, args=(link_q,))
     # input_p = Process(target=cli_process, args=(link_q,))
     converter_p = Process(target=converter_process, args=(sigint_e,child_conn, link_q,play_q,title_q))
-    hardware_p = Process(target=hardware_process, args=(sigint_e,c1_conn,play_q,title_q,))  # TODO: this might need to be changed to the livestream process, which can in-turn call hardware and play video
+    hardware_p = Process(target=hardware_process, args=(sigint_e,c1_conn,play_q,title_q,args.disable_hardware,))  # TODO: this might need to be changed to the livestream process, which can in-turn call hardware and play video
     visuals_p = Process(target=visuals_process, args=(parent_conn,p1_conn,title_q,))
 
     input_p.daemon = True
@@ -114,10 +114,7 @@ if __name__ == '__main__':
 
     input_p.start()
     converter_p.start()
-    if not args.disable_hardware:
-        hardware_p.start()
-    else:
-        test_hardware_process.start()
+    hardware_p.start()
     visuals_p.start()
 
     # Since we spawned all the necessary processes already,

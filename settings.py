@@ -12,16 +12,15 @@ dirs = [midi_file_path, audio_file_path, video_file_path]  # add any other file 
 
 queue_save_file = "saved_queues"
 
-load_dotenv()
-# nickname = getenv("NICKNAME")
-# token = getenv("TOKEN")
-
-nickname = 'berthatwo'
-token = 'oauth:efnlrqvy824hqq4h5hczse0ekvms0e'
-client_id = 'oqjx4qhulp84kvlv32rwggu7q2z2tb'
 channel = '#berthatwo'  # the channel of which chat is being monitored
-# channel = "#lashieloo12"
 
-proxy_port = '22225'
-proxy_username = 'lum-customer-hl_65bf90ee-zone-data_center'
-proxy_password = '2?f8ek31o~xr'
+load_dotenv("secrets.env")
+
+# Twitch Secrets
+nickname = getenv("NICKNAME")
+token = getenv("TOKEN")
+client_id = getenv("CLIENT_ID")
+
+proxy_port = getenv("PROXY_PORT")
+proxy_username = getenv("PROXY_USERNAME")
+proxy_password = getenv("PROXY_PASSWORD")
