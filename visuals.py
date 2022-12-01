@@ -4,30 +4,11 @@ import asyncio
 import simpleobsws
 from pprint import *
 from os import getcwd
+import logging
 
-# An example list of songs to show on the screen.
-# TODO remove these examples
-songs = ['Sexy frog',
-         'Sexy frog',
-         'Crazy frog',
-         'Happy frog',
-         'Yolo beans',
-         'Epic finger dance (Must watch!)',
-         'Goodnight moon',
-         '2203455',
-         'video',
-         '',
-         'Epic finger dance (Must watch!)',
-         'Goodnight moon',
-         '2203455',
-         'video',
-         '',
-         'Epic finger dance (Must watch!)',
-         'Goodnight moon',
-         '2203455',
-         'video',
-         '',
-         ]
+songs = []
+
+logger = logging.getLogger(__name__)
 
 # TODO: Could these be added to settings?
 SCENE_NAME = 'Scene'
@@ -60,9 +41,9 @@ async def update_obs_obj_args(change_args):
 
     '''
     if ret.ok():  # Check if the request succeeded
-        print(f"Request succeeded! Response data: {ret.responseData}")
+        logger.debug(f"Request succeeded! Response data: {ret.responseData}")
     else:
-        print("There was an error setting the text in OBS")
+        logger.critical(f"There was an error setting the text in OBS")
     '''
 
     await ws.disconnect()  # Disconnect from the websocket server cleanly
@@ -104,7 +85,7 @@ def change_text_obj_value(text_obj_id, text_obj_value:str):
         loop = asyncio.get_event_loop()  # NOTE: Async function must be called like this.
         loop.run_until_complete(update_obs_obj_args(change_arguments))
     except Exception as e:
-        print("VISUALS: Unable to connect to OBS. Is it running right now?")
+        logger.warning(f"Unable to connect to OBS. Is it running right now?")
 
 
 def change_video_source(media_obj_id, media_filepath:str):
@@ -187,12 +168,12 @@ def visuals_process(conn, done_conn, video_name_q):
             l.append(o)
 
         # TODO: only refresh when l has changed
-        # print("VISUALS: Refreshing visuals.")
+        # logger.debug(f"Refreshing visuals.")
         # we always want to update the queue:
         update_playing_next(video_name_list)
         # we should always update the current song as well. just make sure video name list[0] is removed when the song is over
         if l != []:
-            print(l[0])
+            logger.debug(l[0])
             change_text_obj_value("current_song", f"Current Video: {l[0]['title']}")
             change_video_source("playing_video", l[0]["filepath"])
         else:
@@ -202,7 +183,7 @@ def visuals_process(conn, done_conn, video_name_q):
 
         if len(l) > 0:
             done_conn.recv() # this will be received once the hardware is done playing the video
-            print("VISUALS: Done playing file.")
+            logger.info(f"Done playing file.")
             l.pop(0) # remove the video that has just been played
             video_name_list.pop(0)
 

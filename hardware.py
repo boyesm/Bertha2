@@ -17,6 +17,12 @@ import serial
 import struct
 import time
 import socket  # TODO: This shouldn't be imported by default. But this isn't super important
+import logging
+
+
+### LOGGING SETUP ###
+logger = logging.getLogger(__name__)
+# logger.setLevel(10)  # Uncomment this for debug level logging
 
 
 ### GLOBAL VARIABLES ###
@@ -102,7 +108,7 @@ def generate_hardware_vis(arr, min_val=0, max_val=255, bar_length=30):
 def update_cl_vis(out_str):
     # rate limiting
     global last_cl_update
-    print(f"TIME SINCE LAST CALL: {time.time() - last_cl_update}")
+    logger.debug(f"TIME SINCE LAST CALL: {time.time() - last_cl_update}")
     if (time.time() - last_cl_update < 0.005): return
 
     sock.send(b"\033[H")  # sketchy way of clearing the screen
@@ -122,12 +128,12 @@ def update_solenoid_value(note_address, pwm_value):
 
         # if a note is up to an octave below what is available to be played, shift it up an octave
         if (note_address < 0):
-            print(f"HARDWARE: too low! for now... {note_address}")
+            logger.debug(f"too low! for now... {note_address}")
             note_address += 24
 
         # if a note is up to an octave below what is available to be played, shift it up an octave
         if (note_address > number_of_notes):
-            print(f"HARDWARE: too high! for now... {note_address}")
+            logger.debug(f"too high! for now... {note_address}")
             note_address -= 24
 
 
@@ -136,7 +142,7 @@ def update_solenoid_value(note_address, pwm_value):
 
         note_values[note_address] = pwm_value
 
-        print(note_values)
+        logger.debug(note_values)
 
         o = generate_hardware_vis(note_values)
         # this part of the code will send hardware outputs to an open netcat terminal
@@ -153,18 +159,18 @@ def update_solenoid_value(note_address, pwm_value):
 
         # if a note is up to an octave below what is available to be played, shift it up an octave
         if (note_address < 0+1):
-            # print(f"HARDWARE: too low! for now... {note_address}")
+            # logger.debug(f"too low! for now... {note_address}")
             note_address+=24
 
         # if a note is up to an octave below what is available to be played, shift it up an octave
         if (note_address > number_of_notes+1):
-            # print(f"HARDWARE: too high! for now... {note_address}")
+            # logger.debug(f"too high! for now... {note_address}")
             note_address -= 24
 
         # this will ensure only valid notes are toggled, preventing memory address not found errors
         if (note_address < 0+1) or (note_address > number_of_notes+1) or (note_address >= 254): return
 
-        print(f'{note_address}, {int(pwm_value)}')
+        logger.debug(f"{note_address}, {int(pwm_value)}")
         if arduino_connection != None:
             arduino_connection.write(struct.pack('>3B', int(note_address), int(pwm_value), int(255)))
 
@@ -182,7 +188,7 @@ def power_draw_function(velocity, time_passed):
     pwm_at_t = (b ** (c + (velocity / e) - (a * time_passed))) + d
     ## y=1.05^{\left(90+\frac{t}{10}-250x\right)}+100
 
-    print(f"PWM: {pwm_at_t}")
+    logger.debug(f"PWM: {pwm_at_t}")
     return pwm_at_t
 
 
@@ -233,13 +239,13 @@ async def play_midi_file(midi_filename):
         else:
             if msg.type == 'note_on':
                 note = msg.note - starting_note
-                print(f'note_on {note} {msg.velocity} {input_time}')
+                logger.debug(f"note_on {note} {msg.velocity} {input_time}")
                 temp_lengs.update({note: {"velocity": msg.velocity, "init_note_delay": input_time}})
 
             elif msg.type == 'note_off':
                 note = msg.note - starting_note
-                print(f'note_off {note}')
-                # print(temp_lengs)
+                logger.debug(f"note_off {note}")
+                logger.debug(temp_lengs)
 
                 ## TODO: error checks
                 # make sure temp_lengs[msg.note] exists and isn't from some past note.
@@ -266,7 +272,7 @@ def hardware_process(sigint_e, done_conn, play_q, title_q, TEST_FLAG_param):
         try:
             sock.connect(('127.0.0.1', 8001))
         except:
-            print("HARDWARE: Socket connection refused. Run netcat with `nc -dkl 8001`.")
+            logger.error(f"Socket connection refused. Run netcat with `nc -dkl 8001`.")
             # TODO: program shouldn't exit. it should be paused here until this condition has been met
 
 
@@ -282,20 +288,20 @@ def hardware_process(sigint_e, done_conn, play_q, title_q, TEST_FLAG_param):
             potential_ports = subprocess.check_output(["ls -a /dev/cu.usbserial*"], shell=True,
                                                       stderr=subprocess.DEVNULL).decode('ascii')
 
-            print("HARDWARE: Setting serial up")
+            logger.info(f"Setting serial up")
             arduino_connection = serial.Serial()
             # pprint(potential_ports)
             port_to_use = potential_ports.split("\n")[0]
-            print("HARDWARE: Setting Arduino port to: " + port_to_use)
+            logger.info(f"Setting Arduino port to: {port_to_use}")
             arduino_connection.port = port_to_use
-            print("HARDWARE: Setting Arduino baudrate and timeout:" + port_to_use)
+            logger.info(f"Setting Arduino baudrate and timeout: {port_to_use}")
             arduino_connection.baudrate = 115200
             arduino_connection.timeout = 0.1
-            print("HARDWARE: Connecting to arduino on port:" + port_to_use)
+            logger.info(f"Connecting to arduino on port:{port_to_use}")
             arduino_connection.open()
 
         except:
-            print("HARDWARE: Unable to connect to Arduino. Is it plugged in?")
+            logger.warning("Unable to connect to Arduino. Is it plugged in?")
             # TODO: should we end the program here? or keep searching for an arduino to be connected?
             return
 
@@ -305,22 +311,22 @@ def hardware_process(sigint_e, done_conn, play_q, title_q, TEST_FLAG_param):
             # title = title_q.get()
             filepath = play_q.get(timeout=10)
 
-            print("HARDWARE: Starting playback of song on hardware")
+            logger.info("Starting playback of song on hardware")
             asyncio.run(play_midi_file(filepath))
             done_conn.send("done")
-            print("HARDWARE: Finished playback of song on hardware")
+            logger.info("Finished playback of song on hardware")
 
             #  should we just move visuals here?
         except:
             pass
     else:
-        print("HARDWARE: Hardware process has been shut down.")
+        logger.info("Hardware process has been shut down.")
 
 
 
 if __name__ == '__main__':
 
-    print("HARDWARE: Running some tests.")
+    logger.info("Running some tests.")
 
     # asyncio.run(test_every_note())
     # asyncio.run(test_every_note_at_once())

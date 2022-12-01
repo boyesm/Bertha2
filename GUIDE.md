@@ -52,3 +52,13 @@ nc -dkl 8001
 * In the `/obs-media` directory, the OBS scenes that work with this program are saved.
 * They can be imported into OBS by going to `Scene Collection > Import`
 * After a scene has been modified, export it in OBS by going to `Scene Collection > Export`
+
+## Using Pycharm
+
+* To enable the coloured output in PyCharm (much nicer), enable "Emulate terminal in output console" in run configuration
+* To enable this setting by default on all new run configurations:
+  1. Go to RUN > EDIT CONFIGURATIONS
+  2. Go to "Edit configuration templates..." at the bottom left of the new window
+  3. Check the "Emulate terminal in output console" box and apply
+
+

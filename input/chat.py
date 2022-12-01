@@ -1,11 +1,13 @@
 import socket
 import time
 from pprint import pprint
-
+import logging
 from pytube import YouTube
 from settings import channel, nickname, token
 from multiprocessing import Queue
 from input.valid_link import is_valid_youtube_video
+
+logger = logging.getLogger(__name__)
 
 def chat_process(link_q):
     """
@@ -22,11 +24,11 @@ def chat_process(link_q):
     sock.send(f"JOIN {channel}\n".encode("utf-8"))
 
     resp = sock.recv(2048).decode("utf-8")
-    print(resp)
+    logger.info(f"{resp}")
 
     ## This should only say this if it's true. There are not auth checks here to confirm that it's actually connected
     ## One error is "Improperly formatted auth", occurs when args aren't passed in the correct order
-    print(f"CHAT: Ready and waiting for twitch commands in [{channel}]...")
+    logger.info(f"Ready and waiting for twitch commands in [{channel}]...")
 
     while True:
         try:
@@ -40,10 +42,10 @@ def chat_process(link_q):
                 resp = resp[resp.find(":")+1:]
 
             if resp == "Improperly formatted auth":
-                print("CHAT: Auth keys aren't working\nERROR: Improperly formatted auth")
+                logger.critical(f"Auth keys aren't working\nERROR: Improperly formatted auth")
 
             if resp != '':
-                print(f"CHAT: {resp}")
+                logger.info(f"{resp}")
             #     pprint("Resp:")
             #     pprint(resp)
             message = resp
@@ -56,24 +58,24 @@ def chat_process(link_q):
 
                 if command == "!play":
 
-                    # print(message)
+                    logger.debug(message)
                     if is_valid_youtube_video(command_arg):
                         # Queue.put adds command_arg to the global Queue variable, not a local Queue.
                         # See multiprocessing.Queue for more info.
                         # TODO: we can add video_name_q.put() here instead. just use the youtube link that we have here and create a youtube object
 
                         link_q.put(command_arg)
-                        print(f"CHAT: the video follow video has been queued: {command_arg}")
+                        logger.debug(f"the video follow video has been queued: {command_arg}")
                         # TODO: send a message to twitch chat that says this ^^
                     else:
                         response = " Sorry, [{message}] is not a valid youtube link"
                         sock.send(f"PRIVMSG #{channel}:{response}\n".encode("utf-8"))
 
-                        print("CHAT: invalid youtube video")
+                        logger.debug(f"invalid youtube video")
                         # TODO: send a message to twitch chat that says this ^^ 
 
         except Exception as e:
-            print(f"CHAT: Error{e}")
+            logger.critical(f"Error{e}")
             pass
 
 if __name__ == "__main__":

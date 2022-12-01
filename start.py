@@ -7,6 +7,8 @@ import logging
 from settings import dirs, queue_save_file
 import signal
 import json
+import coloredlogs
+import sys
 
 from input.chat import chat_process
 # from input.cli import cli_process
@@ -19,10 +21,18 @@ os.environ['IMAGEIO_VAR_NAME'] = 'ffmpeg'
 # Initialize command line args
 parser = ArgumentParser(prog = 'Bertha2')
 parser.add_argument('--disable_hardware', action='store_true')  # checks if the `--disable_hardware` flag is used
+parser.add_argument("--log", action="store")
 
-# Initialize logging
-# A file to save logs to can be added here. Log line format can also be changed here.
-logging.basicConfig()
+### LOGGING SETUP ###
+args = parser.parse_args()
+# For more information on log levels: https://docs.python.org/3/library/logging.html#levels
+if args.log is None:  # If LOG isn't defined, set to info mode.
+    numeric_level = 20
+else:
+    numeric_level = getattr(logging, args.log.upper())
+logging.basicConfig(level=numeric_level)  # NOTE: Without this, logs won't print in the console.
+coloredlogs.install(level=numeric_level)
+logger = logging.getLogger(__name__)
 
 def create_dirs(dirs):
     for dir in dirs:
@@ -30,14 +40,14 @@ def create_dirs(dirs):
         if not os.path.exists(file_dir):
             os.makedirs(file_dir)
 
-    print("START: Created directories")
+    logger.info(f"Created directories")
 
 
 def save_queues(lq, pq):
 
     # TODO: make sure nothing can go wrong with this code.
 
-    print("START: Saving queues to database.")
+    logger.info(f"Saving queues to database.")
 
     ll = []
     pl = []
@@ -57,12 +67,12 @@ def save_queues(lq, pq):
     with open(f'{queue_save_file}.json', 'w', encoding='utf-8') as f:
         json.dump(backup_file, f, ensure_ascii=False, indent=4)
 
-    print("START: Saved queues to database.")
+    logger.info(f"Saved queues to database.")
 
 
 def load_queue(queue_name):
 
-    print(f"START: Loading queue: {queue_name}")
+    logger.info(f"Loading queue: {queue_name}")
 
     q = Queue()
 
@@ -74,14 +84,14 @@ def load_queue(queue_name):
         for item in o[queue_name]:
             q.put(item)
     except Exception as e:
-        print(f"START: Queue could not be loaded. {e}")
+        logger.critical(f"Queue could not be loaded. {e}")
 
     return q
 
 
 if __name__ == '__main__':
 
-    print("START: Initializing Bertha2...")
+    logger.info(f"Initializing Bertha2...")
     create_dirs(dirs)
 
     # Parse command line args
@@ -124,12 +134,12 @@ if __name__ == '__main__':
     try:
         signal.pause()
     except KeyboardInterrupt:
-        print("START: Shutting down gracefully...")
+        logger.info(f"Shutting down gracefully...")
         sigint_e.set()
         converter_p.join()
         hardware_p.join()
     except Exception as e:
-        print(f"START: Error has occurred. {e}")
+        logger.critical(f"Error has occurred. {e}")
     finally:
         save_queues(link_q, play_q)
-        print("START: Shut down.")
+        logger.info(f"Shut down.")
