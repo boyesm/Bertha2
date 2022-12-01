@@ -20,16 +20,19 @@ from settings import (
 
 
 logger = logging.getLogger(__name__)
+pptr_logger = logging.getLogger("pyppeteer")
+pptr_logger.setLevel(50)
+pptr_logger.addHandler(logging.StreamHandler())
 
 
 def download_video_audio(youtube_url):
-    logger.info(f"Converting YouTube URL into audio file...")
+    logger.debug(f"Converting YouTube URL into audio file...")
 
     yt = YouTube(youtube_url)
     file_name = video_id(youtube_url)
 
     # download video
-    logger.info(f"Starting video download")
+    logger.debug(f"Starting video download")
     yt.streams.first().download(
         output_path=video_file_path, filename=f"{file_name}.mp4"
     )
@@ -40,7 +43,7 @@ def download_video_audio(youtube_url):
 
     audioclip = videoclip.audio
     # str conversion + brackets are necessary
-    audioclip.write_audiofile(str(audio_file_path / (file_name + ".mp3")))
+    audioclip.write_audiofile(str(audio_file_path / (file_name + ".mp3")), verbose=False, logger=None)
 
     audioclip.close()
     videoclip.close()
@@ -50,7 +53,7 @@ def download_video_audio(youtube_url):
 
 # TODO: get this function working
 async def convert_audio_to_midi(file_name):
-    logger.info(f"converting audio to midi")
+    logger.debug(f"converting audio to midi")
     # TODO: put some try catches in here to prevent timeouts
 
     proxy_num = random.randrange(0, 100000)
@@ -58,6 +61,7 @@ async def convert_audio_to_midi(file_name):
     logger.debug(f"ATTEMPTING TO GET LINK")
     browser = await launch(
         {
+            "logLevel": 0,
             "args": [f"--proxy-server=zproxy.lum-superproxy.io:{proxy_port}"],
             # "headless": False,
         }
@@ -107,7 +111,7 @@ async def convert_audio_to_midi(file_name):
     # os.remove(str(audio_file_path / (file_name + ".mp3")))  # remove unneeded mp3 file
     logger.debug(f"{link}")
 
-    logger.info(f"Downloading midi file...")
+    logger.debug(f"Downloading midi file...")
     wget.download(link, str(midi_file_path / (file_name + ".midi")))
 
 
@@ -117,6 +121,9 @@ def video_to_midi(youtube_url):
 
     yt = YouTube(youtube_url)
     video_name = yt.vid_info['videoDetails']['title']
+
+    logger.info(f"Converting YouTube video \"{video_name}\" to a MIDI file")
+
     # video_name = yt.vid_info
     # file_name = video_id(youtube_url)
 
@@ -128,9 +135,7 @@ def video_to_midi(youtube_url):
     file_name = download_video_audio(youtube_url)  # store audio file in audio_file_path
 
     # TODO: if this fails, rerun the function
-    midi_file_url = asyncio.run(convert_audio_to_midi(file_name))
-
-    # TODO: why is midi_file_url not used? That seems like an issue.
+    asyncio.run(convert_audio_to_midi(file_name))
 
     filepath = str(midi_file_path / (file_name + ".midi"))
 
@@ -142,10 +147,9 @@ def converter_process(sigint_e,conn, link_q, play_q, title_q):
     while not sigint_e.is_set():
         try:
             link = link_q.get(timeout=10)
-            logger.info(f"starting to convert YT link to MIDI")
+
             filepath, video_title = video_to_midi(link)
-            # time.sleep(10)
-            logger.info(f"completed the conversion of YT link to MIDI")
+            logger.info(f"Successfully converted {video_title} to a MIDI file")
 
             conn.send({"title": video_title,
                        "filepath": f"{getcwd()}/files/video/{YouTube(link).video_id}.mp4"})  # This should be here. As soon as a video is finished converting, it should be added to the queue because we know it's safe

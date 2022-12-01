@@ -13,7 +13,7 @@ def chat_process(link_q):
     """
     Reads through twitch chat and parses out commands
 
-    :param link_q: The Queue that the Youtube links from chat should be added to
+    :param link_q: The queue that the YouTube links from chat should be added to
     :return:
     """
 
@@ -24,7 +24,7 @@ def chat_process(link_q):
     sock.send(f"JOIN {channel}\n".encode("utf-8"))
 
     resp = sock.recv(2048).decode("utf-8")
-    logger.info(f"{resp}")
+    logger.debug(f"{resp}")
 
     ## This should only say this if it's true. There are not auth checks here to confirm that it's actually connected
     ## One error is "Improperly formatted auth", occurs when args aren't passed in the correct order
@@ -45,7 +45,7 @@ def chat_process(link_q):
                 logger.critical(f"Auth keys aren't working\nERROR: Improperly formatted auth")
 
             if resp != '':
-                logger.info(f"{resp}")
+                logger.debug(f"{resp}")
             #     pprint("Resp:")
             #     pprint(resp)
             message = resp
@@ -65,7 +65,7 @@ def chat_process(link_q):
                         # TODO: we can add video_name_q.put() here instead. just use the youtube link that we have here and create a youtube object
 
                         link_q.put(command_arg)
-                        logger.debug(f"the video follow video has been queued: {command_arg}")
+                        logger.info(f"The video follow video has been queued: {command_arg.strip()}")
                         # TODO: send a message to twitch chat that says this ^^
                     else:
                         response = " Sorry, [{message}] is not a valid youtube link"

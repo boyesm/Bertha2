@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 
 cwd = getcwd()
 
-midi_file_path = cwd / Path("files") / Path("midi-files")  # TODO: make sure this still works
+midi_file_path = cwd / Path("files") / Path("midi")
 audio_file_path = cwd / Path("files") / Path("audio")
 video_file_path = cwd / Path("files") / Path("video")
 

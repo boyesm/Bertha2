@@ -1,13 +1,14 @@
 # Some bigger things to implement
 
 * Easy and consistent testing (even without hardware connected)
-  * Hardware simulator [done]
+  * [DONE] Hardware simulator
   * Documented test setup guide
-  * Write a script that stress tests the stream
+  * [DONE] Write a script that stress tests the stream
 * Better logging, some way of enabling different levels of information without constantly commenting out print statements
-  * Control general log level, when debugging, debug level logs should be enabled
-  * Also be able to control log level for each module, when troubleshooting a single module for example, all debug level logs are not needed
-  * 
+  * [DONE] Control general log level, when debugging, debug level logs should be enabled
+  * [DONE] Also be able to control log level for each module, when troubleshooting a single module for example, all debug level logs are not needed
+  * Make sure the log levels are accurate to what they are. Document how to level logs.
+  * Change log level while program is running? https://towardsdatascience.com/how-to-add-a-debug-mode-for-your-python-logging-mid-run-3c7330dc199d
 * Be able to pause the program when certain conditions aren't met to prevent undefined behaviours.
   * In the following cases, the program should pause but not crash or stop running:
     * OBS isn't open / crashes / can't be accessed
@@ -16,7 +17,7 @@
     * Cannot connect to hardware / hardware emulator
   * In the following cases the program should stop running:
     * Can't access important secret keys / keys are not valid
-* There should be more information displayed on screen as to what is happening with the program and robot
+* There should be more information displayed on stream as to what is happening with the program and robot
   * When there is downtime to cool solenoids, this should be displayed on screen
   * ...
 
