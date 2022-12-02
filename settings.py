@@ -24,3 +24,16 @@ client_id = getenv("CLIENT_ID")
 proxy_port = getenv("PROXY_PORT")
 proxy_username = getenv("PROXY_USERNAME")
 proxy_password = getenv("PROXY_PASSWORD")
+
+cuss_words_file_name = "cuss_words.txt"
+
+def import_cuss_words():
+    global cuss_words
+
+    with open(cuss_words_file_name) as f:
+        words = f.read()
+        word_list = words.split("\n")
+        word_list = list(filter(None, word_list))  # Remove blank elements (e.g. "") from array
+        return word_list
+
+cuss_words = import_cuss_words()

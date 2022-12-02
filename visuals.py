@@ -1,10 +1,10 @@
-import logging
 import time
 import asyncio
 import simpleobsws
 from pprint import *
 from os import getcwd
 import logging
+from settings import cuss_words
 
 songs = []
 
@@ -120,8 +120,6 @@ def process_title(title:str):
 
 def filter_cuss_words(title:str):
     new_title = title
-    # TODO: move these words to a text file and import them. they shouldn't be listed explicitly here
-    cuss_words = ["nigga", "nigger", "cunt", "fuck", "shit", "cracker", "incel", "virgin", "simp"]  # TODO: add some more banned twitch words here
     for word in cuss_words:
         new_title = new_title.replace(word, "****")
     return new_title
@@ -182,13 +180,12 @@ def visuals_process(conn, done_conn, video_name_q):
         # all of this ^^ should happen at the same time this \/\/ is happening.
 
         if len(l) > 0:
-            done_conn.recv() # this will be received once the hardware is done playing the video
+            done_conn.recv()  # this will be received once the hardware is done playing the video
             logger.info(f"Done playing file.")
-            l.pop(0) # remove the video that has just been played
+            l.pop(0)  # remove the video that has just been played
             video_name_list.pop(0)
 
         time.sleep(0.5)
-
 
 
 if __name__ == "__main__":

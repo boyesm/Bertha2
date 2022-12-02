@@ -11,7 +11,6 @@ import coloredlogs
 import sys
 
 from input.chat import chat_process
-# from input.cli import cli_process
 from converter import converter_process
 from hardware import hardware_process
 from visuals import visuals_process
@@ -112,7 +111,6 @@ if __name__ == '__main__':
     sigint_e = Event()
     # TODO: if processes crash, restart them automatically
     input_p = Process(target=chat_process, args=(link_q,))
-    # input_p = Process(target=cli_process, args=(link_q,))
     converter_p = Process(target=converter_process, args=(sigint_e,child_conn, link_q,play_q,title_q))
     hardware_p = Process(target=hardware_process, args=(sigint_e,c1_conn,play_q,title_q,args.disable_hardware,))  # TODO: this might need to be changed to the livestream process, which can in-turn call hardware and play video
     visuals_p = Process(target=visuals_process, args=(parent_conn,p1_conn,title_q,))

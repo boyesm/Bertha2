@@ -21,9 +21,7 @@
   * When there is downtime to cool solenoids, this should be displayed on screen
   * ...
 
-
-
-
+  
 
 # Bugs / Needed Improvements
 
