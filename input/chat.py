@@ -3,11 +3,14 @@ import time
 from pprint import pprint
 import logging
 from pytube import YouTube
-from settings import channel, nickname, token
+from settings import channel, nickname, token, cli_args
 from multiprocessing import Queue
 from input.valid_link import is_valid_youtube_video
 
+### LOGGING SETUP ###
 logger = logging.getLogger(__name__)
+if cli_args.debug_chat:  # If the debug flag is set high, enable debug level logging
+    logging.getLogger(__name__).setLevel(logging.DEBUG)
 
 def chat_process(link_q):
     """

@@ -4,11 +4,15 @@ import simpleobsws
 from pprint import *
 from os import getcwd
 import logging
-from settings import cuss_words
+from settings import cuss_words, cli_args
 
 songs = []
 
+### LOGGING SETUP ###
 logger = logging.getLogger(__name__)
+if cli_args.debug_visuals:  # If the debug flag is set high, enable debug level logging
+    logging.getLogger(__name__).setLevel(logging.DEBUG)
+
 
 # TODO: Could these be added to settings?
 SCENE_NAME = 'Scene'
@@ -25,26 +29,14 @@ async def update_obs_obj_args(change_args):
     await ws.connect()  # Make the connection to obs-websocket
     await ws.wait_until_identified()  # Wait for the identification handshake to complete
 
-
-
-    # request = simpleobsws.Request('GetSceneItemId', get_item_arguments)
-    # ret = await ws.call(request) # Perform the request
-    # # pprint(ret)
-    # request = simpleobsws.Request('GetInputDefaultSettings', get_arguments)
-    # ret = await ws.call(request) # Perform the request
-    # pprint(ret)
-
     # The type of the input is "text_ft2_source_v2"
     request = simpleobsws.Request('SetInputSettings', change_args)
     ret = await ws.call(request)  # Perform the request
-    # pprint(ret)
 
-    '''
     if ret.ok():  # Check if the request succeeded
         logger.debug(f"Request succeeded! Response data: {ret.responseData}")
     else:
-        logger.critical(f"There was an error setting the text in OBS")
-    '''
+        logger.warning(f"There was an error setting the text in OBS")
 
     await ws.disconnect()  # Disconnect from the websocket server cleanly
 
@@ -138,13 +130,12 @@ def update_playing_next(playing_next_list:list):
     input_string = 'Next Up:\n'
 
     # TODO: remove the first item of the array, that's the currently playing video. ([1:])
-    # TODO: only display the first 10 items.
 
     max_items = 5
 
     for index, video_title in enumerate(playing_next_list):
         if (index < max_items) and (index > 0):
-            input_string += f"{str(index+1)}. {process_title(video_title)}\n"
+            input_string += f"{str(index)}. {process_title(video_title)}\n"
 
     if(len(playing_next_list) > max_items):
         input_string += f"{len(playing_next_list) - max_items} more video(s) queued..."
@@ -153,9 +144,15 @@ def update_playing_next(playing_next_list:list):
 
 
 def visuals_process(conn, done_conn, video_name_q):
-    # this process should control visuals.
+    logger.debug(f"Debug mode enabled for {__name__}")
+    # this process should control livestream visuals.
     video_name_list = []  # TODO: merge this into l
-    l = []
+    l = []  # TODO: rename this variable
+
+
+
+    # logger.info("HELLO IM ALIVE")
+    # logger.debug("VISUALS IS IN DEBUG MODE")
 
     while True:
 
@@ -166,7 +163,7 @@ def visuals_process(conn, done_conn, video_name_q):
             l.append(o)
 
         # TODO: only refresh when l has changed
-        # logger.debug(f"Refreshing visuals.")
+        logger.debug(f"Refreshing visuals.")
         # we always want to update the queue:
         update_playing_next(video_name_list)
         # we should always update the current song as well. just make sure video name list[0] is removed when the song is over

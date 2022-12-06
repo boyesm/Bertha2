@@ -4,34 +4,30 @@ import time
 from pathlib import Path
 from argparse import ArgumentParser
 import logging
-from settings import dirs, queue_save_file
+from settings import dirs, queue_save_file, cli_args, log_format
 import signal
 import json
-import coloredlogs
 import sys
+
+os.environ['IMAGEIO_VAR_NAME'] = 'ffmpeg'
+
+### LOGGING SETUP ###
+# This is run before importing B2 modules so that they all have consistent log levels for all code run
+# For more information on log levels: https://docs.python.org/3/library/logging.html#levels
+if cli_args.log is None:  # If LOG isn't defined, set to info mode.
+    numeric_level = 20
+else:
+    numeric_level = getattr(logging, cli_args.log.upper())
+logging.basicConfig(level=numeric_level, format=log_format)  # NOTE: Without this, logs won't print in the console.
+logger = logging.getLogger(__name__)
+
+
 
 from input.chat import chat_process
 from converter import converter_process
 from hardware import hardware_process
 from visuals import visuals_process
 
-os.environ['IMAGEIO_VAR_NAME'] = 'ffmpeg'
-
-# Initialize command line args
-parser = ArgumentParser(prog = 'Bertha2')
-parser.add_argument('--disable_hardware', action='store_true')  # checks if the `--disable_hardware` flag is used
-parser.add_argument("--log", action="store")
-
-### LOGGING SETUP ###
-args = parser.parse_args()
-# For more information on log levels: https://docs.python.org/3/library/logging.html#levels
-if args.log is None:  # If LOG isn't defined, set to info mode.
-    numeric_level = 20
-else:
-    numeric_level = getattr(logging, args.log.upper())
-logging.basicConfig(level=numeric_level)  # NOTE: Without this, logs won't print in the console.
-coloredlogs.install(level=numeric_level)
-logger = logging.getLogger(__name__)
 
 def create_dirs(dirs):
     for dir in dirs:
@@ -93,9 +89,6 @@ if __name__ == '__main__':
     logger.info(f"Initializing Bertha2...")
     create_dirs(dirs)
 
-    # Parse command line args
-    args = parser.parse_args()
-
     # Set signal handling of SIGINT to ignore mode.
     default_handler = signal.getsignal(signal.SIGINT)
     signal.signal(signal.SIGINT, signal.SIG_IGN)
@@ -112,7 +105,7 @@ if __name__ == '__main__':
     # TODO: if processes crash, restart them automatically
     input_p = Process(target=chat_process, args=(link_q,))
     converter_p = Process(target=converter_process, args=(sigint_e,child_conn, link_q,play_q,title_q))
-    hardware_p = Process(target=hardware_process, args=(sigint_e,c1_conn,play_q,title_q,args.disable_hardware,))  # TODO: this might need to be changed to the livestream process, which can in-turn call hardware and play video
+    hardware_p = Process(target=hardware_process, args=(sigint_e,c1_conn,play_q,title_q,))
     visuals_p = Process(target=visuals_process, args=(parent_conn,p1_conn,title_q,))
 
     input_p.daemon = True

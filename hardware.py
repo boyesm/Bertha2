@@ -18,12 +18,13 @@ import struct
 import time
 import socket  # TODO: This shouldn't be imported by default. But this isn't super important
 import logging
+from settings import cli_args
 
 
 ### LOGGING SETUP ###
 logger = logging.getLogger(__name__)
-# logger.setLevel(10)  # Uncomment this for debug level logging
-
+if cli_args.debug_hardware:  # If the debug flag is set high, enable debug level logging
+    logging.getLogger(__name__).setLevel(logging.DEBUG)
 
 ### GLOBAL VARIABLES ###
 starting_note = 48
@@ -260,10 +261,10 @@ async def play_midi_file(midi_filename):
     await asyncio.gather(*tasks)
     await asyncio.sleep(30)
 
-def hardware_process(sigint_e, done_conn, play_q, title_q, TEST_FLAG_param):
-
+def hardware_process(sigint_e, done_conn, play_q, title_q,):
+    logger.debug(f"Debug mode enabled for {__name__}")
     global TEST_FLAG
-    TEST_FLAG = TEST_FLAG_param
+    TEST_FLAG = cli_args.disable_hardware
     if TEST_FLAG:
         global sock
 
@@ -316,7 +317,6 @@ def hardware_process(sigint_e, done_conn, play_q, title_q, TEST_FLAG_param):
             done_conn.send("done")
             logger.info("Finished playback of song on hardware")
 
-            #  should we just move visuals here?
         except:
             pass
     else:

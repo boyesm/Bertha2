@@ -25,7 +25,9 @@
 
 # Bugs / Needed Improvements
 
-* Next up only refreshes at weird times + the first element begins with 2.
+* The load and save queues features need to be repaired
+* Next up only refreshes at weird times
+* [DONE] the first element begins with 2.
 * Change keys because they've all been leaked.
   * Proxy keys
   * berthatwo oauth

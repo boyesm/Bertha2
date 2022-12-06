@@ -8,7 +8,7 @@ import random
 from pyppeteer import launch
 from pytube import YouTube
 from pytube.extract import video_id
-from settings import video_file_path
+from settings import video_file_path, cli_args
 from moviepy.editor import VideoFileClip
 from settings import (
     midi_file_path,
@@ -19,7 +19,12 @@ from settings import (
 )
 
 
+### LOGGING SETUP ###
 logger = logging.getLogger(__name__)
+if cli_args.debug_converter:  # If the debug flag is set high, enable debug level logging
+    logging.getLogger(__name__).setLevel(logging.DEBUG)
+
+# This is to prevent messy debug logs from pyppeteer
 pptr_logger = logging.getLogger("pyppeteer")
 pptr_logger.setLevel(50)
 pptr_logger.addHandler(logging.StreamHandler())

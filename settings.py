@@ -1,6 +1,7 @@
 from os import getcwd, getenv
 from pathlib import Path
 from dotenv import load_dotenv
+import argparse
 
 cwd = getcwd()
 
@@ -37,3 +38,23 @@ def import_cuss_words():
         return word_list
 
 cuss_words = import_cuss_words()
+
+
+# Initialize command line args
+parser = argparse.ArgumentParser(prog = 'Bertha2')
+parser.add_argument('--disable_hardware', action='store_true')  # checks if the `--disable_hardware` flag is used
+parser.add_argument("--log", action="store")
+parser.add_argument("--debug_visuals", action='store_true')
+parser.add_argument("--debug_converter", action='store_true')
+parser.add_argument("--debug_hardware", action='store_true')
+parser.add_argument("--debug_chat", action='store_true')
+
+cli_args = parser.parse_args()
+
+# Logging Formatter
+# Easily create ANSI escape codes here: https://ansi.gabebanks.net
+magenta="\x1b[35;49;1m"
+blue="\x1b[34;49;1m"
+green="\x1b[32;49;1m"
+reset = "\x1b[0m"
+log_format = f"{blue}[%(levelname)s]{magenta}[%(name)s]{reset} %(message)s     {green}[%(filename)s:%(lineno)d]{reset}"
