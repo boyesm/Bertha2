@@ -98,15 +98,17 @@ if __name__ == '__main__':
     title_q = Queue() # queue of video names for obs to display
     video_name_list = []  # The list is only 10 items long  # TODO: this doesn't need to be created here (it doesn't seem like it anyway). it should just be created in livestream.py
 
-    parent_conn, child_conn = Pipe()
-    p1_conn, c1_conn = Pipe()
+    # converter -> visuals connection
+    cv_parent_conn, cv_child_conn = Pipe()
+    # hardware -> visuals connection. used for the hardware process to tell the visuals process when its doing things
+    hv_child_conn, hv_parent_conn = Pipe()
 
     sigint_e = Event()
     # TODO: if processes crash, restart them automatically
     input_p = Process(target=chat_process, args=(link_q,))
-    converter_p = Process(target=converter_process, args=(sigint_e,child_conn, link_q,play_q,title_q))
-    hardware_p = Process(target=hardware_process, args=(sigint_e,c1_conn,play_q,title_q,))
-    visuals_p = Process(target=visuals_process, args=(parent_conn,p1_conn,title_q,))
+    converter_p = Process(target=converter_process, args=(sigint_e,cv_child_conn,link_q,play_q,title_q,))
+    hardware_p = Process(target=hardware_process, args=(sigint_e,hv_parent_conn,play_q,title_q,))
+    visuals_p = Process(target=visuals_process, args=(cv_parent_conn,hv_child_conn,title_q,))
 
     input_p.daemon = True
     converter_p.daemon = True

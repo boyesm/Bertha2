@@ -5,6 +5,8 @@ import argparse
 
 cwd = getcwd()
 
+solenoid_cooldown_s = 30
+
 midi_file_path = cwd / Path("files") / Path("midi")
 audio_file_path = cwd / Path("files") / Path("audio")
 video_file_path = cwd / Path("files") / Path("video")

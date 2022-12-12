@@ -18,7 +18,7 @@ import struct
 import time
 import socket  # TODO: This shouldn't be imported by default. But this isn't super important
 import logging
-from settings import cli_args
+from settings import cli_args, solenoid_cooldown_s
 
 
 ### LOGGING SETUP ###
@@ -109,7 +109,7 @@ def generate_hardware_vis(arr, min_val=0, max_val=255, bar_length=30):
 def update_cl_vis(out_str):
     # rate limiting
     global last_cl_update
-    logger.debug(f"TIME SINCE LAST CALL: {time.time() - last_cl_update}")
+    # logger.debug(f"TIME SINCE LAST CALL: {time.time() - last_cl_update}")
     if (time.time() - last_cl_update < 0.005): return
 
     sock.send(b"\033[H")  # sketchy way of clearing the screen
@@ -143,7 +143,7 @@ def update_solenoid_value(note_address, pwm_value):
 
         note_values[note_address] = pwm_value
 
-        logger.debug(note_values)
+        # logger.debug(note_values)
 
         o = generate_hardware_vis(note_values)
         # this part of the code will send hardware outputs to an open netcat terminal
@@ -189,7 +189,7 @@ def power_draw_function(velocity, time_passed):
     pwm_at_t = (b ** (c + (velocity / e) - (a * time_passed))) + d
     ## y=1.05^{\left(90+\frac{t}{10}-250x\right)}+100
 
-    logger.debug(f"PWM: {pwm_at_t}")
+    # logger.debug(f"PWM: {pwm_at_t}")
     return pwm_at_t
 
 
@@ -246,7 +246,7 @@ async def play_midi_file(midi_filename):
             elif msg.type == 'note_off':
                 note = msg.note - starting_note
                 logger.debug(f"note_off {note}")
-                logger.debug(temp_lengs)
+                # logger.debug(temp_lengs)
 
                 ## TODO: error checks
                 # make sure temp_lengs[msg.note] exists and isn't from some past note.
@@ -259,10 +259,12 @@ async def play_midi_file(midi_filename):
 
     # gather tasks and run
     await asyncio.gather(*tasks)
-    await asyncio.sleep(30)
 
-def hardware_process(sigint_e, done_conn, play_q, title_q,):
+
+def hardware_process(sigint_e, hardware_visuals_conn, play_q, title_q,):
+
     logger.debug(f"Debug mode enabled for {__name__}")
+
     global TEST_FLAG
     TEST_FLAG = cli_args.disable_hardware
     if TEST_FLAG:
@@ -313,8 +315,16 @@ def hardware_process(sigint_e, done_conn, play_q, title_q,):
             filepath = play_q.get(timeout=10)
 
             logger.info("Starting playback of song on hardware")
+
             asyncio.run(play_midi_file(filepath))
-            done_conn.send("done")
+
+            hardware_visuals_conn.send("wait")
+
+            # wait to cool down solenoids
+            time.sleep(solenoid_cooldown_s)
+
+            hardware_visuals_conn.send("done")
+
             logger.info("Finished playback of song on hardware")
 
         except:

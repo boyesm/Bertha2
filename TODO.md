@@ -18,15 +18,21 @@
   * In the following cases the program should stop running:
     * Can't access important secret keys / keys are not valid
 * There should be more information displayed on stream as to what is happening with the program and robot
-  * When there is downtime to cool solenoids, this should be displayed on screen
-  * ...
+  * [DONE] When there is downtime to cool solenoids, this should be displayed on screen
+* Solenoids aren't always turned off at the end of a song
+* 
 
   
 
 # Bugs / Needed Improvements
 
+* The same video played 3 times in a row?
+  * Once video is done playing, make sure it stops!
+* Make sure the software actually pauses the hardware after the video is done playing for the specified time (e.g. 30 seconds)
+* 
+* Ensure data transmission between Arduino and PC is reliable (https://github.com/beneater/error-detection-videos)
 * The load and save queues features need to be repaired
-* Next up only refreshes at weird times
+* [DONE] Next up only refreshes at weird times
 * [DONE] the first element begins with 2.
 * Change keys because they've all been leaked.
   * Proxy keys
@@ -34,4 +40,4 @@
 * Create a start message for visuals process
 * If visuals.py can't connect to OBS after some time, the program will crash entirely.
   * What should the desired behaviour here be? If it can't connect, should it just wait until it can connect?
-* 
+* Enable a GitHub action that cleans up python code?

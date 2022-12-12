@@ -7,6 +7,7 @@ from os import getenv
 from dotenv import load_dotenv
 import time
 
+from pytube import Playlist
 
 ## LOAD SECRETS
 load_dotenv("../secrets.env")
@@ -48,11 +49,16 @@ if __name__ == "__main__":
     resp = sock.recv(2048).decode("utf-8")
     print(resp)
 
-    yt_arr = ["https://www.youtube.com/watch?v=jt9mM1jw7PE&list=RDMM&index=6",
-              "https://www.youtube.com/watch?v=NUC2EQvdzmY&list=RDMM&index=8",
-              "https://www.youtube.com/watch?v=ncvH_ZD8Gjs&list=RDMM&index=14",
-              "https://www.youtube.com/watch?v=J2AHvZWojSc&list=RDMM&index=25",
-              "https://www.youtube.com/watch?v=kfzRXseSBIM&list=RDMM&index=27"]
+    '''
+    yt_arr = ["https://www.youtube.com/watch?v=dshZ3tK4V-0",
+              "https://www.youtube.com/watch?v=0RMdwA8GWB8",
+              "https://www.youtube.com/watch?v=nYkxlwuWH9E&list=LLfw2biEGCqighyGgmF64iWw",
+              "https://www.youtube.com/watch?v=dshZ3tK4V-0",
+              "https://www.youtube.com/watch?v=dshZ3tK4V-0"]
+    '''
+
+    yt_arr = Playlist("https://www.youtube.com/watch?v=q6EoRBvdVPQ&list=PLFsQleAWXsj_4yDeebiIADdH5FMayBiJo").video_urls
+
 
     for el in yt_arr:
         send_chat_message(f"!play {el}")
