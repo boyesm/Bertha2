@@ -15,7 +15,7 @@ dirs = [midi_file_path, audio_file_path, video_file_path]  # add any other file 
 
 queue_save_file = "saved_queues"
 
-channel = '#berthatwo'  # the channel of which chat is being monitored
+channel = 'berthatwo'  # the channel of which chat is being monitored
 
 load_dotenv("secrets.env")
 

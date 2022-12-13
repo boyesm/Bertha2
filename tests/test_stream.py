@@ -30,6 +30,8 @@ print(resp)
 
 MAX_MSG_PER_SECOND = 0.5  # this is a speed that works
 
+## I've modded this account now, so it could do 100 msgs / 30 seconds
+
 dx_last_message = time.time()
 
 def send_chat_message(message):
