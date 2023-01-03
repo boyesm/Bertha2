@@ -180,16 +180,17 @@ def power_draw_function(velocity, time_passed):
     # create a function that will determine the power emitted at different points in time
     # max output value should be 255?
 
-    a = 100
-    b = 1.05
-    c = 100
-    d = 30
-    e = 10
+    cutoff = 0.1  # TODO: find a value for this variable. seconds
+    minimum_power = 100  # TODO: find a value for this variable. minimum amount of power required to depress note
+    minimum_hold = 100  # TODO: find a value for this variable. minimum amount of power to keep depressing the note after it's already been depressed initially
+    maximum_power = 255
+    maximum_velocity = 127
 
-    pwm_at_t = (b ** (c + (velocity / e) - (a * time_passed))) + d
-    ## y=1.05^{\left(90+\frac{t}{10}-250x\right)}+100
+    if time_passed < cutoff:
+        pwm_at_t = minimum_power + ((maximum_power - minimum_power) / maximum_velocity) * velocity
+    else:
+        pwm_at_t = minimum_hold
 
-    # logger.debug(f"PWM: {pwm_at_t}")
     return pwm_at_t
 
 

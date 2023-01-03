@@ -1,3 +1,10 @@
+# v1.0 roadmap
+
+* [DONE] Fix Saved Queue
+  * Will the queue save videos even if it's in the process of shutting down?
+* Modify peak and hold voltage function
+
+
 # Some bigger things to implement
 
 * Easy and consistent testing (even without hardware connected)

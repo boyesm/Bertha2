@@ -59,6 +59,8 @@ def save_queues(lq, pq):
         "link_q": ll
     }
 
+    logger.debug(backup_file)
+
     with open(f'{queue_save_file}.json', 'w', encoding='utf-8') as f:
         json.dump(backup_file, f, ensure_ascii=False, indent=4)
 
@@ -80,6 +82,9 @@ def load_queue(queue_name):
             q.put(item)
     except Exception as e:
         logger.critical(f"Queue could not be loaded. {e}")
+
+
+    logger.debug(o[queue_name])
 
     return q
 

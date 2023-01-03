@@ -124,17 +124,11 @@ def chat_process(link_q):
                 else:
                     logger.debug(f"invalid youtube video")
 
-                    send_privmsg(sock, f"Sorry, {message_object['command_arg']} is not a valid YouTube link.", channel,
+                    send_privmsg(sock, f"Sorry, {message_object['command_arg']} is not a valid YouTube link. It's either an invalid link or it's age restricted.", channel,
                                  reply_id=message_object["msg_id"])
 
         except Exception as e:
             logger.critical(f"Error{e}")
             pass
-
-
-if __name__ == "__main__":
-
-    # play_queue = Queue()
-    # chat_process(play_queue)
 
 
