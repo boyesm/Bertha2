@@ -65,6 +65,7 @@ def turn_on_some_notes():
     for note in range(20):
         update_solenoid_value(note, 254)
 
+
 '''
 def turn_off_all():
     for note in range(number_of_notes):

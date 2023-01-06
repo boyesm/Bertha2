@@ -30,6 +30,8 @@
 
 This file should include Twitch auth information and OBS local password. It should be of the format:
 
+#TODO: this isn't up to date.
+
 ```
 TOKEN=oauth:
 CLIENT_ID=

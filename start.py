@@ -22,7 +22,6 @@ logging.basicConfig(level=numeric_level, format=log_format)  # NOTE: Without thi
 logger = logging.getLogger(__name__)
 
 
-
 from input.chat import chat_process
 from converter import converter_process
 from hardware import hardware_process
@@ -39,8 +38,6 @@ def create_dirs(dirs):
 
 
 def save_queues(lq, pq):
-
-    # TODO: make sure nothing can go wrong with this code.
 
     logger.info(f"Saving queues to database.")
 
@@ -77,14 +74,13 @@ def load_queue(queue_name):
         with open(f'{queue_save_file}.json') as f:
             o = json.load(f)
 
+        logger.debug(o[queue_name])
+
         # save it into a queue
         for item in o[queue_name]:
             q.put(item)
     except Exception as e:
         logger.critical(f"Queue could not be loaded. {e}")
-
-
-    logger.debug(o[queue_name])
 
     return q
 
