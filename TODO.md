@@ -3,14 +3,15 @@
 * [DONE] Fix Saved Queue
   * Will the queue save videos even if it's in the process of shutting down?
 * [DONE] Modify peak and hold voltage function
-* Doesn't play the first video that's requested (on startup, or on restart)
-* It currently plays image files (!play https://i.ytimg.com/vi/QNQQGO2WJbM/hqdefault.jpg?sqp=-oaymwE2CNACELwBSFXyq4qpAygIARUAAIhCGAFwAcABBvABAfgBvgSAAoAIigIMCAAQARhyIFooQDAP&rs=AOn4CLCaDbi7K59Dw3oIoKaZXVtCsKV8Nw)
-* If a link that doesn't work gets past initial filter, make sure it doesn't fuck everything up.
-* Make a message saying the bot is down when it closes (i.e. set obs text to something like "bot is offline for maintenaince")
-* Why are other users seeing messages from berthatwo? All responses to !play commands should be whispers
-* Add some serious try catches to this code so things don't go wrong
-* Is this queueing every video?
-* Add some better explanations for what is going on (why does your video not immediately appear in next up? why does the bot not respond to only "!play"?)
+* [MALCOLM] Doesn't play the first video that's requested (on startup, or on restart)
+* [JARVIS] It currently plays image files (!play https://i.ytimg.com/vi/QNQQGO2WJbM/hqdefault.jpg?sqp=-oaymwE2CNACELwBSFXyq4qpAygIARUAAIhCGAFwAcABBvABAfgBvgSAAoAIigIMCAAQARhyIFooQDAP&rs=AOn4CLCaDbi7K59Dw3oIoKaZXVtCsKV8Nw)
+* [NOT SPECIFIC] If a link that doesn't work gets past initial filter, make sure it doesn't fuck everything up.
+* [JARVIS] Make a message saying the bot is down when it closes (i.e. set obs text to something like "bot is offline for maintenaince")
+* [JARVIS] Why are other users seeing messages from berthatwo? All responses to !play commands should be whispers
+* [NOT SPECIFIC] Add some serious try catches to this code so things don't go wrong
+* [NOT SPECIFIC] Is this queueing every video?
+* [NOT SPECIFIC] Add some better explanations for what is going on (why does your video not immediately appear in next up? why does the bot not respond to only "!play"?)
+* [MALCOLM] Doesn't always save the play queue (like when the hardware isn't working)
 
 READ THIS: https://go.snyk.io/rs/677-THP-415/images/Python_Cheatsheet_whitepaper.pdf
 
