@@ -25,7 +25,7 @@ video is converted to a MIDI file which is then played on the piano.
 ## Configuring
 
 * Ensure the latest firmware is loaded onto the Arduino
-* Install FFmpeg using `brew install ffmpeg`
+* Install Ffmpeg using `brew install ffmpeg`
 * Ensure al dependencies are installed and up to date. Reference `requirements.txt` for more information.
 * Install the latest version of pytube by using `git clone git://github.com/nficano/pytube.git`. Anything else than the latest version will likely cause errors.
 

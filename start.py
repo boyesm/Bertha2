@@ -79,8 +79,8 @@ def load_queue(queue_name):
         # save it into a queue
         for item in o[queue_name]:
             q.put(item)
-    except Exception as e:
-        logger.critical(f"Queue could not be loaded. {e}")
+    except Exception as ee:
+        logger.critical(f"Queue could not be loaded. {ee}")
 
     return q
 
@@ -94,7 +94,7 @@ if __name__ == '__main__':
     default_handler = signal.getsignal(signal.SIGINT)
     signal.signal(signal.SIGINT, signal.SIG_IGN)
 
-    link_q = load_queue("link_q")  # we need a queue for youtube links
+    link_q = load_queue("link_q")  # we need a queue for YouTube links
     play_q = load_queue("play_q")  # this is the queue of ready to play videos
     title_q = Queue() # queue of video names for obs to display
     video_name_list = []  # The list is only 10 items long  # TODO: this doesn't need to be created here (it doesn't seem like it anyway). it should just be created in livestream.py

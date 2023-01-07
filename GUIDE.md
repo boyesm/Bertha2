@@ -6,7 +6,7 @@
 ## Before Using the Program
 
 * Install `requirements.txt`
-* Ensure FFmpeg is installed. Use `brew install ffmpeg` to install.
+* Ensure Ffmpeg is installed. Use `brew install ffmpeg` to install.
 * Ensure `secrets.env` is present in the main directory. If it's not, create it and input the proper information.
 * Get OBS working
   * Install version 28.xx of OBS. This will be default include version 5+ of `obs-websockets`. Ensure version 1+ of `simpleobsws` is installed.
