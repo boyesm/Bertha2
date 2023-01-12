@@ -12,6 +12,7 @@
 * [NOT SPECIFIC] Is this queueing every video?
 * [NOT SPECIFIC] Add some better explanations for what is going on (why does your video not immediately appear in next up? why does the bot not respond to only "!play"?)
 * [MALCOLM] Doesn't always save the play queue (like when the hardware isn't working)
+* [MALCOLM] "next up" onscreen element doesn't properly render after a restart. 
 
 READ THIS: https://go.snyk.io/rs/677-THP-415/images/Python_Cheatsheet_whitepaper.pdf
 

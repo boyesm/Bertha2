@@ -167,28 +167,3 @@ def converter_process(sigint_e,conn, link_q, play_q, title_q):
     else:
         logger.info(f"Converter process has been shut down.")
 
-# TODO: test longer videos and see how they work
-# yt_links = [
-#     "jt9LlHXGckg",
-#     "3Lyex2tSUyA",
-#     "p9RtcklL0as",
-#     "meha_FCcHbo",
-#     "KRbsco8M7Fc",
-#     "jt9LlHXGckg",
-#     "3Lyex2tSUyA",
-#     "p9RtcklL0as",
-#     "meha_FCcHbo",
-#     "KRbsco8M7Fc",
-#     "jt9LlHXGckg",
-#     "3Lyex2tSUyA",
-#     "p9RtcklL0as",
-#     "meha_FCcHbo",
-#     "KRbsco8M7Fc",
-#     "jt9LlHXGckg",
-#     "3Lyex2tSUyA",
-#     "p9RtcklL0as",
-#     "meha_FCcHbo",
-#     "KRbsco8M7Fc",
-# ]
-# for link in yt_links:
-#     video_to_midi(f"https://www.youtube.com/watch?v={link}")

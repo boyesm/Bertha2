@@ -130,12 +130,12 @@ def update_solenoid_value(note_address, pwm_value):
 
         # if a note is up to an octave below what is available to be played, shift it up an octave
         if (note_address < 0):
-            logger.debug(f"too low! for now... {note_address}")
+            # logger.debug(f"too low! for now... {note_address}")
             note_address += 24
 
         # if a note is up to an octave below what is available to be played, shift it up an octave
         if (note_address > number_of_notes):
-            logger.debug(f"too high! for now... {note_address}")
+            # logger.debug(f"too high! for now... {note_address}")
             note_address -= 24
 
 
@@ -278,7 +278,7 @@ def hardware_process(sigint_e, hardware_visuals_conn, play_q, title_q,):
             sock.connect(('127.0.0.1', 8001))
         except:
             logger.error(f"Socket connection refused. Run netcat with `nc -dkl 8001`.")
-            # TODO: program shouldn't exit. it should be paused here until this condition has been met
+            raise ConnectionRefusedError
 
 
     else:  # test mode is disabled
