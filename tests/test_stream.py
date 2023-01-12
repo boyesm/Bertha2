@@ -18,7 +18,7 @@ client_id = getenv("TESTBOT_CLIENT_ID")
 channel = "berthatwo"
 
 
-## CONNECT TO TWITCH
+# CONNECT TO TWITCH
 sock = socket.socket()
 sock.connect(("irc.chat.twitch.tv", 6667))
 sock.send(f"PASS {token}\n".encode("utf-8"))
@@ -34,9 +34,10 @@ MAX_MSG_PER_SECOND = 0.5  # this is a speed that works
 
 dx_last_message = time.time()
 
+
 def send_chat_message(message):
     global dx_last_message
-    if(time.time() - dx_last_message < 1/MAX_MSG_PER_SECOND):
+    if time.time() - dx_last_message < 1/MAX_MSG_PER_SECOND:
         time.sleep((1/MAX_MSG_PER_SECOND) - (time.time() - dx_last_message))
 
     print(f"PRIVMSG #{channel} :{message}\r\n")

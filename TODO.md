@@ -5,8 +5,8 @@
 * [DONE] Modify peak and hold voltage function
 * [MALCOLM] Doesn't play the first video that's requested (on startup, or on restart)
 * [JARVIS] It currently plays image files (!play https://i.ytimg.com/vi/QNQQGO2WJbM/hqdefault.jpg?sqp=-oaymwE2CNACELwBSFXyq4qpAygIARUAAIhCGAFwAcABBvABAfgBvgSAAoAIigIMCAAQARhyIFooQDAP&rs=AOn4CLCaDbi7K59Dw3oIoKaZXVtCsKV8Nw)
-* [NOT SPECIFIC] If a link that doesn't work gets past initial filter, make sure it doesn't fuck everything up.
-* [JARVIS] Make a message saying the bot is down when it closes (i.e. set obs text to something like "bot is offline for maintenaince")
+* [NOT SPECIFIC] If a link that doesn't work gets past initial filter, make sure it doesn't mess everything up.
+* [JARVIS] Make a message saying the bot is down when it closes (i.e. set obs text to something like "bot is offline for maintenance")
 * [JARVIS] Why are other users seeing messages from berthatwo? All responses to !play commands should be whispers
 * [NOT SPECIFIC] Add some serious try catches to this code so things don't go wrong
 * [NOT SPECIFIC] Is this queueing every video?

@@ -45,8 +45,8 @@ async def update_obs_obj_args(change_args):
 def obs_change_text_source_value(text_obj_id, text_obj_value:str):
     """
     Changes the text of a Text object on the screen.
-    :param text_obj_id: The name of the Media object to change.
-    :param text_obj_value: The text to set for the input
+    :param: text_obj_id: The name of the Media object to change.
+    :param: text_obj_value: The text to set for the input
     :return:
     """
 
@@ -106,7 +106,7 @@ def obs_change_video_source_value(media_obj_id, media_filepath:str):
 
 
 def process_title(title:str):
-    new_title = filter_cuss_words(title)
+    # new_title = filter_cuss_words(title)
     new_title = shorten_title(title)
     return new_title
 
@@ -115,6 +115,7 @@ def filter_cuss_words(title:str):
     new_title = title
     for word in cuss_words:
         new_title = new_title.replace(word, "****")
+
     return new_title
 
 
@@ -127,7 +128,8 @@ def shorten_title(title:str):
 
 def update_playing_next(playing_next_list:list):
 
-    # what does this do?: This function takes a list of the names of videos playing next and updates the next playing visual on the screen
+    # what does this do?: This function takes a list of the names of videos playing next and
+    #   updates the next playing visual on the screen
     input_string = 'Next Up:\n'
 
     max_items = 5
@@ -136,7 +138,7 @@ def update_playing_next(playing_next_list:list):
         if (index < max_items) and (index > 0):
             input_string += f"{str(index)}. {process_title(video_title)}\n"
 
-    if(len(playing_next_list) > max_items):
+    if len(playing_next_list) > max_items:
         input_string += f"{len(playing_next_list) - max_items} more video(s) queued..."
 
     if len(playing_next_list) <= 1:

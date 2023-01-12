@@ -44,14 +44,14 @@ def download_video_audio(youtube_url):
 
     # convert to mp3
     # str conversion + brackets are necessary
-    videoclip = VideoFileClip(str(video_file_path / (file_name + ".mp4")))
+    video_clip = VideoFileClip(str(video_file_path / (file_name + ".mp4")))
 
-    audioclip = videoclip.audio
+    audio_clip = video_clip.audio
     # str conversion + brackets are necessary
-    audioclip.write_audiofile(str(audio_file_path / (file_name + ".mp3")), verbose=False, logger=None)
+    audio_clip.write_audiofile(str(audio_file_path / (file_name + ".mp3")), verbose=False, logger=None)
 
-    audioclip.close()
-    videoclip.close()
+    audio_clip.close()
+    video_clip.close()
 
     return file_name
 

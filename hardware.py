@@ -38,10 +38,11 @@ last_cl_update = time.time()
 sock = None
 note_values = [0]*number_of_notes
 
+
 ### TEST PATTERN FUNCTIONS ###
 async def test_every_note(hold_note_time=0.25):
     tasks = []
-    input_time = 0.0
+    input_time = 0
 
     for note in range(number_of_notes):
         tasks.append(trigger_note(note, input_time, 127, hold_note_time))
@@ -52,7 +53,7 @@ async def test_every_note(hold_note_time=0.25):
 
 async def test_every_note_at_once(hold_note_time=10, number_of_notes=5):
     tasks = []
-    input_time = 0.0
+    input_time = 0
 
     for note in range(number_of_notes):
         tasks.append(trigger_note(note, input_time, 127, hold_note_time))
@@ -99,8 +100,8 @@ def generate_hardware_vis(arr, min_val=0, max_val=255, bar_length=30):
         hashes = '#' * int(round(per * bar_length))
         spaces = ' ' * int(round((1 - per) * bar_length))
         out_str += f"[{hashes + spaces}]"
-        if (i) % 2:
-            out_str+="\n"
+        if i % 2:
+            out_str += "\n"
         else:
             out_str+=(" " * 5)
 
@@ -111,7 +112,7 @@ def update_cl_vis(out_str):
     # rate limiting
     global last_cl_update
     # logger.debug(f"TIME SINCE LAST CALL: {time.time() - last_cl_update}")
-    if (time.time() - last_cl_update < 0.005): return
+    if time.time() - last_cl_update < 0.005: return
 
     sock.send(b"\033[H")  # sketchy way of clearing the screen
     sock.send(out_str.encode())
@@ -129,13 +130,13 @@ def update_solenoid_value(note_address, pwm_value):
         if pwm_value < 0: pwm_value = 0
 
         # if a note is up to an octave below what is available to be played, shift it up an octave
-        if (note_address < 0):
-            # logger.debug(f"too low! for now... {note_address}")
+        if note_address < 0:
+            logger.debug(f"too low! for now... {note_address}")
             note_address += 24
 
         # if a note is up to an octave below what is available to be played, shift it up an octave
-        if (note_address > number_of_notes):
-            # logger.debug(f"too high! for now... {note_address}")
+        if note_address > number_of_notes:
+            logger.debug(f"too high! for now... {note_address}")
             note_address -= 24
 
 
@@ -151,21 +152,24 @@ def update_solenoid_value(note_address, pwm_value):
         update_cl_vis(o)
 
     else:
-        # ensure that note_address or pwm_value are always bewtween 1 and 255. 0 must be reserved for error codes in arduino (stupidest thing I ever heard).
+        # ensure that note_address or pwm_value are always between 1 and 255.
+        #   0 must be reserved for error codes in arduino (the stupidest thing I ever heard).
         note_address += 1
         pwm_value += 1
 
         # this will ensure pwm_value does not exceed the bounds of 8-bit int
-        if pwm_value > 254: pwm_value = 254
-        if pwm_value < 1: pwm_value = 1
+        if pwm_value > 254:
+            pwm_value = 254
+        if pwm_value < 1:
+            pwm_value = 1
 
         # if a note is up to an octave below what is available to be played, shift it up an octave
-        if (note_address < 0+1):
+        if note_address < 0+1:
             # logger.debug(f"too low! for now... {note_address}")
-            note_address+=24
+            note_address += 24
 
         # if a note is up to an octave below what is available to be played, shift it up an octave
-        if (note_address > number_of_notes+1):
+        if note_address > number_of_notes+1:
             # logger.debug(f"too high! for now... {note_address}")
             note_address -= 24
 
@@ -173,7 +177,7 @@ def update_solenoid_value(note_address, pwm_value):
         if (note_address < 0+1) or (note_address > number_of_notes+1) or (note_address >= 254): return
 
         logger.debug(f"{note_address}, {int(pwm_value)}")
-        if arduino_connection != None:
+        if arduino_connection is not None:
             arduino_connection.write(struct.pack('>3B', int(note_address), int(pwm_value), int(255)))
 
 
@@ -224,7 +228,7 @@ async def play_midi_file(midi_filename):
 
     tasks = []
     start_time = time.time()
-    input_time = 0.0
+    input_time = 0
     mid = mido.MidiFile(midi_filename)
     ticks_per_beat = mid.ticks_per_beat
     tempo = 500000 # this is the default MIDI tempo
@@ -233,7 +237,7 @@ async def play_midi_file(midi_filename):
     for msg in mido.merge_tracks(mid.tracks):
 
         # find the time between turning a note on and off
-        # temp_lengs = {note:{vel:127, time_on:0.0}}
+        # temp_lens = {note:{vel:127, time_on:0.0}}
 
         input_time += mido.tick2second(msg.time, ticks_per_beat, tempo)
 
@@ -248,10 +252,10 @@ async def play_midi_file(midi_filename):
             elif msg.type == 'note_off':
                 note = msg.note - starting_note
                 logger.debug(f"note_off {note}")
-                # logger.debug(temp_lengs)
+                # logger.debug(temp_lens)
 
                 ## TODO: error checks
-                # make sure temp_lengs[msg.note] exists and isn't from some past note.
+                # make sure temp_lens[msg.note] exists and isn't from some past note.
 
                 init_note_delay = temp_lengs[note]["init_note_delay"]
                 velocity = temp_lengs[note]["velocity"]

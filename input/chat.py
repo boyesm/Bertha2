@@ -12,20 +12,19 @@ logger = logging.getLogger(__name__)
 if cli_args.debug_chat:  # If the debug flag is set high, enable debug level logging
     logging.getLogger(__name__).setLevel(logging.DEBUG)
 
-def send_privmsg(sock, message, channel, reply_id=None):
 
+def send_privmsg(sock, message, twitch_channel, reply_id=None):
     if reply_id is not None:
-        msg = f"@reply-parent-msg-id={reply_id} PRIVMSG #{channel} :{message}\r\n"
+        msg = f"@reply-parent-msg-id={reply_id} PRIVMSG #{twitch_channel} :{message}\r\n"
         sock.send(msg.encode("utf-8"))
         logger.debug(msg)
     else:
-        msg = f"PRIVMSG #{channel} :{message}\r\n"
+        msg = f"PRIVMSG #{twitch_channel} :{message}\r\n"
         sock.send(msg.encode("utf-8"))
         logger.debug(msg)
 
 
 def parse_privmsg(msg):
-
     if msg == '':
         return
 
@@ -48,7 +47,6 @@ def parse_privmsg(msg):
         command = msg_content.split(" ")[0].strip()
         command_arg = msg_content.split(" ")[1].strip()
 
-
     return {
         'msg_id': msg_id,
         'username': username,
@@ -62,7 +60,7 @@ def chat_process(link_q):
     """
     Reads through twitch chat and parses out commands
 
-    :param link_q: The queue that the YouTube links from chat should be added to
+    :param: link_q: The queue that the YouTube links from chat should be added to
     :return:
     """
 
@@ -91,7 +89,6 @@ def chat_process(link_q):
     resp = sock.recv(2048).decode("utf-8")  # get join messages
     logger.debug(resp)
 
-
     logger.info(f"Ready and waiting for twitch commands in [{channel}]...")
 
     while True:
@@ -112,23 +109,25 @@ def chat_process(link_q):
 
                 logger.debug(message_object["msg_content"])
                 if is_valid_youtube_video(message_object["command_arg"]):
-                    # Queue.put adds command_arg to the global Queue variable, not a local Queue.
-                    # See multiprocessing.Queue for more info.
-                    # TODO: we can add video_name_q.put() here instead. just use the youtube link that we have here and create a youtube object
+                    # Queue.put adds command_arg to the global Queue variable, not a local Queue. See
+                    # multiprocessing.Queue for more info.
+                    # TODO: we can add video_name_q.put() here instead. just use
+                    #   the youtube link that we have here and create a youtube object
 
                     link_q.put(message_object["command_arg"])
                     logger.info(f"The video follow video has been queued: {message_object['command_arg']}")
 
-                    send_privmsg(sock, f"Your video ({message_object['command_arg']}) has been queued.", channel, reply_id=message_object["msg_id"])
+                    send_privmsg(sock, f"Your video ({message_object['command_arg']}) has been queued.", channel,
+                                 reply_id=message_object["msg_id"])
 
                 else:
                     logger.debug(f"invalid youtube video")
 
-                    send_privmsg(sock, f"Sorry, {message_object['command_arg']} is not a valid YouTube link. It's either an invalid link or it's age restricted.", channel,
+                    send_privmsg(sock,
+                                 f"Sorry, {message_object['command_arg']} is not a valid YouTube link. It's either an invalid link or it's age restricted.",
+                                 channel,
                                  reply_id=message_object["msg_id"])
 
         except Exception as e:
             logger.critical(f"Error{e}")
             pass
-
-
