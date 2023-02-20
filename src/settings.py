@@ -7,9 +7,9 @@ cwd = getcwd()
 
 solenoid_cooldown_s = 30
 
-midi_file_path = cwd / Path("files") / Path("midi")
-audio_file_path = cwd / Path("files") / Path("audio")
-video_file_path = cwd / Path("files") / Path("video")
+midi_file_path = cwd / Path("tmp-files") / Path("midi")
+audio_file_path = cwd / Path("tmp-files") / Path("audio")
+video_file_path = cwd / Path("tmp-files") / Path("video")
 
 dirs = [midi_file_path, audio_file_path, video_file_path]  # add any other file paths to this variable
 
@@ -55,8 +55,8 @@ cli_args = parser.parse_args()
 
 # Logging Formatter
 # Easily create ANSI escape codes here: https://ansi.gabebanks.net
-magenta="\x1b[35;49;1m"
-blue="\x1b[34;49;1m"
-green="\x1b[32;49;1m"
+magenta = "\x1b[35;49;1m"
+blue = "\x1b[34;49;1m"
+green = "\x1b[32;49;1m"
 reset = "\x1b[0m"
 log_format = f"{blue}[%(levelname)s]{magenta}[%(name)s]{reset} %(message)s     {green}[%(filename)s:%(lineno)d]{reset}"

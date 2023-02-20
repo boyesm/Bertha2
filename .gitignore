@@ -1,8 +1,7 @@
 # Custom
 example.png
 .DS_Store
-files
-files.old
+tmp-files
 test.py
 anothertest.py
 *.mp4
@@ -11,7 +10,7 @@ anothertest.py
 *.db
 secrets.env
 **/.DS_Store
-/midi-files/
+/files/midi-files/
 /saved_queues.json
 
 
@@ -151,3 +150,4 @@ node_modules
 # Pyre type checker
 .pyre/
 /cuss_words.txt
+/tmp-files/
