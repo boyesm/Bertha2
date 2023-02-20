@@ -3,6 +3,7 @@ import logging
 from src.settings import channel, nickname, token, cli_args
 from src.input.valid_link import is_valid_youtube_video
 
+
 ### LOGGING SETUP ###
 logger = logging.getLogger(__name__)
 if cli_args.debug_chat:  # If the debug flag is set high, enable debug level logging

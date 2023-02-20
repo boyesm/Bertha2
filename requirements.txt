@@ -1,7 +1,7 @@
 pytube~=12.1.0
 mido~=1.2.10
 pyserial~=3.5
-python-dotenv~=0.19.2
+python-dotenv~=0.21.1
 wget~=3.2
 pyppeteer~=1.0.2
 moviepy~=1.0.3

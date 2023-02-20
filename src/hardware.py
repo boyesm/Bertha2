@@ -254,7 +254,7 @@ async def play_midi_file(midi_filename):
                 logger.debug(f"note_off {note}")
                 # logger.debug(temp_lens)
 
-                ## TODO: error checks
+                # TODO: error checks
                 # make sure temp_lens[msg.note] exists and isn't from some past note.
 
                 init_note_delay = temp_lengs[note]["init_note_delay"]
@@ -283,7 +283,6 @@ def hardware_process(sigint_e, hardware_visuals_conn, play_q, title_q,):
         except:
             logger.error(f"Socket connection refused. Run netcat with `nc -dkl 8001`.")
             raise ConnectionRefusedError
-
 
     else:  # test mode is disabled
         global arduino_connection
