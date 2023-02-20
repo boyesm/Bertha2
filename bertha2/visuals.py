@@ -1,15 +1,12 @@
 import asyncio
 import time
-from os import getcwd
 
 import simpleobsws
 
 from bertha2.settings import cuss_words, solenoid_cooldown_s
-from bertha2.utils.logs import initialize_module_logger
+from bertha2.utils.logs import initialize_module_logger, log_if_in_debug_mode
 
 logger = initialize_module_logger(__name__)
-
-songs = []
 
 # TODO: Could these be added to settings?
 SCENE_NAME = 'Scene'
@@ -43,12 +40,6 @@ async def update_obs_obj_args(change_args):
 
 
 def obs_change_text_source_value(text_obj_id, text_obj_value: str):
-    """
-    Changes the text of a Text object on the screen.
-    :param: text_obj_id: The name of the Media object to change.
-    :param: text_obj_value: The text to set for the input
-    :return:
-    """
 
     get_item_arguments = {
         'sceneName': SCENE_NAME,
@@ -148,7 +139,7 @@ def update_playing_next(playing_next_list: list):
 def visuals_process(converter_visuals_conn, hardware_visuals_conn, video_name_q):
     # this process should control livestream visuals.
 
-    logger.debug(f"Debug mode enabled for {__name__}")
+    log_if_in_debug_mode(logger, __name__)
 
     no_video_playing_text = "Nothing currently playing."
 
@@ -224,12 +215,3 @@ def visuals_process(converter_visuals_conn, hardware_visuals_conn, video_name_q)
                 cooldown_bool = True
 
         time.sleep(0.5)
-
-
-if __name__ == "__main__":
-    # these are just some tests
-    update_playing_next(songs)
-    print('here')
-    media_filepath = f"{getcwd()}/files/video/_I5pKnI-WJc.mp4"
-    obs_change_video_source_value("playing_video", media_filepath)
-    print("here")

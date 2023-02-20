@@ -4,17 +4,17 @@ from bertha2.settings import cli_args, log_format
 
 
 def initialize_module_logger(module_name):
-    logger = logging.getLogger(__name__)
+    logger = logging.getLogger(module_name)
 
     # If the debug flag is set high, enable debug level logging
     if "visuals" in module_name and cli_args.debug_visuals:
-        logging.getLogger(__name__).setLevel(logging.DEBUG)
+        logging.getLogger(module_name).setLevel(logging.DEBUG)
     elif "chat" in module_name and cli_args.debug_chat:
-        logging.getLogger(__name__).setLevel(logging.DEBUG)
+        logging.getLogger(module_name).setLevel(logging.DEBUG)
     elif "hardware" in module_name and cli_args.debug_hardware:
-        logging.getLogger(__name__).setLevel(logging.DEBUG)
+        logging.getLogger(module_name).setLevel(logging.DEBUG)
     elif "converter" in module_name and cli_args.debug_converter:
-        logging.getLogger(__name__).setLevel(logging.DEBUG)
+        logging.getLogger(module_name).setLevel(logging.DEBUG)
 
     return logger
 
@@ -28,3 +28,7 @@ def initialize_root_logger(root_module):
         numeric_level = getattr(logging, cli_args.log.upper())
     logging.basicConfig(level=numeric_level, format=log_format)  # NOTE: Without this, logs won't print in the console.
     return logging.getLogger(root_module)
+
+
+def log_if_in_debug_mode(logger_object, module_name):
+    logger_object.debug(f"Debug logging enabled for {module_name}.")

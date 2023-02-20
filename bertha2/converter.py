@@ -17,7 +17,7 @@ from bertha2.settings import (
     proxy_password,
 )
 from bertha2.settings import video_file_path
-from bertha2.utils.logs import initialize_module_logger
+from bertha2.utils.logs import initialize_module_logger, log_if_in_debug_mode
 
 logger = initialize_module_logger(__name__)
 
@@ -55,6 +55,7 @@ def download_video_audio(youtube_url):
 
 # TODO: get this function working
 async def convert_audio_to_midi(file_name):
+    log_if_in_debug_mode(logger, __name__)
     logger.debug(f"converting audio to midi")
     # TODO: put some try catches in here to prevent timeouts
 

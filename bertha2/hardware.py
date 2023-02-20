@@ -15,7 +15,7 @@ import mido
 import serial
 
 from bertha2.settings import cli_args, solenoid_cooldown_s
-from bertha2.utils.logs import initialize_module_logger
+from bertha2.utils.logs import initialize_module_logger, log_if_in_debug_mode
 
 logger = initialize_module_logger(__name__)
 
@@ -257,7 +257,7 @@ async def play_midi_file(midi_filename):
 
 
 def hardware_process(sigint_e, hardware_visuals_conn, play_q, title_q, ):
-    logger.debug(f"Debug mode enabled for {__name__}")
+    log_if_in_debug_mode(logger, __name__)
 
     global TEST_FLAG
     TEST_FLAG = cli_args.disable_hardware

@@ -3,7 +3,7 @@ import socket
 from pytube import YouTube
 
 from bertha2.settings import channel, nickname, token
-from bertha2.utils.logs import initialize_module_logger
+from bertha2.utils.logs import initialize_module_logger, log_if_in_debug_mode
 
 logger = initialize_module_logger(__name__)
 
@@ -83,6 +83,7 @@ def parse_privmsg(msg):
 
 
 def chat_process(link_q):
+    log_if_in_debug_mode(logger, __name__)
     """
     Reads through twitch chat and parses out commands
 
