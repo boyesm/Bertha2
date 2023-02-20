@@ -2,18 +2,31 @@ from multiprocessing import Process, Queue, Event, Pipe
 import os
 import time
 from pathlib import Path
-
-from settings import dirs, queue_save_file
+from argparse import ArgumentParser
+import logging
+from settings import dirs, queue_save_file, cli_args, log_format
 import signal
 import json
+import sys
 
-from input.oldchat import chat_process
-from input.cli import cli_process
+os.environ['IMAGEIO_VAR_NAME'] = 'ffmpeg'
+
+### LOGGING SETUP ###
+# This is run before importing B2 modules so that they all have consistent log levels for all code run
+# For more information on log levels: https://docs.python.org/3/library/logging.html#levels
+if cli_args.log is None:  # If LOG isn't defined, set to info mode.
+    numeric_level = 20
+else:
+    numeric_level = getattr(logging, cli_args.log.upper())
+logging.basicConfig(level=numeric_level, format=log_format)  # NOTE: Without this, logs won't print in the console.
+logger = logging.getLogger(__name__)
+
+
+from input.chat import chat_process
 from converter import converter_process
 from hardware import hardware_process
 from visuals import visuals_process
 
-os.environ['IMAGEIO_VAR_NAME'] = 'ffmpeg'
 
 def create_dirs(dirs):
     for dir in dirs:
@@ -21,14 +34,12 @@ def create_dirs(dirs):
         if not os.path.exists(file_dir):
             os.makedirs(file_dir)
 
-    print("START: Created directories")
+    logger.info(f"Created directories")
 
 
 def save_queues(lq, pq):
 
-    # TODO: make sure nothing can go wrong with this code.
-
-    print("START: Saving queues to database.")
+    logger.info(f"Saving queues to database.")
 
     ll = []
     pl = []
@@ -45,15 +56,17 @@ def save_queues(lq, pq):
         "link_q": ll
     }
 
+    logger.debug(backup_file)
+
     with open(f'{queue_save_file}.json', 'w', encoding='utf-8') as f:
         json.dump(backup_file, f, ensure_ascii=False, indent=4)
 
-    print("START: Saved queues to database.")
+    logger.info(f"Saved queues to database.")
 
 
 def load_queue(queue_name):
 
-    print(f"START: Loading queue: {queue_name}")
+    logger.info(f"Loading queue: {queue_name}")
 
     q = Queue()
 
@@ -61,41 +74,42 @@ def load_queue(queue_name):
         with open(f'{queue_save_file}.json') as f:
             o = json.load(f)
 
+        logger.debug(o[queue_name])
+
         # save it into a queue
         for item in o[queue_name]:
             q.put(item)
-    except Exception as e:
-        print(f"START: Queue could not be loaded. {e}")
+    except Exception as ee:
+        logger.critical(f"Queue could not be loaded. {ee}")
 
     return q
 
 
 if __name__ == '__main__':
 
-    print("START: Initializing Bertha2...")
+    logger.info(f"Initializing Bertha2...")
     create_dirs(dirs)
 
     # Set signal handling of SIGINT to ignore mode.
     default_handler = signal.getsignal(signal.SIGINT)
     signal.signal(signal.SIGINT, signal.SIG_IGN)
 
-    # TODO: refactor this so that we have a shared state among all the processes instead of weird queue and pipe systems.
-
-    link_q = load_queue("link_q")  # we need a queue for youtube links
+    link_q = load_queue("link_q")  # we need a queue for YouTube links
     play_q = load_queue("play_q")  # this is the queue of ready to play videos
     title_q = Queue() # queue of video names for obs to display
     video_name_list = []  # The list is only 10 items long  # TODO: this doesn't need to be created here (it doesn't seem like it anyway). it should just be created in livestream.py
 
-    parent_conn, child_conn = Pipe()
-    p1_conn, c1_conn = Pipe()
+    # converter -> visuals connection
+    cv_parent_conn, cv_child_conn = Pipe()
+    # hardware -> visuals connection. used for the hardware process to tell the visuals process when its doing things
+    hv_child_conn, hv_parent_conn = Pipe()
 
     sigint_e = Event()
     # TODO: if processes crash, restart them automatically
     input_p = Process(target=chat_process, args=(link_q,))
-    # input_p = Process(target=cli_process, args=(link_q,))
-    converter_p = Process(target=converter_process, args=(sigint_e,child_conn, link_q,play_q,title_q))
-    hardware_p = Process(target=hardware_process, args=(sigint_e,c1_conn,play_q,title_q,))  # TODO: this might need to be changed to the livestream process, which can in-turn call hardware and play video
-    visuals_p = Process(target=visuals_process, args=(parent_conn,p1_conn,title_q,))
+    converter_p = Process(target=converter_process, args=(sigint_e,cv_child_conn,link_q,play_q,title_q,))
+    hardware_p = Process(target=hardware_process, args=(sigint_e,hv_parent_conn,play_q,title_q,))
+    visuals_p = Process(target=visuals_process, args=(cv_parent_conn,hv_child_conn,title_q,))
 
     input_p.daemon = True
     converter_p.daemon = True
@@ -114,12 +128,12 @@ if __name__ == '__main__':
     try:
         signal.pause()
     except KeyboardInterrupt:
-        print("START: Shutting down gracefully...")
+        logger.info(f"Shutting down gracefully...")
         sigint_e.set()
         converter_p.join()
         hardware_p.join()
     except Exception as e:
-        print(f"START: Error has occurred. {e}")
+        logger.critical(f"Error has occurred. {e}")
     finally:
         save_queues(link_q, play_q)
-        print("START: Shut down.")
+        logger.info(f"Shut down.")
