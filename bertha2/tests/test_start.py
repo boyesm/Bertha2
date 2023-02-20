@@ -1,8 +1,10 @@
 import unittest
 from multiprocessing import Queue
+from unittest import TestCase
+
 from pytube import Playlist
-from pytube import YouTube
 from pytube.extract import video_id
+
 from bertha2.start import save_queues, load_queue
 
 
@@ -25,7 +27,6 @@ def convert_list_to_queue(in_list):
 
 
 class TestQueueSave(unittest.TestCase):
-
     link_list = []
     play_list = []
 
@@ -68,3 +69,8 @@ class TestQueueSave(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class Test(TestCase):
+    def test_create_dirs(self):
+        self.fail()
