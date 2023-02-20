@@ -1,5 +1,7 @@
 # v1.0 roadmap
 
+* Re-organize files and dirs
+* Rename start.py to main.py
 * [DONE] Fix Saved Queue
   * Will the queue save videos even if it's in the process of shutting down?
 * [DONE] Modify peak and hold voltage function
@@ -16,6 +18,19 @@
 * check for the existence of needed files on launch (cuss_wrds.txt, secrets.env)
 
 READ THIS: https://go.snyk.io/rs/677-THP-415/images/Python_Cheatsheet_whitepaper.pdf
+
+# Testing
+
+* Breaking down into smaller, testable functions.
+* Writing tests for these functions.
+* Jarvis will work on:
+  * chat.py
+  * converter.py
+* Malcolm will work on:
+  * hardware.py
+  * start.py
+  * visuals.py
+
 
 # Some bigger things to implement
 
