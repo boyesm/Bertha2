@@ -28,16 +28,18 @@
 
 ## Secrets.env File
 
-This file should include Twitch auth information and OBS local password. It should be of the format:
+This file should include Twitch auth information and OBS local password as well as other important stuff.
 
-#TODO: this isn't up to date.
+It can be found in the GitHub 'Secrets and Variables' page of the repo.
 
-```
-TOKEN=oauth:
-CLIENT_ID=
-NICKNAME=berthatwo
-OBSPSWD=
-```
+Create a new file called 'secrets.env' and add it into the root dir.
+
+## cuss_words.txt File
+
+It can be found in the GitHub 'Secrets and Variables' page of the repo.
+
+Create a new file called 'cuss_words.txt' and add it into the root dir.
+
 
 ## Hardware Simulator
 
