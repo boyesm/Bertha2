@@ -349,7 +349,7 @@ if __name__ == '__main__':
 
     # turn_on_some_notes()  # NOTE: Don't run this with power enabled
 
-    midi_filename = "midi-files/all_notes.mid"
+    midi_filename = "../files/midi-files/all_notes.mid"
     # midi_filename = "midi/take5.mid"
     # midi_filename = "midi/Wii Channels - Mii Channel.mid"
     # midi_filename = "midi-files/The Entertainer.mid"
