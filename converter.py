@@ -147,7 +147,7 @@ def video_to_midi(youtube_url):
     return filepath, video_name
 
 
-def converter_process(sigint_e,conn, link_q, play_q, title_q):
+def converter_process(sigint_e, conn, link_q, play_q, title_q):
     logger.info(f"Converter process has been started.")
     while not sigint_e.is_set():
         try:

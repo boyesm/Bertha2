@@ -190,7 +190,7 @@ def visuals_process(converter_visuals_conn, hardware_visuals_conn, video_name_q)
         # update status text at the bottom of the screen
         if update_status_text:
             # update the video player and 'current video text'
-            if cooldown_bool: # if b2 is cooling down, update this to the correct text
+            if cooldown_bool:  # if b2 is cooling down, update this to the correct text
                 obs_current_status_text = f"Bertha2 is cooling down for the next {solenoid_cooldown_s} seconds, please wait."
                 obs_current_video_path = ""
 

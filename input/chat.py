@@ -67,6 +67,8 @@ def chat_process(link_q):
     logger.debug(f"twitch token, nickname: {token}, {nickname}")
 
     # https://dev.twitch.tv/docs/irc
+
+    ## Twitch Auth can be it's own function! Test this on it's own!
     sock = socket.socket()
     sock.connect(("irc.chat.twitch.tv", 6667))  # connect to server
     sock.send(f"CAP REQ :twitch.tv/tags\n".encode("utf-8"))  # req capabilities
@@ -96,6 +98,9 @@ def chat_process(link_q):
             resp = sock.recv(2048).decode("utf-8")
 
             # this code ensures the IRC server knows the bot is still listening
+            # if my_func(resp):
+
+
             if resp.startswith("PING"):
                 sock.send("PONG\n".encode("utf-8"))
                 continue
@@ -107,6 +112,8 @@ def chat_process(link_q):
 
             if message_object["command"] == "!play":
 
+                ### this can be a function ###
+                # each case for this function can be analyzed and tested (is valid, is not valid)
                 logger.debug(message_object["msg_content"])
                 if is_valid_youtube_video(message_object["command_arg"]):
                     # Queue.put adds command_arg to the global Queue variable, not a local Queue. See
@@ -127,6 +134,7 @@ def chat_process(link_q):
                                  f"Sorry, {message_object['command_arg']} is not a valid YouTube link. It's either an invalid link or it's age restricted.",
                                  channel,
                                  reply_id=message_object["msg_id"])
+                ################
 
         except Exception as e:
             logger.critical(f"Error{e}")

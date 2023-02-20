@@ -13,6 +13,7 @@
 * [NOT SPECIFIC] Add some better explanations for what is going on (why does your video not immediately appear in next up? why does the bot not respond to only "!play"?)
 * [MALCOLM] Doesn't always save the play queue (like when the hardware isn't working)
 * [MALCOLM] "next up" onscreen element doesn't properly render after a restart. 
+* check for the existence of needed files on launch (cuss_wrds.txt, secrets.env)
 
 READ THIS: https://go.snyk.io/rs/677-THP-415/images/Python_Cheatsheet_whitepaper.pdf
 
@@ -60,3 +61,7 @@ READ THIS: https://go.snyk.io/rs/677-THP-415/images/Python_Cheatsheet_whitepaper
 * If visuals.py can't connect to OBS after some time, the program will crash entirely.
   * What should the desired behaviour here be? If it can't connect, should it just wait until it can connect?
 * Enable a GitHub action that cleans up python code?
+
+# Considerations
+
+Warning If a process is killed using Process.terminate() or os.kill() while it is trying to use a Queue, then the data in the queue is likely to become corrupted. This may cause any other process to get an exception when it tries to use the queue later on.

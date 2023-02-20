@@ -7,6 +7,7 @@ from os import getenv
 from dotenv import load_dotenv
 import time
 
+
 from pytube import Playlist
 
 ## LOAD SECRETS
