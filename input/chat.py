@@ -98,14 +98,12 @@ def chat_process(link_q):
             # this code ensures the IRC server knows the bot is still listening
             if resp.startswith("PING"):
                 sock.send("PONG\n".encode("utf-8"))
-                continue
-            else:
+            elif:
                 message_object = parse_privmsg(resp)
-                if message_object is None:
-                    continue
-                logger.debug(message_object)
-
-            if message_object["command"] == "!play":
+                if message_object is not None:
+                    logger.debug(message_object)
+            # Main body        
+            elif message_object["command"] == "!play":
 
                 logger.debug(message_object["msg_content"])
                 if is_valid_youtube_video(message_object["command_arg"]):
