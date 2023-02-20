@@ -1,8 +1,8 @@
-import socket
 import logging
-from bertha2.settings import channel, nickname, token, cli_args
-from bertha2.input.valid_link import is_valid_youtube_video
+import socket
 
+from bertha2.input.valid_link import is_valid_youtube_video
+from bertha2.settings import channel, nickname, token, cli_args
 
 ### LOGGING SETUP ###
 logger = logging.getLogger(__name__)
@@ -96,7 +96,6 @@ def chat_process(link_q):
 
             # this code ensures the IRC server knows the bot is still listening
             # if my_func(resp):
-
 
             if resp.startswith("PING"):
                 sock.send("PONG\n".encode("utf-8"))

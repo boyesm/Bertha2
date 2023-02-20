@@ -1,15 +1,14 @@
 import asyncio
-import time
-from pprint import pprint
-from os import getcwd
 import logging
-import wget
 import random
+from os import getcwd
+
+import wget
+from moviepy.editor import VideoFileClip
 from pyppeteer import launch
 from pytube import YouTube
 from pytube.extract import video_id
-from bertha2.settings import video_file_path, cli_args
-from moviepy.editor import VideoFileClip
+
 from bertha2.settings import (
     midi_file_path,
     audio_file_path,
@@ -17,7 +16,7 @@ from bertha2.settings import (
     proxy_username,
     proxy_password,
 )
-
+from bertha2.settings import video_file_path, cli_args
 
 ### LOGGING SETUP ###
 logger = logging.getLogger(__name__)
@@ -121,7 +120,6 @@ async def convert_audio_to_midi(file_name):
 
 
 def video_to_midi(youtube_url):
-
     # TODO: add a feature that checks if the YouTube video has already been converted
 
     yt = YouTube(youtube_url)
@@ -166,4 +164,3 @@ def converter_process(sigint_e, conn, link_q, play_q, title_q):
 
     else:
         logger.info(f"Converter process has been shut down.")
-

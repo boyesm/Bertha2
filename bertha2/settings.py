@@ -1,7 +1,8 @@
+import argparse
 from os import getcwd, getenv
 from pathlib import Path
+
 from dotenv import load_dotenv
-import argparse
 
 cwd = getcwd()
 
@@ -30,6 +31,7 @@ proxy_password = getenv("PROXY_PASSWORD")
 
 cuss_words_file_name = "cuss_words.txt"
 
+
 def import_cuss_words():
     global cuss_words
 
@@ -39,11 +41,11 @@ def import_cuss_words():
         word_list = list(filter(None, word_list))  # Remove blank elements (e.g. "") from array
         return word_list
 
+
 cuss_words = import_cuss_words()
 
-
 # Initialize command line args
-parser = argparse.ArgumentParser(prog = 'Bertha2')
+parser = argparse.ArgumentParser(prog='Bertha2')
 parser.add_argument('--disable_hardware', action='store_true')  # checks if the `--disable_hardware` flag is used
 parser.add_argument("--log", action="store")
 parser.add_argument("--debug_visuals", action='store_true')

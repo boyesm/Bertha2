@@ -5,21 +5,17 @@ what this file should do:
 - play on hardware
 """
 
-import os
 import asyncio
-import subprocess
-from pprint import pprint
-import mido
-import math
-import datetime
-import atexit
-import serial
-import struct
-import time
-import socket  # TODO: This shouldn't be imported by default. But this isn't super important
 import logging
-from bertha2.settings import cli_args, solenoid_cooldown_s
+import socket  # TODO: This shouldn't be imported by default. But this isn't super important
+import struct
+import subprocess
+import time
 
+import mido
+import serial
+
+from bertha2.settings import cli_args, solenoid_cooldown_s
 
 ### LOGGING SETUP ###
 logger = logging.getLogger(__name__)
@@ -36,7 +32,7 @@ TEST_FLAG = False  # TODO: This should be False by default
 # TODO: this shouldn't be defined when not in test mode
 last_cl_update = time.time()
 sock = None
-note_values = [0]*number_of_notes
+note_values = [0] * number_of_notes
 
 
 ### TEST PATTERN FUNCTIONS ###
@@ -103,7 +99,7 @@ def generate_hardware_vis(arr, min_val=0, max_val=255, bar_length=30):
         if i % 2:
             out_str += "\n"
         else:
-            out_str+=(" " * 5)
+            out_str += (" " * 5)
 
     return out_str
 
@@ -122,7 +118,6 @@ def update_cl_vis(out_str):
 
 ### IMPORTANT MAIN FUNCTIONS ###
 def update_solenoid_value(note_address, pwm_value):
-
     if TEST_FLAG:  # when testing, output doesn't go to the actual hardware, it's just visualized on the command line
 
         # this will ensure pwm_value does not exceed the bounds of 8-bit int
@@ -138,7 +133,6 @@ def update_solenoid_value(note_address, pwm_value):
         if note_address > number_of_notes:
             logger.debug(f"too high! for now... {note_address}")
             note_address -= 24
-
 
         # this will ensure only valid notes are toggled, preventing memory address not found errors
         if (note_address < 0) or (note_address > number_of_notes - 1) or (note_address >= 255): return
@@ -164,17 +158,17 @@ def update_solenoid_value(note_address, pwm_value):
             pwm_value = 1
 
         # if a note is up to an octave below what is available to be played, shift it up an octave
-        if note_address < 0+1:
+        if note_address < 0 + 1:
             # logger.debug(f"too low! for now... {note_address}")
             note_address += 24
 
         # if a note is up to an octave below what is available to be played, shift it up an octave
-        if note_address > number_of_notes+1:
+        if note_address > number_of_notes + 1:
             # logger.debug(f"too high! for now... {note_address}")
             note_address -= 24
 
         # this will ensure only valid notes are toggled, preventing memory address not found errors
-        if (note_address < 0+1) or (note_address > number_of_notes+1) or (note_address >= 254): return
+        if (note_address < 0 + 1) or (note_address > number_of_notes + 1) or (note_address >= 254): return
 
         logger.debug(f"{note_address}, {int(pwm_value)}")
         if arduino_connection is not None:
@@ -200,7 +194,6 @@ def power_draw_function(velocity, time_passed):
 
 
 async def trigger_note(note, init_note_delay=0, velocity=255, hold_note_time=1):
-
     # delay until the note should be turned on
     await asyncio.sleep(init_note_delay)
 
@@ -222,7 +215,6 @@ async def trigger_note(note, init_note_delay=0, velocity=255, hold_note_time=1):
 
 
 async def play_midi_file(midi_filename):
-
     # TODO: be able to start playback from a certain point in the video (10 seconds in)
     # TODO: add a 30 second limit to video playback
 
@@ -231,7 +223,7 @@ async def play_midi_file(midi_filename):
     input_time = 0
     mid = mido.MidiFile(midi_filename)
     ticks_per_beat = mid.ticks_per_beat
-    tempo = 500000 # this is the default MIDI tempo
+    tempo = 500000  # this is the default MIDI tempo
     temp_lengs = {}
 
     for msg in mido.merge_tracks(mid.tracks):
@@ -267,8 +259,7 @@ async def play_midi_file(midi_filename):
     await asyncio.gather(*tasks)
 
 
-def hardware_process(sigint_e, hardware_visuals_conn, play_q, title_q,):
-
+def hardware_process(sigint_e, hardware_visuals_conn, play_q, title_q, ):
     logger.debug(f"Debug mode enabled for {__name__}")
 
     global TEST_FLAG
@@ -313,7 +304,6 @@ def hardware_process(sigint_e, hardware_visuals_conn, play_q, title_q,):
             # TODO: should we end the program here? or keep searching for an arduino to be connected?
             return
 
-
     while not sigint_e.is_set():
         try:
             # title = title_q.get()
@@ -338,9 +328,7 @@ def hardware_process(sigint_e, hardware_visuals_conn, play_q, title_q,):
         logger.info("Hardware process has been shut down.")
 
 
-
 if __name__ == '__main__':
-
     logger.info("Running some tests.")
 
     # asyncio.run(test_every_note())

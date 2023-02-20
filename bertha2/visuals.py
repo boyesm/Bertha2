@@ -1,9 +1,10 @@
-import time
 import asyncio
-import simpleobsws
-from pprint import *
-from os import getcwd
 import logging
+import time
+from os import getcwd
+
+import simpleobsws
+
 from bertha2.settings import cuss_words, cli_args, solenoid_cooldown_s
 
 songs = []
@@ -13,7 +14,6 @@ logger = logging.getLogger(__name__)
 if cli_args.debug_visuals:  # If the debug flag is set high, enable debug level logging
     logging.getLogger(__name__).setLevel(logging.DEBUG)
 
-
 # TODO: Could these be added to settings?
 SCENE_NAME = 'Scene'
 MEDIA_NAME = 'Video'
@@ -22,8 +22,10 @@ MAX_VIDEO_TITLE_LENGTH_CURRENT = 45
 VIDEO_WIDTH = 1280
 VIDEO_HEIGHT = 720
 
-parameters = simpleobsws.IdentificationParameters(ignoreNonFatalRequestChecks=False) # Create an IdentificationParameters object (optional for connecting)
-ws = simpleobsws.WebSocketClient(url='ws://127.0.0.1:4444', identification_parameters=parameters) # Every possible argument has been passed, but none are required. See lib code for defaults.
+parameters = simpleobsws.IdentificationParameters(
+    ignoreNonFatalRequestChecks=False)  # Create an IdentificationParameters object (optional for connecting)
+ws = simpleobsws.WebSocketClient(url='ws://127.0.0.1:4444',
+                                 identification_parameters=parameters)  # Every possible argument has been passed, but none are required. See lib code for defaults.
 
 
 async def update_obs_obj_args(change_args):
@@ -43,7 +45,7 @@ async def update_obs_obj_args(change_args):
     await ws.disconnect()  # Disconnect from the websocket server cleanly
 
 
-def obs_change_text_source_value(text_obj_id, text_obj_value:str):
+def obs_change_text_source_value(text_obj_id, text_obj_value: str):
     """
     Changes the text of a Text object on the screen.
     :param: text_obj_id: The name of the Media object to change.
@@ -82,22 +84,21 @@ def obs_change_text_source_value(text_obj_id, text_obj_value:str):
         logger.warning(f"Unable to connect to OBS. Is it running right now?")
 
 
-def obs_change_video_source_value(media_obj_id, media_filepath:str):
-
+def obs_change_video_source_value(media_obj_id, media_filepath: str):
     get_item_arguments = {
-        'sceneName':SCENE_NAME,
-        'sourceName':media_obj_id,
+        'sceneName': SCENE_NAME,
+        'sourceName': media_obj_id,
     }
 
     # Use this as a reference for the different options available:
     #     https://github.com/Elektordi/obs-websocket-py/blob/e92960a475d3f1096a4ea41763cbc776b23f0a37/obswebsocket/requests.py#L1480
 
     change_arguments = {
-        'inputName':media_obj_id,
-        'inputSettings':{
-            'local_file':media_filepath,
-            'width':VIDEO_WIDTH,
-            'height':VIDEO_HEIGHT,
+        'inputName': media_obj_id,
+        'inputSettings': {
+            'local_file': media_filepath,
+            'width': VIDEO_WIDTH,
+            'height': VIDEO_HEIGHT,
         }
     }
 
@@ -106,13 +107,13 @@ def obs_change_video_source_value(media_obj_id, media_filepath:str):
     loop.run_until_complete(update_obs_obj_args(change_arguments))
 
 
-def process_title(title:str):
+def process_title(title: str):
     # new_title = filter_cuss_words(title)
     new_title = shorten_title(title)
     return new_title
 
 
-def filter_cuss_words(title:str):
+def filter_cuss_words(title: str):
     new_title = title
     for word in cuss_words:
         new_title = new_title.replace(word, "****")
@@ -120,15 +121,14 @@ def filter_cuss_words(title:str):
     return new_title
 
 
-def shorten_title(title:str):
+def shorten_title(title: str):
     if len(title) > MAX_VIDEO_TITLE_LENGTH_QUEUE:
         title = title[0:(MAX_VIDEO_TITLE_LENGTH_QUEUE - 3)] + "..."
 
     return title
 
 
-def update_playing_next(playing_next_list:list):
-
+def update_playing_next(playing_next_list: list):
     # what does this do?: This function takes a list of the names of videos playing next and
     #   updates the next playing visual on the screen
     input_string = 'Next Up:\n'
@@ -176,12 +176,10 @@ def visuals_process(converter_visuals_conn, hardware_visuals_conn, video_name_q)
             logger.debug(f"conn.recv(): {o}")
             update_next_up = True
 
-
         # UPDATE ANY VISUALS
 
         # update next up
         if update_next_up:
-
             # update the on-screen list of videos that are playing next
             update_playing_next([video['title'] for video in video_data_queue])
             logger.debug(f"Refreshed 'Next Up'.")
@@ -209,7 +207,6 @@ def visuals_process(converter_visuals_conn, hardware_visuals_conn, video_name_q)
 
             update_status_text = False
 
-
         # CHECK IF CURRENTLY PLAYING VIDEO IS DONE PLAYING YET
 
         if hardware_visuals_conn.poll():
@@ -218,7 +215,6 @@ def visuals_process(converter_visuals_conn, hardware_visuals_conn, video_name_q)
             logger.debug(f"msg: {msg}")
 
             if len(video_data_queue) > 0 and msg == "done":
-
                 logger.info(f"Done playing file.")
                 logger.debug(f"video_data_queue: {video_data_queue}")
                 video_data_queue.pop(0)  # remove the video that has just been played
@@ -227,10 +223,8 @@ def visuals_process(converter_visuals_conn, hardware_visuals_conn, video_name_q)
                 cooldown_bool = False
 
             if msg == "wait":
-
                 update_status_text = True
                 cooldown_bool = True
-
 
         time.sleep(0.5)
 

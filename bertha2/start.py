@@ -1,13 +1,11 @@
-from multiprocessing import Process, Queue, Event, Pipe
-import os
-import time
-from pathlib import Path
-from argparse import ArgumentParser
-import logging
-from bertha2.settings import dirs, queue_save_file, cli_args, log_format
-import signal
 import json
-import sys
+import logging
+import os
+import signal
+from multiprocessing import Process, Queue, Event, Pipe
+from pathlib import Path
+
+from bertha2.settings import dirs, queue_save_file, cli_args, log_format
 
 os.environ['IMAGEIO_VAR_NAME'] = 'ffmpeg'
 
@@ -20,7 +18,6 @@ else:
     numeric_level = getattr(logging, cli_args.log.upper())
 logging.basicConfig(level=numeric_level, format=log_format)  # NOTE: Without this, logs won't print in the console.
 logger = logging.getLogger(__name__)
-
 
 from bertha2.input.chat import chat_process
 from bertha2.converter import converter_process
@@ -38,7 +35,6 @@ def create_dirs(dirs):
 
 
 def save_queues(lq, pq):
-
     logger.info(f"Saving queues to database.")
 
     ll = []
@@ -65,7 +61,6 @@ def save_queues(lq, pq):
 
 
 def load_queue(queue_name):
-
     logger.info(f"Loading queue: {queue_name}")
 
     q = Queue()
@@ -96,7 +91,7 @@ if __name__ == '__main__':
 
     link_q = load_queue("link_q")  # we need a queue for YouTube links
     play_q = load_queue("play_q")  # this is the queue of ready to play videos
-    title_q = Queue() # queue of video names for obs to display
+    title_q = Queue()  # queue of video names for obs to display
     video_name_list = []  # The list is only 10 items long  # TODO: this doesn't need to be created here (it doesn't seem like it anyway). it should just be created in livestream.py
 
     # converter -> visuals connection
@@ -107,9 +102,9 @@ if __name__ == '__main__':
     sigint_e = Event()
     # TODO: if processes crash, restart them automatically
     input_p = Process(target=chat_process, args=(link_q,))
-    converter_p = Process(target=converter_process, args=(sigint_e,cv_child_conn,link_q,play_q,title_q,))
-    hardware_p = Process(target=hardware_process, args=(sigint_e,hv_parent_conn,play_q,title_q,))
-    visuals_p = Process(target=visuals_process, args=(cv_parent_conn,hv_child_conn,title_q,))
+    converter_p = Process(target=converter_process, args=(sigint_e, cv_child_conn, link_q, play_q, title_q,))
+    hardware_p = Process(target=hardware_process, args=(sigint_e, hv_parent_conn, play_q, title_q,))
+    visuals_p = Process(target=visuals_process, args=(cv_parent_conn, hv_child_conn, title_q,))
 
     input_p.daemon = True
     converter_p.daemon = True

@@ -1,7 +1,7 @@
 from pytube import YouTube
 
-def is_valid_youtube_video(user_input):
 
+def is_valid_youtube_video(user_input):
     # print(user_input)
 
     try:
