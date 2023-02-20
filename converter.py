@@ -2,13 +2,13 @@ import asyncio
 import time
 from pprint import pprint
 from os import getcwd
-
+import logging
 import wget
 import random
 from pyppeteer import launch
 from pytube import YouTube
 from pytube.extract import video_id
-from settings import video_file_path
+from settings import video_file_path, cli_args
 from moviepy.editor import VideoFileClip
 from settings import (
     midi_file_path,
@@ -18,42 +18,55 @@ from settings import (
     proxy_password,
 )
 
+
+### LOGGING SETUP ###
+logger = logging.getLogger(__name__)
+if cli_args.debug_converter:  # If the debug flag is set high, enable debug level logging
+    logging.getLogger(__name__).setLevel(logging.DEBUG)
+
+# This is to prevent messy debug logs from pyppeteer
+pptr_logger = logging.getLogger("pyppeteer")
+pptr_logger.setLevel(50)
+pptr_logger.addHandler(logging.StreamHandler())
+
+
 def download_video_audio(youtube_url):
-    print("CONVERTER: Converting YouTube URL into audio file...")
+    logger.debug(f"Converting YouTube URL into audio file...")
 
     yt = YouTube(youtube_url)
     file_name = video_id(youtube_url)
 
     # download video
-    print("CONVERTER: Starting video download")
+    logger.debug(f"Starting video download")
     yt.streams.first().download(
         output_path=video_file_path, filename=f"{file_name}.mp4"
     )
 
     # convert to mp3
     # str conversion + brackets are necessary
-    videoclip = VideoFileClip(str(video_file_path / (file_name + ".mp4")))
+    video_clip = VideoFileClip(str(video_file_path / (file_name + ".mp4")))
 
-    audioclip = videoclip.audio
+    audio_clip = video_clip.audio
     # str conversion + brackets are necessary
-    audioclip.write_audiofile(str(audio_file_path / (file_name + ".mp3")))
+    audio_clip.write_audiofile(str(audio_file_path / (file_name + ".mp3")), verbose=False, logger=None)
 
-    audioclip.close()
-    videoclip.close()
+    audio_clip.close()
+    video_clip.close()
 
     return file_name
 
 
 # TODO: get this function working
 async def convert_audio_to_midi(file_name):
-    print("CONVERTER: converting audio to midi")
+    logger.debug(f"converting audio to midi")
     # TODO: put some try catches in here to prevent timeouts
 
     proxy_num = random.randrange(0, 100000)
 
-    # print("ATTEMPTING TO GET LINK")
+    logger.debug(f"ATTEMPTING TO GET LINK")
     browser = await launch(
         {
+            "logLevel": 0,
             "args": [f"--proxy-server=zproxy.lum-superproxy.io:{proxy_port}"],
             # "headless": False,
         }
@@ -73,15 +86,14 @@ async def convert_audio_to_midi(file_name):
         # await page.goto("https://whatmyuseragent.com")
 
     except Exception as e:
-        print("CONVERTER: goto timed out!")
-        print(e)  # error -> Navigation Timeout Exceeded: 1000 ms exceeded.
+        logger.critical(f"goto timed out!")
+        logger.critical(f"{e}")  # error -> Navigation Timeout Exceeded: 1000 ms exceeded.
         # return asyncio.get_event_loop().run_until_complete(
         #     convert_audio_to_link(file_name)
         # )
         # TODO: restart function from the top!
 
-    # print("Opened the webpage successfully")
-    # time.sleep(30)
+    logger.debug(f"Opened the webpage successfully")
 
     filechoose = await page.querySelector("#localfile")
     upload_file = str(audio_file_path / (file_name + ".mp3"))
@@ -99,12 +111,12 @@ async def convert_audio_to_midi(file_name):
     )
 
     await browser.close()
-    # print("Got the link!")
+    logger.debug(f"Got the link!")
 
     # os.remove(str(audio_file_path / (file_name + ".mp3")))  # remove unneeded mp3 file
-    # print(link)
+    logger.debug(f"{link}")
 
-    print("CONVERTER: Downloading midi file...")
+    logger.debug(f"Downloading midi file...")
     wget.download(link, str(midi_file_path / (file_name + ".midi")))
 
 
@@ -114,6 +126,9 @@ def video_to_midi(youtube_url):
 
     yt = YouTube(youtube_url)
     video_name = yt.vid_info['videoDetails']['title']
+
+    logger.info(f"Converting YouTube video \"{video_name}\" to a MIDI file")
+
     # video_name = yt.vid_info
     # file_name = video_id(youtube_url)
 
@@ -125,9 +140,7 @@ def video_to_midi(youtube_url):
     file_name = download_video_audio(youtube_url)  # store audio file in audio_file_path
 
     # TODO: if this fails, rerun the function
-    midi_file_url = asyncio.run(convert_audio_to_midi(file_name))
-
-    # TODO: why is midi_file_url not used? That seems like an issue.
+    asyncio.run(convert_audio_to_midi(file_name))
 
     filepath = str(midi_file_path / (file_name + ".midi"))
 
@@ -135,14 +148,13 @@ def video_to_midi(youtube_url):
 
 
 def converter_process(sigint_e,conn, link_q, play_q, title_q):
-    print("CONVERTER: Converter process has been started.")
+    logger.info(f"Converter process has been started.")
     while not sigint_e.is_set():
         try:
             link = link_q.get(timeout=10)
-            print("CONVERTER: starting to convert YT link to MIDI")
+
             filepath, video_title = video_to_midi(link)
-            # time.sleep(10)
-            print("CONVERTER: completed the conversion of YT link to MIDI")
+            logger.info(f"Successfully converted {video_title} to a MIDI file")
 
             conn.send({"title": video_title,
                        "filepath": f"{getcwd()}/files/video/{YouTube(link).video_id}.mp4"})  # This should be here. As soon as a video is finished converting, it should be added to the queue because we know it's safe
@@ -153,30 +165,5 @@ def converter_process(sigint_e,conn, link_q, play_q, title_q):
             pass
 
     else:
-        print("CONVERTER: Converter process has been shut down.")
+        logger.info(f"Converter process has been shut down.")
 
-# TODO: test longer videos and see how they work
-# yt_links = [
-#     "jt9LlHXGckg",
-#     "3Lyex2tSUyA",
-#     "p9RtcklL0as",
-#     "meha_FCcHbo",
-#     "KRbsco8M7Fc",
-#     "jt9LlHXGckg",
-#     "3Lyex2tSUyA",
-#     "p9RtcklL0as",
-#     "meha_FCcHbo",
-#     "KRbsco8M7Fc",
-#     "jt9LlHXGckg",
-#     "3Lyex2tSUyA",
-#     "p9RtcklL0as",
-#     "meha_FCcHbo",
-#     "KRbsco8M7Fc",
-#     "jt9LlHXGckg",
-#     "3Lyex2tSUyA",
-#     "p9RtcklL0as",
-#     "meha_FCcHbo",
-#     "KRbsco8M7Fc",
-# ]
-# for link in yt_links:
-#     video_to_midi(f"https://www.youtube.com/watch?v={link}")
