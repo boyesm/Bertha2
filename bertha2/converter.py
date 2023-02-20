@@ -8,9 +8,9 @@ import random
 from pyppeteer import launch
 from pytube import YouTube
 from pytube.extract import video_id
-from settings import video_file_path, cli_args
+from bertha2.settings import video_file_path, cli_args
 from moviepy.editor import VideoFileClip
-from settings import (
+from bertha2.settings import (
     midi_file_path,
     audio_file_path,
     proxy_port,

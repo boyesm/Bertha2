@@ -18,7 +18,7 @@ import struct
 import time
 import socket  # TODO: This shouldn't be imported by default. But this isn't super important
 import logging
-from settings import cli_args, solenoid_cooldown_s
+from bertha2.settings import cli_args, solenoid_cooldown_s
 
 
 ### LOGGING SETUP ###

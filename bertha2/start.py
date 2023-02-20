@@ -4,7 +4,7 @@ import time
 from pathlib import Path
 from argparse import ArgumentParser
 import logging
-from settings import dirs, queue_save_file, cli_args, log_format
+from bertha2.settings import dirs, queue_save_file, cli_args, log_format
 import signal
 import json
 import sys
@@ -22,10 +22,10 @@ logging.basicConfig(level=numeric_level, format=log_format)  # NOTE: Without thi
 logger = logging.getLogger(__name__)
 
 
-from input.chat import chat_process
-from converter import converter_process
-from hardware import hardware_process
-from visuals import visuals_process
+from bertha2.input.chat import chat_process
+from bertha2.converter import converter_process
+from bertha2.hardware import hardware_process
+from bertha2.visuals import visuals_process
 
 
 def create_dirs(dirs):

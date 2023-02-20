@@ -4,7 +4,7 @@ import simpleobsws
 from pprint import *
 from os import getcwd
 import logging
-from settings import cuss_words, cli_args, solenoid_cooldown_s
+from bertha2.settings import cuss_words, cli_args, solenoid_cooldown_s
 
 songs = []
 

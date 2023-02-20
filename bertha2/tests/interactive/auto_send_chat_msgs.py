@@ -11,7 +11,7 @@ import time
 from pytube import Playlist
 
 ## LOAD SECRETS
-load_dotenv("../secrets.env")
+load_dotenv("../../../secrets.env")
 
 nickname = getenv("TESTBOT_NICKNAME")
 token = getenv("TESTBOT_TOKEN")

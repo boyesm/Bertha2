@@ -1,7 +1,7 @@
 import socket
 import logging
-from src.settings import channel, nickname, token, cli_args
-from src.input.valid_link import is_valid_youtube_video
+from bertha2.settings import channel, nickname, token, cli_args
+from bertha2.input.valid_link import is_valid_youtube_video
 
 
 ### LOGGING SETUP ###

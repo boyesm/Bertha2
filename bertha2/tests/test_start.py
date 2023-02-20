@@ -3,17 +3,10 @@ from multiprocessing import Queue
 from pytube import Playlist
 from pytube import YouTube
 from pytube.extract import video_id
-from start import save_queues, load_queue
-
-'''
-things that must be tested:
-- all functions, they should output expected values
-- 
-
-'''
+from bertha2.start import save_queues, load_queue
 
 
-class TestSavedQueues(unittest.TestCase):
+class TestQueueSave(unittest.TestCase):
 
     # create mock queues
     link_q = Queue()  # queue for YouTube links
@@ -33,7 +26,7 @@ class TestSavedQueues(unittest.TestCase):
 
     def test_save_n_load(self):
 
-        '''
+
         # ensure that after the queues have been saved and loaded, they're the same.
 
         # create backups of the queues
@@ -48,9 +41,9 @@ class TestSavedQueues(unittest.TestCase):
         play_q_loaded = load_queue("play_q")
 
         # check they're the same
-        self.assertEqual(True, link_q_loaded == self.link_q)
-        self.assertEqual(play_q_loaded, self.play_q)  # add assertion here
-        '''
+        self.assertEqual(link_q_loaded.queue, self.link_q.queue)
+        self.assertEqual(play_q_loaded.queue, self.play_q.queue)
+
 
 
     '''
@@ -58,6 +51,8 @@ class TestSavedQueues(unittest.TestCase):
         # code that is run once tests are finished
         return
     '''
+
+
 
 if __name__ == '__main__':
     unittest.main()

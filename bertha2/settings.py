@@ -17,7 +17,7 @@ queue_save_file = "saved_queues"
 
 channel = 'berthatwo'  # the channel of which chat is being monitored
 
-load_dotenv("secrets.env")
+load_dotenv("../secrets.env")
 
 # Twitch Secrets
 nickname = getenv("NICKNAME")
