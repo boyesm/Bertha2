@@ -16,12 +16,10 @@ from bertha2.settings import (
     proxy_username,
     proxy_password,
 )
-from bertha2.settings import video_file_path, cli_args
+from bertha2.settings import video_file_path
+from bertha2.utils.logs import initialize_module_logger
 
-### LOGGING SETUP ###
-logger = logging.getLogger(__name__)
-if cli_args.debug_converter:  # If the debug flag is set high, enable debug level logging
-    logging.getLogger(__name__).setLevel(logging.DEBUG)
+logger = initialize_module_logger(__name__)
 
 # This is to prevent messy debug logs from pyppeteer
 pptr_logger = logging.getLogger("pyppeteer")

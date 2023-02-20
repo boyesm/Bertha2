@@ -1,14 +1,11 @@
-import logging
 import socket
 
 from pytube import YouTube
 
-from bertha2.settings import channel, nickname, token, cli_args
+from bertha2.settings import channel, nickname, token
+from bertha2.utils.logs import initialize_module_logger
 
-### LOGGING SETUP ###
-logger = logging.getLogger(__name__)
-if cli_args.debug_chat:  # If the debug flag is set high, enable debug level logging
-    logging.getLogger(__name__).setLevel(logging.DEBUG)
+logger = initialize_module_logger(__name__)
 
 
 def is_valid_youtube_video(user_input):

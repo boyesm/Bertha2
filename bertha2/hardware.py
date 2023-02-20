@@ -6,7 +6,6 @@ what this file should do:
 """
 
 import asyncio
-import logging
 import socket  # TODO: This shouldn't be imported by default. But this isn't super important
 import struct
 import subprocess
@@ -16,11 +15,9 @@ import mido
 import serial
 
 from bertha2.settings import cli_args, solenoid_cooldown_s
+from bertha2.utils.logs import initialize_module_logger
 
-### LOGGING SETUP ###
-logger = logging.getLogger(__name__)
-if cli_args.debug_hardware:  # If the debug flag is set high, enable debug level logging
-    logging.getLogger(__name__).setLevel(logging.DEBUG)
+logger = initialize_module_logger(__name__)
 
 ### GLOBAL VARIABLES ###
 starting_note = 48

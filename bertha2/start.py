@@ -1,23 +1,15 @@
 import json
-import logging
 import os
 import signal
 from multiprocessing import Process, Queue, Event, Pipe
 from pathlib import Path
 
-from bertha2.settings import dirs, queue_save_file, cli_args, log_format
+from bertha2.settings import dirs, queue_save_file
+from bertha2.utils.logs import initialize_root_logger
 
 os.environ['IMAGEIO_VAR_NAME'] = 'ffmpeg'
 
-### LOGGING SETUP ###
-# This is run before importing B2 modules so that they all have consistent log levels for all code run
-# For more information on log levels: https://docs.python.org/3/library/logging.html#levels
-if cli_args.log is None:  # If LOG isn't defined, set to info mode.
-    numeric_level = 20
-else:
-    numeric_level = getattr(logging, cli_args.log.upper())
-logging.basicConfig(level=numeric_level, format=log_format)  # NOTE: Without this, logs won't print in the console.
-logger = logging.getLogger(__name__)
+logger = initialize_root_logger(__name__)
 
 from bertha2.chat import chat_process
 from bertha2.converter import converter_process

@@ -1,18 +1,15 @@
 import asyncio
-import logging
 import time
 from os import getcwd
 
 import simpleobsws
 
-from bertha2.settings import cuss_words, cli_args, solenoid_cooldown_s
+from bertha2.settings import cuss_words, solenoid_cooldown_s
+from bertha2.utils.logs import initialize_module_logger
+
+logger = initialize_module_logger(__name__)
 
 songs = []
-
-### LOGGING SETUP ###
-logger = logging.getLogger(__name__)
-if cli_args.debug_visuals:  # If the debug flag is set high, enable debug level logging
-    logging.getLogger(__name__).setLevel(logging.DEBUG)
 
 # TODO: Could these be added to settings?
 SCENE_NAME = 'Scene'
