@@ -19,7 +19,7 @@ else:
 logging.basicConfig(level=numeric_level, format=log_format)  # NOTE: Without this, logs won't print in the console.
 logger = logging.getLogger(__name__)
 
-from bertha2.input.chat import chat_process
+from bertha2.chat import chat_process
 from bertha2.converter import converter_process
 from bertha2.hardware import hardware_process
 from bertha2.visuals import visuals_process
