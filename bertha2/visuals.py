@@ -25,6 +25,7 @@ VIDEO_HEIGHT = 720
 parameters = simpleobsws.IdentificationParameters(ignoreNonFatalRequestChecks=False) # Create an IdentificationParameters object (optional for connecting)
 ws = simpleobsws.WebSocketClient(url='ws://127.0.0.1:4444', identification_parameters=parameters) # Every possible argument has been passed, but none are required. See lib code for defaults.
 
+
 async def update_obs_obj_args(change_args):
     # This will error if OBS isn't running
     await ws.connect()  # Make the connection to obs-websocket
