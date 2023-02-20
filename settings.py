@@ -55,8 +55,8 @@ cli_args = parser.parse_args()
 
 # Logging Formatter
 # Easily create ANSI escape codes here: https://ansi.gabebanks.net
-magenta="\x1b[35;49;1m"
-blue="\x1b[34;49;1m"
-green="\x1b[32;49;1m"
+magenta = "\x1b[35;49;1m"
+blue = "\x1b[34;49;1m"
+green = "\x1b[32;49;1m"
 reset = "\x1b[0m"
 log_format = f"{blue}[%(levelname)s]{magenta}[%(name)s]{reset} %(message)s     {green}[%(filename)s:%(lineno)d]{reset}"
