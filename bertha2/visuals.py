@@ -1,15 +1,10 @@
-import asyncio
 from multiprocessing import connection
 
-import simpleobsws
-
-from bertha2.settings import cuss_words, solenoid_cooldown_s, scene_name, max_video_title_length_queue, video_width, \
-    video_height, no_video_playing_text
+from bertha2.settings import cuss_words, solenoid_cooldown_s, max_video_title_length_queue, no_video_playing_text
 from bertha2.utils.logs import initialize_module_logger, log_if_in_debug_mode
-from bertha2.utils.obs import create_obs_websocket_client
+from bertha2.utils.obs import obs_change_text_source_value, obs_change_video_source_value
 
 logger = initialize_module_logger(__name__)
-obs_ws_client = create_obs_websocket_client()
 
 visuals_state = {
     "currently_displayed_status_text": no_video_playing_text,
@@ -19,80 +14,6 @@ visuals_state = {
     "does_next_up_need_update": True,
     "does_status_text_need_update": True
 }
-
-
-
-async def update_obs_obj_args(change_args):
-    # This will error if OBS isn't running
-    await obs_ws_client.connect()  # Make the connection to obs-websocket
-    await obs_ws_client.wait_until_identified()  # Wait for the identification handshake to complete
-
-    # The type of the input is "text_ft2_source_v2"
-    request = simpleobsws.Request('SetInputSettings', change_args)
-    ret = await obs_ws_client.call(request)  # Perform the request
-
-    if ret.ok():  # Check if the request succeeded
-        logger.debug(f"Request succeeded! Response data: {ret.responseData}")
-    else:
-        logger.warning(f"There was an error setting the text in OBS")
-
-    await obs_ws_client.disconnect()  # Disconnect from the websocket server cleanly
-
-
-def obs_change_text_source_value(text_obj_id, text_obj_value: str):
-
-    get_item_arguments = {
-        'sceneName': scene_name,
-        'sourceName': text_obj_id,
-    }
-
-    get_arguments = {
-        'inputKind': "text_ft2_source_v2",
-        'inputSettings': {
-            'text': text_obj_value,
-        }
-    }
-
-    change_arguments = {
-        'inputName': text_obj_id,
-        'inputSettings': {
-            'text': text_obj_value,
-            # 'font': {
-            #     'face': 'Helvetica',
-            #     'size': '128',
-            # }
-        }
-    }
-
-    # TODO: create a function for updating OBS and include this in it \/
-    try:
-        loop = asyncio.get_event_loop()  # NOTE: Async function must be called like this.
-        loop.run_until_complete(update_obs_obj_args(change_arguments))
-    except Exception as e:
-        logger.warning(f"Unable to connect to OBS. Is it running right now?")
-
-
-def obs_change_video_source_value(media_obj_id, media_filepath: str):
-    get_item_arguments = {
-        'sceneName': scene_name,
-        'sourceName': media_obj_id,
-    }
-
-    # Use this as a reference for the different options available:
-    #     https://github.com/Elektordi/obs-websocket-py/blob/e92960a475d3f1096a4ea41763cbc776b23f0a37/obswebsocket/requests.py#L1480
-
-    change_arguments = {
-        'inputName': media_obj_id,
-        'inputSettings': {
-            'local_file': media_filepath,
-            'width': video_width,
-            'height': video_height,
-        }
-    }
-
-    # TODO: replace this code with OBS update function
-    loop = asyncio.get_event_loop()  # NOTE: Async function must be called like this.
-    loop.run_until_complete(update_obs_obj_args(change_arguments))
 
 
 def process_title(title: str):
@@ -174,13 +95,13 @@ def update_onscreen_visuals_from_state():
         visuals_state["does_status_text_need_update"] = False
 
 
-def update_visual_state_with_new_converted_video(converted_video_metadata_object):
+def update_visual_state_with_new_video(converted_video_metadata_object):
     visuals_state["queued_video_metadata_objects"].append(converted_video_metadata_object)
     logger.debug(f"conn.recv(): {converted_video_metadata_object}")
     visuals_state["does_next_up_need_update"] = True
 
 
-def update_visual_state_with_bertha_status(bertha_playing_status):
+def update_visual_state_with_new_bertha_status(bertha_playing_status):
     logger.debug(f"bertha_playing_status: {bertha_playing_status}")
 
     # bertha_playing_status will be "done" when video isn't playing (done and next video hasn't started yet)
@@ -200,20 +121,6 @@ def update_visual_state_with_bertha_status(bertha_playing_status):
 
 
 def visuals_process(converter_visuals_conn, hardware_visuals_conn):
-    # this process controls livestream visuals.
-    # CHECK FOR NEW INFORMATION FROM HARDWARE PROCESS AND OTHER PROCESSES
-
-    # this receives all the latest processed data
-    ## this is a connection (with converter), when data is available to be read, it is true.
-    ## what is sent through this?:
-
-    ##### process outline #####
-    # update visuals
-
-    # check if updates are needed
-    # from converter process
-    # from hardware process
-    ## end
 
     log_if_in_debug_mode(logger, __name__)
 
@@ -229,10 +136,10 @@ def visuals_process(converter_visuals_conn, hardware_visuals_conn):
             if current_connection == converter_visuals_conn:
 
                 converted_video_metadata_object = current_connection.recv()  # receive object (containing video title and video filepath) from converter process
-                update_visual_state_with_new_converted_video(converted_video_metadata_object)
+                update_visual_state_with_new_video(converted_video_metadata_object)
 
 
             elif current_connection == hardware_visuals_conn:
 
                 bertha_playing_status = current_connection.recv()  # this will be received once the hardware is done playing the video
-                update_visual_state_with_bertha_status(bertha_playing_status)
+                update_visual_state_with_new_bertha_status(bertha_playing_status)
