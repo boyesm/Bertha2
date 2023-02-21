@@ -35,6 +35,9 @@ obs_websocket_url = 'ws://127.0.0.1:4444'
 
 no_video_playing_text = "Nothing currently playing."
 
+status_text_obs_source_id = "current_song"
+playing_video_obs_source_id = "playing_video"
+
 
 def import_cuss_words():
     global cuss_words

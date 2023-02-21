@@ -1,8 +1,9 @@
 from multiprocessing import connection
 
-from bertha2.settings import cuss_words, solenoid_cooldown_s, max_video_title_length_queue, no_video_playing_text
+from bertha2.settings import cuss_words, solenoid_cooldown_s, max_video_title_length_queue, no_video_playing_text, \
+    status_text_obs_source_id, playing_video_obs_source_id
 from bertha2.utils.logs import initialize_module_logger, log_if_in_debug_mode
-from bertha2.utils.obs import obs_change_text_source_value, obs_change_video_source_value
+from bertha2.utils.obs import update_obs_text_source_value, update_obs_video_source_value
 
 logger = initialize_module_logger(__name__)
 
@@ -17,9 +18,9 @@ visuals_state = {
 
 
 def process_title(title: str):
-    new_title = filter_cuss_words_from_title(title)
-    new_title = shorten_title(title)
-    return new_title
+    title = filter_cuss_words_from_title(title)
+    title = shorten_title(title)
+    return title
 
 
 def filter_cuss_words_from_title(title: str):
@@ -54,7 +55,7 @@ def update_playing_next(playing_next_list: list):
     if len(playing_next_list) <= 1:
         input_string += "Nothing queued."
 
-    obs_change_text_source_value('queue', input_string)
+    update_obs_text_source_value('queue', input_string)
 
     logger.debug(f"Refreshed 'Next Up'.")
 
@@ -89,8 +90,8 @@ def update_onscreen_visuals_from_state():
             visuals_state["currently_displayed_status_text"] = no_video_playing_text
             visuals_state["currently_playing_video_path"] = ""
 
-        obs_change_text_source_value("current_song", visuals_state["currently_displayed_status_text"])
-        obs_change_video_source_value("playing_video", visuals_state["currently_playing_video_path"])
+        update_obs_text_source_value(status_text_obs_source_id, visuals_state["currently_displayed_status_text"])
+        update_obs_video_source_value(playing_video_obs_source_id, visuals_state["currently_playing_video_path"])
 
         visuals_state["does_status_text_need_update"] = False
 

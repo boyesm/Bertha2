@@ -1,7 +1,6 @@
 import os
 import unittest
 from multiprocessing import Queue
-from unittest import TestCase
 
 from pytube import Playlist
 from pytube.extract import video_id
@@ -35,7 +34,10 @@ class TestQueueSave(unittest.TestCase):
     def setUp(self):
 
         # TODO: safely delete existing saved_queues.json file
-        os.remove(f"{queue_save_file}.json")
+        try:
+            os.remove(f"{queue_save_file}.json")
+        except FileNotFoundError:
+            pass
 
         # create a mock queue with YouTube links in it
         yt_arr = Playlist(
@@ -76,9 +78,3 @@ class TestQueueSave(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-
-
-class Test(TestCase):
-    def test_create_dirs(self):
-        # self.fail()
-        return

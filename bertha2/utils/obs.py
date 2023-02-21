@@ -42,7 +42,7 @@ async def update_obs_source_properties(updated_source_properties):
     return response
 
 
-def obs_change_text_source_value(text_source_id, text_value: str):
+def update_obs_text_source_value(text_source_id, text_value: str):
     updated_source_properties = {
         'inputName': text_source_id,
         'inputSettings': {
@@ -51,10 +51,10 @@ def obs_change_text_source_value(text_source_id, text_value: str):
     }
 
     loop = asyncio.get_event_loop()  # NOTE: Async function must be called like this.
-    loop.run_until_complete(update_obs_source_properties(updated_source_properties))
+    return loop.run_until_complete(update_obs_source_properties(updated_source_properties))
 
 
-def obs_change_video_source_value(video_source_id, video_filepath: str):
+def update_obs_video_source_value(video_source_id, video_filepath: str):
     # Use this as a reference for the different options available:
     #     https://github.com/Elektordi/obs-websocket-py/blob/e92960a475d3f1096a4ea41763cbc776b23f0a37/obswebsocket/requests.py#L1480
 
@@ -68,4 +68,4 @@ def obs_change_video_source_value(video_source_id, video_filepath: str):
     }
 
     loop = asyncio.get_event_loop()  # NOTE: Async function must be called like this.
-    loop.run_until_complete(update_obs_source_properties(updated_source_properties))
+    return loop.run_until_complete(update_obs_source_properties(updated_source_properties))
