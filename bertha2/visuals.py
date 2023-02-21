@@ -1,48 +1,48 @@
 import asyncio
-import time
+from multiprocessing import connection
 
 import simpleobsws
 
-from bertha2.settings import cuss_words, solenoid_cooldown_s
+from bertha2.settings import cuss_words, solenoid_cooldown_s, scene_name, max_video_title_length_queue, video_width, \
+    video_height, no_video_playing_text
 from bertha2.utils.logs import initialize_module_logger, log_if_in_debug_mode
+from bertha2.utils.obs import create_obs_websocket_client
 
 logger = initialize_module_logger(__name__)
+obs_ws_client = create_obs_websocket_client()
 
-# TODO: Could these be added to settings?
-SCENE_NAME = 'Scene'
-MEDIA_NAME = 'Video'
-MAX_VIDEO_TITLE_LENGTH_QUEUE = 45
-MAX_VIDEO_TITLE_LENGTH_CURRENT = 45
-VIDEO_WIDTH = 1280
-VIDEO_HEIGHT = 720
+visuals_state = {
+    "currently_displayed_status_text": no_video_playing_text,
+    "currently_playing_video_path": "",
+    "queued_video_metadata_objects": [],
+    "is_bertha_on_cooldown": False,
+    "does_next_up_need_update": True,
+    "does_status_text_need_update": True
+}
 
-parameters = simpleobsws.IdentificationParameters(
-    ignoreNonFatalRequestChecks=False)  # Create an IdentificationParameters object (optional for connecting)
-ws = simpleobsws.WebSocketClient(url='ws://127.0.0.1:4444',
-                                 identification_parameters=parameters)  # Every possible argument has been passed, but none are required. See lib code for defaults.
 
 
 async def update_obs_obj_args(change_args):
     # This will error if OBS isn't running
-    await ws.connect()  # Make the connection to obs-websocket
-    await ws.wait_until_identified()  # Wait for the identification handshake to complete
+    await obs_ws_client.connect()  # Make the connection to obs-websocket
+    await obs_ws_client.wait_until_identified()  # Wait for the identification handshake to complete
 
     # The type of the input is "text_ft2_source_v2"
     request = simpleobsws.Request('SetInputSettings', change_args)
-    ret = await ws.call(request)  # Perform the request
+    ret = await obs_ws_client.call(request)  # Perform the request
 
     if ret.ok():  # Check if the request succeeded
         logger.debug(f"Request succeeded! Response data: {ret.responseData}")
     else:
         logger.warning(f"There was an error setting the text in OBS")
 
-    await ws.disconnect()  # Disconnect from the websocket server cleanly
+    await obs_ws_client.disconnect()  # Disconnect from the websocket server cleanly
 
 
 def obs_change_text_source_value(text_obj_id, text_obj_value: str):
 
     get_item_arguments = {
-        'sceneName': SCENE_NAME,
+        'sceneName': scene_name,
         'sourceName': text_obj_id,
     }
 
@@ -74,7 +74,7 @@ def obs_change_text_source_value(text_obj_id, text_obj_value: str):
 
 def obs_change_video_source_value(media_obj_id, media_filepath: str):
     get_item_arguments = {
-        'sceneName': SCENE_NAME,
+        'sceneName': scene_name,
         'sourceName': media_obj_id,
     }
 
@@ -85,8 +85,8 @@ def obs_change_video_source_value(media_obj_id, media_filepath: str):
         'inputName': media_obj_id,
         'inputSettings': {
             'local_file': media_filepath,
-            'width': VIDEO_WIDTH,
-            'height': VIDEO_HEIGHT,
+            'width': video_width,
+            'height': video_height,
         }
     }
 
@@ -96,12 +96,12 @@ def obs_change_video_source_value(media_obj_id, media_filepath: str):
 
 
 def process_title(title: str):
-    # new_title = filter_cuss_words(title)
+    new_title = filter_cuss_words_from_title(title)
     new_title = shorten_title(title)
     return new_title
 
 
-def filter_cuss_words(title: str):
+def filter_cuss_words_from_title(title: str):
     new_title = title
     for word in cuss_words:
         new_title = new_title.replace(word, "****")
@@ -110,8 +110,8 @@ def filter_cuss_words(title: str):
 
 
 def shorten_title(title: str):
-    if len(title) > MAX_VIDEO_TITLE_LENGTH_QUEUE:
-        title = title[0:(MAX_VIDEO_TITLE_LENGTH_QUEUE - 3)] + "..."
+    if len(title) > max_video_title_length_queue:
+        title = title[0:(max_video_title_length_queue - 3)] + "..."
 
     return title
 
@@ -135,83 +135,104 @@ def update_playing_next(playing_next_list: list):
 
     obs_change_text_source_value('queue', input_string)
 
+    logger.debug(f"Refreshed 'Next Up'.")
 
-def visuals_process(converter_visuals_conn, hardware_visuals_conn, video_name_q):
-    # this process should control livestream visuals.
+
+def update_onscreen_visuals_from_state():
+    logger.debug("updating visuals")
+
+    # UPDATE ANY VISUALS
+
+    # update next up
+    if visuals_state["does_next_up_need_update"]:
+        update_playing_next([video['title'] for video in visuals_state["queued_video_metadata_objects"]])
+        visuals_state["does_next_up_need_update"] = False
+
+    # update status text at the bottom of the screen
+    if visuals_state["does_status_text_need_update"]:
+        #### THIS CAN BE A FUNC ####
+        # update the video player and 'current video text'
+        if visuals_state["is_bertha_on_cooldown"]:  # if b2 is cooling down, update this to the correct text
+            visuals_state[
+                "currently_displayed_status_text"] = f"Bertha2 is cooling down for the next {solenoid_cooldown_s} seconds, please wait."
+            visuals_state["currently_playing_video_path"] = ""
+
+        elif visuals_state["queued_video_metadata_objects"] != []:  # if there are videos in the queue
+            visuals_state[
+                "currently_displayed_status_text"] = f"Current Video: {visuals_state['queued_video_metadata_objects'][0]['title']}"
+            visuals_state["currently_playing_video_path"] = visuals_state["queued_video_metadata_objects"][0][
+                "filepath"]
+            logger.debug(visuals_state["queued_video_metadata_objects"][0])
+
+        elif visuals_state["queued_video_metadata_objects"] == []:  # there isn't any video to be played
+            visuals_state["currently_displayed_status_text"] = no_video_playing_text
+            visuals_state["currently_playing_video_path"] = ""
+
+        obs_change_text_source_value("current_song", visuals_state["currently_displayed_status_text"])
+        obs_change_video_source_value("playing_video", visuals_state["currently_playing_video_path"])
+
+        visuals_state["does_status_text_need_update"] = False
+
+
+def update_visual_state_with_new_converted_video(converted_video_metadata_object):
+    visuals_state["queued_video_metadata_objects"].append(converted_video_metadata_object)
+    logger.debug(f"conn.recv(): {converted_video_metadata_object}")
+    visuals_state["does_next_up_need_update"] = True
+
+
+def update_visual_state_with_bertha_status(bertha_playing_status):
+    logger.debug(f"bertha_playing_status: {bertha_playing_status}")
+
+    # bertha_playing_status will be "done" when video isn't playing (done and next video hasn't started yet)
+    if len(visuals_state["queued_video_metadata_objects"]) > 0 and bertha_playing_status == "done":
+        logger.info(f"Done playing file.")
+        logger.debug(
+            f"visuals_state['queued_video_metadata_objects']: {visuals_state['queued_video_metadata_objects']}")
+        visuals_state["queued_video_metadata_objects"].pop(0)  # remove the video that has just been played
+        visuals_state["does_next_up_need_update"] = True
+        visuals_state["does_status_text_need_update"] = True
+        visuals_state["is_bertha_on_cooldown"] = False
+
+    # bertha_playing_status will be "wait" when a video is currently playing
+    if bertha_playing_status == "wait":
+        visuals_state["does_status_text_need_update"] = True
+        visuals_state["is_bertha_on_cooldown"] = True
+
+
+def visuals_process(converter_visuals_conn, hardware_visuals_conn):
+    # this process controls livestream visuals.
+    # CHECK FOR NEW INFORMATION FROM HARDWARE PROCESS AND OTHER PROCESSES
+
+    # this receives all the latest processed data
+    ## this is a connection (with converter), when data is available to be read, it is true.
+    ## what is sent through this?:
+
+    ##### process outline #####
+    # update visuals
+
+    # check if updates are needed
+    # from converter process
+    # from hardware process
+    ## end
 
     log_if_in_debug_mode(logger, __name__)
 
-    no_video_playing_text = "Nothing currently playing."
-
-    ## STATE variables & default values
-    obs_current_status_text = no_video_playing_text
-    obs_current_video_path = ""
-    video_data_queue = []
-    cooldown_bool = False
-    update_next_up = True
-    update_status_text = True
-
-    ##
+    multiprocessing_connection_list = [converter_visuals_conn, hardware_visuals_conn]
 
     while True:
 
-        # CHECK FOR NEW INFORMATION FROM HARDWARE PROCESS AND OTHER PROCESSES
+        update_onscreen_visuals_from_state()
 
-        # this receives all the latest processed data
-        while converter_visuals_conn.poll():
-            o = converter_visuals_conn.recv()  # receive input from hardware on when to update
-            video_data_queue.append(o)
-            logger.debug(f"conn.recv(): {o}")
-            update_next_up = True
+        # if either (blocking) connection receives something, proceed.
+        for current_connection in connection.wait(multiprocessing_connection_list, timeout=None):
 
-        # UPDATE ANY VISUALS
+            if current_connection == converter_visuals_conn:
 
-        # update next up
-        if update_next_up:
-            # update the on-screen list of videos that are playing next
-            update_playing_next([video['title'] for video in video_data_queue])
-            logger.debug(f"Refreshed 'Next Up'.")
+                converted_video_metadata_object = current_connection.recv()  # receive object (containing video title and video filepath) from converter process
+                update_visual_state_with_new_converted_video(converted_video_metadata_object)
 
-            update_next_up = False
 
-        # update status text at the bottom of the screen
-        if update_status_text:
-            # update the video player and 'current video text'
-            if cooldown_bool:  # if b2 is cooling down, update this to the correct text
-                obs_current_status_text = f"Bertha2 is cooling down for the next {solenoid_cooldown_s} seconds, please wait."
-                obs_current_video_path = ""
+            elif current_connection == hardware_visuals_conn:
 
-            elif video_data_queue != []:  # if there are videos in the queue
-                obs_current_status_text = f"Current Video: {video_data_queue[0]['title']}"
-                obs_current_video_path = video_data_queue[0]["filepath"]
-
-                logger.debug(video_data_queue[0])
-            elif video_data_queue == []:  # there isn't any video to be played
-                obs_current_status_text = no_video_playing_text
-                obs_current_video_path = ""
-
-            obs_change_text_source_value("current_song", obs_current_status_text)
-            obs_change_video_source_value("playing_video", obs_current_video_path)
-
-            update_status_text = False
-
-        # CHECK IF CURRENTLY PLAYING VIDEO IS DONE PLAYING YET
-
-        if hardware_visuals_conn.poll():
-
-            msg = hardware_visuals_conn.recv()  # this will be received once the hardware is done playing the video
-            logger.debug(f"msg: {msg}")
-
-            if len(video_data_queue) > 0 and msg == "done":
-                logger.info(f"Done playing file.")
-                logger.debug(f"video_data_queue: {video_data_queue}")
-                video_data_queue.pop(0)  # remove the video that has just been played
-                update_next_up = True
-                update_status_text = True
-                cooldown_bool = False
-
-            if msg == "wait":
-                update_status_text = True
-                cooldown_bool = True
-
-        time.sleep(0.5)
+                bertha_playing_status = current_connection.recv()  # this will be received once the hardware is done playing the video
+                update_visual_state_with_bertha_status(bertha_playing_status)

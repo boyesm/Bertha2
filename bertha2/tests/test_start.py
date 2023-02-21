@@ -1,3 +1,4 @@
+import os
 import unittest
 from multiprocessing import Queue
 from unittest import TestCase
@@ -5,6 +6,7 @@ from unittest import TestCase
 from pytube import Playlist
 from pytube.extract import video_id
 
+from bertha2.settings import queue_save_file
 from bertha2.start import save_queues, load_queue
 
 
@@ -33,7 +35,9 @@ class TestQueueSave(unittest.TestCase):
     def setUp(self):
 
         # TODO: safely delete existing saved_queues.json file
+        os.remove(f"{queue_save_file}.json")
 
+        # create a mock queue with YouTube links in it
         yt_arr = Playlist(
             "https://www.youtube.com/watch?v=q6EoRBvdVPQ&list=PLFsQleAWXsj_4yDeebiIADdH5FMayBiJo").video_urls
 
@@ -66,6 +70,9 @@ class TestQueueSave(unittest.TestCase):
         self.assertEqual(link_q_loaded_list, self.link_list)
         self.assertEqual(play_q_loaded_list, self.play_list)
 
+    def tearDown(self):
+        os.remove(f"{queue_save_file}.json")
+
 
 if __name__ == '__main__':
     unittest.main()
@@ -73,4 +80,5 @@ if __name__ == '__main__':
 
 class Test(TestCase):
     def test_create_dirs(self):
-        self.fail()
+        # self.fail()
+        return

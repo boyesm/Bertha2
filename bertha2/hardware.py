@@ -256,7 +256,7 @@ async def play_midi_file(midi_filename):
     await asyncio.gather(*tasks)
 
 
-def hardware_process(sigint_e, hardware_visuals_conn, play_q, title_q, ):
+def hardware_process(sigint_e, hardware_visuals_conn, play_q, ):
     log_if_in_debug_mode(logger, __name__)
 
     global TEST_FLAG

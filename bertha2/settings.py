@@ -18,7 +18,7 @@ queue_save_file = "saved_queues"
 
 channel = 'berthatwo'  # the channel of which chat is being monitored
 
-load_dotenv("../secrets.env")
+load_dotenv("secrets.env")
 
 # Twitch Secrets
 nickname = getenv("NICKNAME")
@@ -30,6 +30,10 @@ proxy_username = getenv("PROXY_USERNAME")
 proxy_password = getenv("PROXY_PASSWORD")
 
 cuss_words_file_name = "cuss_words.txt"
+
+obs_websocket_url = 'ws://127.0.0.1:4444'
+
+no_video_playing_text = "Nothing currently playing."
 
 
 def import_cuss_words():
@@ -62,3 +66,10 @@ blue = "\x1b[34;49;1m"
 green = "\x1b[32;49;1m"
 reset = "\x1b[0m"
 log_format = f"{blue}[%(levelname)s]{magenta}[%(name)s]{reset} %(message)s     {green}[%(filename)s:%(lineno)d]{reset}"
+
+scene_name = 'Scene'
+media_name = 'Video'
+max_video_title_length_queue = 45
+max_video_title_length_current = 45
+video_width = 1280
+video_height = 720

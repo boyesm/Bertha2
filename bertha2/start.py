@@ -95,8 +95,8 @@ if __name__ == '__main__':
     # TODO: if processes crash, restart them automatically
     input_p = Process(target=chat_process, args=(link_q,))
     converter_p = Process(target=converter_process, args=(sigint_e, cv_child_conn, link_q, play_q, title_q,))
-    hardware_p = Process(target=hardware_process, args=(sigint_e, hv_parent_conn, play_q, title_q,))
-    visuals_p = Process(target=visuals_process, args=(cv_parent_conn, hv_child_conn, title_q,))
+    hardware_p = Process(target=hardware_process, args=(sigint_e, hv_parent_conn, play_q,))
+    visuals_p = Process(target=visuals_process, args=(cv_parent_conn, hv_child_conn,))
 
     input_p.daemon = True
     converter_p.daemon = True
