@@ -18,11 +18,15 @@ queue_save_file = "saved_queues"
 
 channel = 'berthatwo'  # the channel of which chat is being monitored
 
-load_dotenv("../secrets.env")
+load_dotenv("./secrets.env")
 
 # Twitch Secrets
 nickname = getenv("NICKNAME")
 token = getenv("TOKEN")
+if not token or not nickname:
+
+    raise Exception("Couldn't load Twitch authentication info! Did you add secrets.env to the right location?")
+
 client_id = getenv("CLIENT_ID")
 
 proxy_port = getenv("PROXY_PORT")

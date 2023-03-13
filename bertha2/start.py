@@ -1,21 +1,25 @@
+# Built-in packages
 import json
 import os
 import signal
+import subprocess
+from subprocess import Popen, PIPE
 from multiprocessing import Process, Queue, Event, Pipe
 from pathlib import Path
+import socket
 
+# Internal imports
 from bertha2.settings import dirs, queue_save_file
 from bertha2.utils.logs import initialize_root_logger
-
-os.environ['IMAGEIO_VAR_NAME'] = 'ffmpeg'
-
-logger = initialize_root_logger(__name__)
 
 from bertha2.chat import chat_process
 from bertha2.converter import converter_process
 from bertha2.hardware import hardware_process
 from bertha2.visuals import visuals_process
 
+os.environ['IMAGEIO_VAR_NAME'] = 'ffmpeg'
+
+logger = initialize_root_logger(__name__)
 
 def create_dirs(dirs):
     for dir in dirs:
@@ -26,17 +30,17 @@ def create_dirs(dirs):
     logger.info(f"Created directories")
 
 
-def save_queues(lq, pq):
+def save_queues(link_queue, play_queue):
     logger.info(f"Saving queues to database.")
 
     ll = []
     pl = []
 
-    while lq.empty() == False:
-        ll.append(lq.get())
+    while not link_queue.empty():
+        ll.append(link_queue.get())
 
-    while pq.empty() == False:
-        pl.append(pq.get())
+    while not play_queue.empty():
+        pl.append(play_queue.get())
 
     # save q to json file
     backup_file = {
@@ -66,11 +70,10 @@ def load_queue(queue_name):
         # save it into a queue
         for item in o[queue_name]:
             q.put(item)
-    except Exception as ee:
-        logger.critical(f"Queue could not be loaded. {ee}")
+    except Exception as error:
+        logger.critical(f"Queue could not be loaded. {error}")
 
     return q
-
 
 if __name__ == '__main__':
 
@@ -93,6 +96,9 @@ if __name__ == '__main__':
 
     sigint_e = Event()
     # TODO: if processes crash, restart them automatically
+    # netcat = Popen(['nc', '-dkl', '8001'], stdout=PIPE, stderr=PIPE, shell=True)
+    proc = subprocess.Popen("watch nc -dkl 8001", shell=True, start_new_session=True)
+
     input_p = Process(target=chat_process, args=(link_q,))
     converter_p = Process(target=converter_process, args=(sigint_e, cv_child_conn, link_q, play_q, title_q,))
     hardware_p = Process(target=hardware_process, args=(sigint_e, hv_parent_conn, play_q, title_q,))
@@ -122,5 +128,7 @@ if __name__ == '__main__':
     except Exception as e:
         logger.critical(f"Error has occurred. {e}")
     finally:
+        # Stop running netcat
+        netcat = None
         save_queues(link_q, play_q)
         logger.info(f"Shut down.")
