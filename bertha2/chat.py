@@ -1,14 +1,15 @@
+# Built-in packages
 import socket
 import logging
 
+# Internal imports
 from settings import channel, twitch_nickname, twitch_token, cli_args
-from pytube import YouTube
 
+# External imports
+from pytube import YouTube
 
 # LOGGING SETUP
 logger = logging.getLogger(__name__)
-if cli_args.debug_chat:  # If the debug flag is set high, enable debug level logging
-    logging.getLogger(__name__).setLevel(logging.DEBUG)
 
 web_socket = socket.socket()
 
@@ -126,8 +127,8 @@ def send_reply(message, message_id):
                      message,
                      channel,
                      reply_id=message_id)
-    except:
-        logging.warning("Failed to send a message")
+    except Exception as e:
+        logging.warning(f"Failed to send a message: {type(e).__name__}: {e}")
 
 
 def chat_process(link_q):
@@ -156,7 +157,7 @@ def chat_process(link_q):
                 message = parse_privmsg(resp)
                 # logger.debug(message)
                 link = handle_command(message)
-                if link != None:
+                if link is not None:
                     link_q.put(link)
 
         except TypeError:
@@ -167,9 +168,8 @@ def chat_process(link_q):
             logger.critical(f"Error {type(e).__name__}: {e}")
             pass
 
-def is_valid_youtube_video(user_input):
 
-    # print(user_input)
+def is_valid_youtube_video(user_input):
 
     try:
         # TEST CASE: https://www.youtube.com/watch?v=KRbsco8M7Fc
@@ -197,6 +197,7 @@ def is_valid_youtube_video(user_input):
         return False
 
     return True
+
 
 if __name__ == '__main__':
     chat_process()

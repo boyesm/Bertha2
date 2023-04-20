@@ -1,6 +1,6 @@
 # this program is designed to stress test the stream
 # watch and realize bugs with the system
-# need different twitch creds to send test messages
+# need different twitch credentials to send test messages
 
 import socket
 import time

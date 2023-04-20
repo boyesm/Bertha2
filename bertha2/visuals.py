@@ -3,7 +3,7 @@ import asyncio
 import time
 
 # Internal imports
-from bertha2.settings import cuss_words, solenoid_cooldown_s
+from bertha2.settings import cuss_words, SOLENOID_COOLDOWN_SECONDS
 from bertha2.utils.logs import initialize_module_logger, log_if_in_debug_mode
 
 # External imports
@@ -21,25 +21,25 @@ VIDEO_HEIGHT = 720
 
 parameters = simpleobsws.IdentificationParameters(
     ignoreNonFatalRequestChecks=False)  # Create an IdentificationParameters object (optional for connecting)
-ws = simpleobsws.WebSocketClient(url='ws://127.0.0.1:4444',
+obs_websocket = simpleobsws.WebSocketClient(url='ws://127.0.0.1:4444',
                                  identification_parameters=parameters)  # Every possible argument has been passed, but none are required. See lib code for defaults.
 
 
 async def update_obs_obj_args(change_args):
     # This will error if OBS isn't running
-    await ws.connect()  # Make the connection to obs-websocket
-    await ws.wait_until_identified()  # Wait for the identification handshake to complete
+    await obs_websocket.connect()  # Make the connection to obs-websocket
+    await obs_websocket.wait_until_identified()  # Wait for the identification handshake to complete
 
     # The type of the input is "text_ft2_source_v2"
     request = simpleobsws.Request('SetInputSettings', change_args)
-    ret = await ws.call(request)  # Perform the request
+    ret = await obs_websocket.call(request)  # Perform the request
 
     if ret.ok():  # Check if the request succeeded
         logger.debug(f"Request succeeded! Response data: {ret.responseData}")
     else:
         logger.warning(f"There was an error setting the text in OBS")
 
-    await ws.disconnect()  # Disconnect from the websocket server cleanly
+    await obs_websocket.disconnect()  # Disconnect from the websocket server cleanly
 
 
 def obs_change_text_source_value(text_obj_id, text_obj_value: str):
@@ -173,7 +173,7 @@ def visuals_process(converter_visuals_conn, hardware_visuals_conn, video_name_q)
         if update_next_up:
             # update the on-screen list of videos that are playing next
             update_playing_next([video['title'] for video in video_data_queue])
-            logger.debug(f"Refreshed 'Next Up'.")
+            logger.debug(f"Refreshed 'Next Up'")
 
             update_next_up = False
 
@@ -181,15 +181,15 @@ def visuals_process(converter_visuals_conn, hardware_visuals_conn, video_name_q)
         if update_status_text:
             # update the video player and 'current video text'
             if cooldown_bool:  # if b2 is cooling down, update this to the correct text
-                obs_current_status_text = f"Bertha2 is cooling down for the next {solenoid_cooldown_s} seconds, please wait."
+                obs_current_status_text = f"Bertha2 is cooling down for the next {SOLENOID_COOLDOWN_SECONDS} seconds, please wait."
                 obs_current_video_path = ""
 
-            elif video_data_queue != []:  # if there are videos in the queue
+            elif video_data_queue:  # if there are videos in the queue
                 obs_current_status_text = f"Current Video: {video_data_queue[0]['title']}"
                 obs_current_video_path = video_data_queue[0]["filepath"]
 
                 logger.debug(video_data_queue[0])
-            elif video_data_queue == []:  # there isn't any video to be played
+            elif not video_data_queue:  # there isn't any video to be played
                 obs_current_status_text = no_video_playing_text
                 obs_current_video_path = ""
 

@@ -12,7 +12,7 @@ Interactive test: testing that requires a human to validate whether it is workin
 
 ## On Unit Testing
 * For larger functions that have much input from upstream functions, test the upstream functions to ensure they're outputting the correct data.
-* Break down larger functions into testable! bite sized pieces. Alex says they shouldn't be larger than the screen and they shouldn't need comments!
+* Break down larger functions into testable! bite sized pieces. Alex says they shouldn't be larger than the screen, and they shouldn't need comments!
 
 
-Use this for mocking API's: https://requests-mock.readthedocs.io/en/latest/index.html (if needed)
+Use this for mocking APIs: https://requests-mock.readthedocs.io/en/latest/index.html (if needed)

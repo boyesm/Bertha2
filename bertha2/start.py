@@ -2,11 +2,8 @@
 import json
 import os
 import signal
-import subprocess
-from subprocess import Popen, PIPE
 from multiprocessing import Process, Queue, Event, Pipe
 from pathlib import Path
-import socket
 
 # Internal imports
 from bertha2.settings import dirs, queue_save_file
@@ -89,7 +86,9 @@ def main():
     link_q = load_queue("link_q")  # we need a queue for YouTube links
     play_q = load_queue("play_q")  # this is the queue of ready to play videos
     title_q = Queue()  # queue of video names for obs to display
-    video_name_list = []  # The list is only 10 items long  # TODO: this doesn't need to be created here (it doesn't seem like it anyway). it should just be created in livestream.py
+    # TODO: this doesn't need to be created here (it doesn't seem like it anyway).
+    #   It should just be created in livestream.py
+    video_name_list = []  # The list is only 10 items long
 
     # converter -> visuals connection
     cv_parent_conn, cv_child_conn = Pipe()
@@ -128,7 +127,7 @@ def main():
         converter_p.join()
         hardware_p.join()
     except Exception as e:
-        logger.critical(f"Error has occurred. {e}")
+        logger.critical(f"Error has occurred. {type(e).__name__}: {e}")
     finally:
         # Stop running netcat
         netcat = None

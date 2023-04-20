@@ -9,36 +9,38 @@ import asyncio
 import socket  # TODO: This shouldn't be imported by default. But this isn't super important
 import struct
 import subprocess
+from subprocess import CalledProcessError
 import time
 
 import mido
 import serial
 
 # Internal imports
-from bertha2.settings import cli_args, solenoid_cooldown_s
 from bertha2.utils.logs import initialize_module_logger, log_if_in_debug_mode
+from bertha2.settings import (
+    cli_args,
+    SOLENOID_COOLDOWN_SECONDS,
+    STARTING_NOTE,
+    NUMBER_OF_NOTES,
+    HARDWARE_TEST_FLAG
+)
+arduino_connection = None
+sock = None
 
 logger = initialize_module_logger(__name__)
 
-### GLOBAL VARIABLES ###
-starting_note = 48
-number_of_notes = 48
-arduino_connection = None
-sock = None
-TEST_FLAG = False
 
 # TODO: this shouldn't be defined when not in test mode
 last_cl_update = time.time()
-sock = None
-note_values = [0] * number_of_notes
+note_values = [0] * NUMBER_OF_NOTES
 
 
-### TEST PATTERN FUNCTIONS ###
+# ===== TEST PATTERN FUNCTIONS =====
 async def test_every_note(hold_note_time=0.25):
     tasks = []
     input_time = 0
 
-    for note in range(number_of_notes):
+    for note in range(NUMBER_OF_NOTES):
         tasks.append(trigger_note(note, input_time, 127, hold_note_time))
         input_time += hold_note_time
 
@@ -128,12 +130,12 @@ def update_solenoid_value(note_address, pwm_value):
             note_address += 24
 
         # if a note is up to an octave below what is available to be played, shift it up an octave
-        if note_address > number_of_notes:
+        if note_address > NUMBER_OF_NOTES:
             logger.debug(f"too high! for now... {note_address}")
             note_address -= 24
 
         # This will ensure only valid notes are toggled, preventing memory address not found errors
-        if (note_address < 0) or (note_address > number_of_notes - 1) or (note_address >= 255): return
+        if (note_address < 0) or (note_address > NUMBER_OF_NOTES - 1) or (note_address >= 255): return
 
         note_values[note_address] = pwm_value
 
@@ -161,12 +163,12 @@ def update_solenoid_value(note_address, pwm_value):
             note_address += 24
 
         # if a note is up to an octave below what is available to be played, shift it up an octave
-        if note_address > number_of_notes + 1:
+        if note_address > NUMBER_OF_NOTES + 1:
             # logger.debug(f"too high! for now... {note_address}")
             note_address -= 24
 
         # this will ensure only valid notes are toggled, preventing memory address not found errors
-        if (note_address < 0 + 1) or (note_address > number_of_notes + 1) or (note_address >= 254): return
+        if (note_address < 0 + 1) or (note_address > NUMBER_OF_NOTES + 1) or (note_address >= 254): return
 
         logger.debug(f"{note_address}, {int(pwm_value)}")
         if arduino_connection is not None:
@@ -191,7 +193,7 @@ def power_draw_function(velocity, time_passed):
     return pwm_at_t
 
 
-async def trigger_note(note, init_note_delay=0, velocity=255, hold_note_time=1):
+async def trigger_note(note, init_note_delay=0, velocity=255, hold_note_time=1.0):
 
     # Delay until the note should be turned on
     await asyncio.sleep(init_note_delay)
@@ -236,12 +238,12 @@ async def play_midi_file(filename):
             continue
         else:
             if msg.type == 'note_on':
-                note = msg.note - starting_note
+                note = msg.note - STARTING_NOTE
                 logger.debug(f"note_on {note} {msg.velocity} {input_time}")
                 temp_lens.update({note: {"velocity": msg.velocity, "init_note_delay": input_time}})
 
             elif msg.type == 'note_off':
-                note = msg.note - starting_note
+                note = msg.note - STARTING_NOTE
                 logger.debug(f"note_off {note}")
                 # logger.debug(temp_lens)
 
@@ -298,9 +300,11 @@ def hardware_process(sigint_e, hardware_visuals_conn, play_q, title_q, ):
             logger.info(f"Connecting to arduino on port:{port_to_use}")
             arduino_connection.open()
 
-        except:
-            logger.warning("Unable to connect to Arduino. Is it plugged in?")
-            # TODO: should we end the program here? or keep searching for an arduino to be connected?
+        except CalledProcessError:
+            logger.warning("Arduino is not plugged in! Plug it in, or add --disable_hardware flag")
+        except Exception as e:
+            logger.critical(f"Failed to connect to Arduino: {type(e).__name__}: {e}")
+
             return
 
     while not sigint_e.is_set():
@@ -315,7 +319,7 @@ def hardware_process(sigint_e, hardware_visuals_conn, play_q, title_q, ):
             hardware_visuals_conn.send("wait")
 
             # wait to cool down solenoids
-            time.sleep(solenoid_cooldown_s)
+            time.sleep(SOLENOID_COOLDOWN_SECONDS)
 
             hardware_visuals_conn.send("done")
 

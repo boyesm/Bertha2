@@ -21,7 +21,7 @@
 * When testing without hardware, open new terminal and enter netcat command:
     `nc -dkl 8001`
 * Open OBS, import presets
-* Start streaming with B2 creds
+* Start streaming with B2 credentials
 * Run B2 software in test mode
 * Run `test_stream.py` script
 

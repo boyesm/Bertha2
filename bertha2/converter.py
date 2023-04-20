@@ -1,23 +1,27 @@
+# Built-in packages
+from os import getcwd
 import asyncio
 import logging
 import random
-from os import getcwd
 
+# Internal imports
+from bertha2.settings import (
+    MIDI_FILE_PATH,
+    AUDIO_FILE_PATH,
+    VIDEO_FILE_PATH,
+    proxy_port,
+    proxy_username,
+    proxy_password,
+)
+from bertha2.utils.logs import initialize_module_logger, log_if_in_debug_mode
+
+# External imports
 import wget
 from moviepy.editor import VideoFileClip
 from pyppeteer import launch
 from pytube import YouTube
 from pytube.extract import video_id
 
-from bertha2.settings import (
-    midi_file_path,
-    audio_file_path,
-    proxy_port,
-    proxy_username,
-    proxy_password,
-)
-from bertha2.settings import video_file_path
-from bertha2.utils.logs import initialize_module_logger, log_if_in_debug_mode
 
 logger = initialize_module_logger(__name__)
 
@@ -36,16 +40,16 @@ def download_video_audio(youtube_url):
     # download video
     logger.debug(f"Starting video download")
     yt.streams.first().download(
-        output_path=video_file_path, filename=f"{file_name}.mp4"
+        output_path=VIDEO_FILE_PATH, filename=f"{file_name}.mp4"
     )
 
     # convert to mp3
     # str conversion + brackets are necessary
-    video_clip = VideoFileClip(str(video_file_path / (file_name + ".mp4")))
+    video_clip = VideoFileClip(str(VIDEO_FILE_PATH / (file_name + ".mp4")))
 
     audio_clip = video_clip.audio
     # str conversion + brackets are necessary
-    audio_clip.write_audiofile(str(audio_file_path / (file_name + ".mp3")), verbose=False, logger=None)
+    audio_clip.write_audiofile(str(AUDIO_FILE_PATH / (file_name + ".mp3")), verbose=False, logger=None)
 
     audio_clip.close()
     video_clip.close()
@@ -94,7 +98,7 @@ async def convert_audio_to_midi(file_name):
     logger.debug(f"Opened the webpage successfully")
 
     filechoose = await page.querySelector("#localfile")
-    upload_file = str(audio_file_path / (file_name + ".mp3"))
+    upload_file = str(AUDIO_FILE_PATH / (file_name + ".mp3"))
     await filechoose.uploadFile(upload_file)
 
     submit = await page.querySelector("#uploadProgress > p > button")
@@ -115,7 +119,7 @@ async def convert_audio_to_midi(file_name):
     logger.debug(f"{link}")
 
     logger.debug(f"Downloading midi file...")
-    wget.download(link, str(midi_file_path / (file_name + ".midi")))
+    wget.download(link, str(MIDI_FILE_PATH / (file_name + ".midi")))
 
 
 def video_to_midi(youtube_url):
@@ -139,13 +143,13 @@ def video_to_midi(youtube_url):
     # TODO: if this fails, rerun the function
     asyncio.run(convert_audio_to_midi(file_name))
 
-    filepath = str(midi_file_path / (file_name + ".midi"))
+    filepath = str(MIDI_FILE_PATH / (file_name + ".midi"))
 
     return filepath, video_name
 
 
 def converter_process(sigint_e, conn, link_q, play_q, title_q):
-    logger.info(f"Converter process has been started.")
+    logger.info(f"Converter process has been started")
     while not sigint_e.is_set():
         try:
             link = link_q.get(timeout=10)
@@ -153,13 +157,16 @@ def converter_process(sigint_e, conn, link_q, play_q, title_q):
             filepath, video_title = video_to_midi(link)
             logger.info(f"Successfully converted {video_title} to a MIDI file")
 
+            # This should be here. As soon as a video is finished converting,
+            #   it should be added to the queue because we know it's safe
             conn.send({"title": video_title,
-                       "filepath": f"{getcwd()}/files/video/{YouTube(link).video_id}.mp4"})  # This should be here. As soon as a video is finished converting, it should be added to the queue because we know it's safe
+                       "filepath": f"{getcwd()}/files/video/{YouTube(link).video_id}.mp4"})
 
             play_q.put(filepath)
             title_q.put(video_title)
-        except:  # this will occur when link_q is empty. not the best way to implement.
+
+        except Exception as e:  # this will occur when link_q is empty. not the best way to implement.
             pass
 
     else:
-        logger.info(f"Converter process has been shut down.")
+        logger.info(f"Converter process has been shut down")
