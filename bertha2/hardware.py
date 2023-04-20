@@ -284,7 +284,7 @@ def hardware_process(sigint_e, hardware_visuals_conn, play_q, title_q, ):
         # port_to_use = os.popen("ls -a /dev/cu.usbserial*", ).read().split('\n')[0]
 
         try:
-            # TODO Why is this running multiple times? THis only gets imported by start.py once
+            # TODO Why is this running multiple times? THis only gets imported by main.py once
             potential_ports = subprocess.check_output(["ls -a /dev/cu.usbserial*"], shell=True,
                                                       stderr=subprocess.DEVNULL).decode('ascii')
 

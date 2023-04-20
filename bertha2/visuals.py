@@ -27,7 +27,15 @@ obs_websocket = simpleobsws.WebSocketClient(url='ws://127.0.0.1:4444',
 
 async def update_obs_obj_args(change_args):
     # This will error if OBS isn't running
-    await obs_websocket.connect()  # Make the connection to obs-websocket
+    logger.info("Updating OBS objects")
+    try:
+        await obs_websocket.connect()  # Make the connection to obs-websocket
+    except OSError:
+        # This happens when OBS isn't open
+        logger.critical("Could not connect to OBS. Is it open on your computer?")
+        return
+    except Exception:
+        logger.critical("Could not connect to OBS.")
     await obs_websocket.wait_until_identified()  # Wait for the identification handshake to complete
 
     # The type of the input is "text_ft2_source_v2"

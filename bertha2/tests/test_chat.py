@@ -19,6 +19,16 @@ class TestChat(unittest.TestCase):
     def tearDown(self):
         pass
 
+    def test_handle_command(self):
+
+        command = {}
+        command['command'] = ''
+        self.assertEquals(chat.handle_command(command), None)
+
+        command['command'] = '!play'
+        message["command_arg"] = ''
+        self.assertEquals(chat.handle_command(command), None)
+
     def test_login(self):
 
         self.web_socket = socket.socket()

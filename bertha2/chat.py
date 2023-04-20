@@ -2,8 +2,10 @@
 import socket
 import logging
 
+from pytube.exceptions import RegexMatchError
+
 # Internal imports
-from settings import channel, twitch_nickname, twitch_token, cli_args
+from settings import channel, twitch_nickname, twitch_token, cli_args, MAX_YOUTUBE_VIDEO_LENGTH
 
 # External imports
 from pytube import YouTube
@@ -101,24 +103,41 @@ def handle_command(message):
     # The id of the message to reply to in the Twitch chat
     message_id = message["msg_id"]
 
-    logger.debug(content)
+    logger.info(content)
 
     if command == "!play":
 
-        if is_valid_youtube_video(arguments):
-
-            # TODO: we can add video_name_q.put() here instead. just use
-            #   the youtube link that we have here and create a youtube object
-            logger.info(f"The video follow video has been queued: {arguments}")
-            send_reply(f"Your video ({arguments}) has been queued.", message_id)
-            return arguments
-
-        else:
-            logger.debug(f"invalid youtube video")
-
-            response = f"Sorry, {arguments} is not a valid YouTube link. It's either an invalid link or it's age restricted."
+        logger.info(f"Attempting to add: {arguments}")
+        # Check if it is a valid link
+        yt = create_yt_object(arguments)
+        if not yt:
+            logger.info("Link is invalid")
+            response = f"Sorry, {arguments} is not a valid YouTube link."
             send_reply(response, message_id)
             return None
+
+        # Check if it is age restricted
+        if yt.age_restricted:
+            logger.info("Video is age restricted")
+            response = f"Sorry, {arguments} is age restricted."
+            send_reply(response, message_id)
+            return None
+
+        # Check if it is too long
+        if yt.length >= MAX_YOUTUBE_VIDEO_LENGTH:
+            logger.info("Video length exceeds max")
+            response = f"Sorry, {arguments} is too long. The max video length is {int(MAX_YOUTUBE_VIDEO_LENGTH/60)}:{MAX_YOUTUBE_VIDEO_LENGTH%60}"
+            send_reply(response, message_id)
+            return False
+
+        # TODO: we can add video_name_q.put() here instead. just use
+        #   the youtube link that we have here and create a youtube object
+        logger.info(f"The video follow video has been queued: {arguments}")
+        send_reply(f"Your video ({arguments}) has been queued.", message_id)
+        return arguments
+
+    else:
+        return None
 
 
 def send_reply(message, message_id):
@@ -169,34 +188,20 @@ def chat_process(link_q):
             pass
 
 
-def is_valid_youtube_video(user_input):
-
+def create_yt_object(user_input):
+    """
+    Creates a YouTube video object. If the link is not valid, returns false
+    :param user_input: URL of the video
+    :return:
+    """
     try:
         # TEST CASE: https://www.youtube.com/watch?v=KRbsco8M7Fc
         yt = YouTube(user_input)
 
-    except Exception as e:
-        print(f"CHAT: link is invalid {e}")
+    except RegexMatchError:
         return False
 
-    try:
-        # this will return None if it's available, and an error if it's not
-        yt.check_availability()
-
-    except Exception as e:
-        print(f"CHAT: {e}")
-        return False
-
-    if yt.age_restricted:
-        print(f"CHAT: {user_input} is age restricted")
-        return False
-
-    # TODO: decide on an appropriate maximum video length
-    if yt.length >= 390:
-        print(f"CHAT: {user_input} is too long")
-        return False
-
-    return True
+    return yt
 
 
 if __name__ == '__main__':

@@ -2,6 +2,7 @@ from os import getcwd, getenv, path
 from pathlib import Path
 import argparse
 
+
 import pandas as pd
 from dotenv import load_dotenv
 
@@ -36,6 +37,19 @@ queue_save_file = "saved_queues"
 
 
 # ================================
+# Logging
+# ================================
+# Easily create ANSI escape codes here: https://ansi.gabebanks.net
+magenta = "\x1b[35;49;1m"
+blue = "\x1b[34;49;1m"
+green = "\x1b[32;49;1m"
+reset = "\x1b[0m"
+# This format is aligned for ease of reading
+log_format = f"{blue}[%(levelname)-10s]{magenta}[%(name)-20s]{reset} %(message)-70s     {green}[%(filename)s:%(lineno)d]{reset}"
+# log_format = f"{blue}[%(levelname)s]{magenta}[%(name)s]{reset} %(message)s     {green}[%(filename)s:%(lineno)d]{reset}"
+
+
+# ================================
 # Twitch
 # ================================
 client_id = getenv("CLIENT_ID")
@@ -43,6 +57,7 @@ channel = 'berthatwo'  # the channel of which chat is being monitored
 twitch_nickname = getenv("NICKNAME")
 twitch_token = getenv("TOKEN")
 if not twitch_token or not twitch_nickname:
+
     raise Exception("Couldn't load Twitch authentication info! Did you add secrets.env to the right location?")
 
 # ================================
@@ -54,19 +69,6 @@ NUMBER_OF_NOTES = 48
 arduino_connection = None
 sock = None
 HARDWARE_TEST_FLAG = False
-
-
-# ================================
-# Logging
-# ================================
-# Easily create ANSI escape codes here: https://ansi.gabebanks.net
-magenta = "\x1b[35;49;1m"
-blue = "\x1b[34;49;1m"
-green = "\x1b[32;49;1m"
-reset = "\x1b[0m"
-# log_format = f"{blue}[%(levelname)s]{magenta}[%(name)s]{reset} %(message)s     {green}[%(filename)s:%(lineno)d]{reset}"
-# This format is aligned for ease of reading
-log_format = f"{blue}[%(levelname)-10s]{magenta}[%(name)-20s]{reset} %(message)-70s     {green}[%(filename)s:%(lineno)d]{reset}"
 
 
 # ================================
@@ -96,4 +98,5 @@ proxy_password = getenv("PROXY_PASSWORD")
 pd.set_option('display.width', 400)
 pd.set_option('display.max_columns', 100)
 
+MAX_YOUTUBE_VIDEO_LENGTH = 400
 
