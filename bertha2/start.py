@@ -21,8 +21,9 @@ os.environ['IMAGEIO_VAR_NAME'] = 'ffmpeg'
 
 logger = initialize_root_logger(__name__)
 
-def create_dirs(dirs):
-    for dir in dirs:
+
+def create_dirs(directories):
+    for dir in directories:
         file_dir = Path(dir)
         if not os.path.exists(file_dir):
             os.makedirs(file_dir)
@@ -33,6 +34,7 @@ def create_dirs(dirs):
 def save_queues(link_queue, play_queue):
     logger.info(f"Saving queues to database.")
 
+    # TODO Name these something better
     ll = []
     pl = []
 
@@ -67,7 +69,7 @@ def load_queue(queue_name):
 
         logger.debug(o[queue_name])
 
-        # save it into a queue
+        # Save it into a queue
         for item in o[queue_name]:
             q.put(item)
     except Exception as error:
@@ -75,7 +77,8 @@ def load_queue(queue_name):
 
     return q
 
-if __name__ == '__main__':
+
+def main():
 
     logger.info(f"Initializing Bertha2...")
     create_dirs(dirs)
@@ -132,3 +135,7 @@ if __name__ == '__main__':
         netcat = None
         save_queues(link_q, play_q)
         logger.info(f"Shut down.")
+
+if __name__ == '__main__':
+
+    main()

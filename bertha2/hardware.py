@@ -4,7 +4,7 @@ what this file should do:
 - convert to data playable by the hardware
 - play on hardware
 """
-
+# Built-in packages
 import asyncio
 import socket  # TODO: This shouldn't be imported by default. But this isn't super important
 import struct
@@ -14,6 +14,7 @@ import time
 import mido
 import serial
 
+# Internal imports
 from bertha2.settings import cli_args, solenoid_cooldown_s
 from bertha2.utils.logs import initialize_module_logger, log_if_in_debug_mode
 
@@ -24,7 +25,7 @@ starting_note = 48
 number_of_notes = 48
 arduino_connection = None
 sock = None
-TEST_FLAG = False  # TODO: This should be False by default
+TEST_FLAG = False
 
 # TODO: this shouldn't be defined when not in test mode
 last_cl_update = time.time()
@@ -64,7 +65,7 @@ def turn_on_some_notes():
 def turn_off_all():
     for note in range(number_of_notes):
         turn_off_note(note + starting_note)
-    print("HARDWARE: All solenoids should be off...")
+    logger.info("HARDWARE: All solenoids should be off...")
 
 
 def turn_off_note(note):
@@ -131,7 +132,7 @@ def update_solenoid_value(note_address, pwm_value):
             logger.debug(f"too high! for now... {note_address}")
             note_address -= 24
 
-        # this will ensure only valid notes are toggled, preventing memory address not found errors
+        # This will ensure only valid notes are toggled, preventing memory address not found errors
         if (note_address < 0) or (note_address > number_of_notes - 1) or (note_address >= 255): return
 
         note_values[note_address] = pwm_value
@@ -191,15 +192,16 @@ def power_draw_function(velocity, time_passed):
 
 
 async def trigger_note(note, init_note_delay=0, velocity=255, hold_note_time=1):
-    # delay until the note should be turned on
+
+    # Delay until the note should be turned on
     await asyncio.sleep(init_note_delay)
 
     # start loop that will initiate and adjust power output to solenoid
     start_time = time.time()
 
     while True:
-        curr_time = time.time()
-        passed_time = curr_time - start_time
+        current_time = time.time()
+        passed_time = current_time - start_time
 
         if passed_time > hold_note_time:
             update_solenoid_value(note, 0)
@@ -211,17 +213,17 @@ async def trigger_note(note, init_note_delay=0, velocity=255, hold_note_time=1):
         await asyncio.sleep(0.01)
 
 
-async def play_midi_file(midi_filename):
+async def play_midi_file(filename):
     # TODO: be able to start playback from a certain point in the video (10 seconds in)
     # TODO: add a 30 second limit to video playback
 
     tasks = []
     start_time = time.time()
     input_time = 0
-    mid = mido.MidiFile(midi_filename)
+    mid = mido.MidiFile(filename)
     ticks_per_beat = mid.ticks_per_beat
     tempo = 500000  # this is the default MIDI tempo
-    temp_lengs = {}
+    temp_lens = {}
 
     for msg in mido.merge_tracks(mid.tracks):
 
@@ -236,7 +238,7 @@ async def play_midi_file(midi_filename):
             if msg.type == 'note_on':
                 note = msg.note - starting_note
                 logger.debug(f"note_on {note} {msg.velocity} {input_time}")
-                temp_lengs.update({note: {"velocity": msg.velocity, "init_note_delay": input_time}})
+                temp_lens.update({note: {"velocity": msg.velocity, "init_note_delay": input_time}})
 
             elif msg.type == 'note_off':
                 note = msg.note - starting_note
@@ -246,9 +248,9 @@ async def play_midi_file(midi_filename):
                 # TODO: error checks
                 # make sure temp_lens[msg.note] exists and isn't from some past note.
 
-                init_note_delay = temp_lengs[note]["init_note_delay"]
-                velocity = temp_lengs[note]["velocity"]
-                hold_note_time = input_time - temp_lengs[note]["init_note_delay"]
+                init_note_delay = temp_lens[note]["init_note_delay"]
+                velocity = temp_lens[note]["velocity"]
+                hold_note_time = input_time - temp_lens[note]["init_note_delay"]
 
                 tasks.append(trigger_note(note, init_note_delay, velocity, hold_note_time))
 

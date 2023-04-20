@@ -60,6 +60,10 @@ READ THIS: https://go.snyk.io/rs/677-THP-415/images/Python_Cheatsheet_whitepaper
 
 # Bugs / Needed Improvements
 
+* Why does `__init__.py` exist?
+* Make variables `global` in `settings.py`
+* Organize `settings.py` 
+* the logging library is a singleton. We don't need to set the `initalize_module_logger()` is a really weird way of doing this. We should change this.
 * Implement a better peak and hold system. Solenoids shouldn't get so hot all the time.
 * Make sure all solenoids turn off once done. There are often still signals left on after everything is done playing.
 * The load and save queues features need to be repaired

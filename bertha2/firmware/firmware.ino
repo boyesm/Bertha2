@@ -18,10 +18,10 @@ byte pos;
 byte val;
 
 
-// TODO: Make sure that cur_time can be handled as a super big number. It gets really big. long long int is 25 days of milliseconds. works just fine.
+// TODO Make sure that current_time can be handled as a super big number. It gets really big. long long int is 25 days of milliseconds. works just fine.
 
 long long int on_at[50] = {0}; // when each value was turned on last in ms. if off, value is 0
-long long int cur_time = 0;
+long long int current_time = 0;
 
 
 void read_serial_data(){
@@ -100,7 +100,7 @@ void loop() {
 
   // get current time
   // create array where each index corresponds with a pwm channel and the value is when the signal was turned on
-  cur_time = millis();
+  current_time = millis();
 
   // this code will shut off any solenoids that have been on for too long.
 //  Serial.print("Solenoids have been on for: ");
@@ -108,14 +108,14 @@ void loop() {
     if(on_at[i] == 0){
 //      Serial.print(on_at[i]);
 //      Serial.print(", ");
-    } else if (cur_time - on_at[i] > 1000) {  // if solenoid is on for more than (.)5 seconds
+    } else if (current_time - on_at[i] > 1000) {  // if solenoid is on for more than (.)5 seconds
 //      Serial.println("ON FOR TOO LONG");
       on_at[i] = 0;
       change_channel_value(i, 0);
 //      Serial.print(on_at[i]);
 //      Serial.print(", "); 
     } else {
-//      Serial.print(cur_time - on_at[i]);
+//      Serial.print(current_time - on_at[i]);
 //      Serial.print(", ");
     }
   }
@@ -143,19 +143,17 @@ void loop() {
     buff[0] -= 1;
     buff[1] -= 1;
 
-
     // this code will set an array value for the time the solenoid turned on    
     if(buff[1] != 0 && on_at[buff[0]] == 0){  // if setting to a non-zero value and ...
 //      Serial.print("Set " + String(buff[0]) + " to ");
-//      Serial.println(cur_time);
-      on_at[buff[0]] = cur_time;
+//      Serial.println(current_time);
+      on_at[buff[0]] = current_time;
     } else {
 //      Serial.println("Set " + String(buff[0]) + " to zero.");
       on_at[buff[0]] = 0;
     }
     //////////
-    
-    
+
     change_channel_value(buff[0], buff[1]);
   
   }
