@@ -1,6 +1,7 @@
 import socket
 import logging
-from settings import channel, nickname, token, cli_args
+
+from settings import channel, twitch_nickname, twitch_token, cli_args
 from pytube import YouTube
 
 
@@ -27,7 +28,7 @@ def parse_privmsg(msg):
     if msg == '':
         return
 
-    logger.debug(msg)
+    logger.debug(msg.rstrip('\n').rstrip('\r'))
 
     msg = msg.strip()
     msg = msg.split(" :")
@@ -66,14 +67,15 @@ def login(w_socket):
     # print(w_socket.type)
     # logger.debug(w_socket)
     resp = w_socket.recv(2048).decode("utf-8")  # check if cap req was successful
-    logger.debug(resp)
+
+    logger.debug(resp.rstrip('\n').rstrip('\r'))
     if "CAP * NAK" in resp:
         logger.critical("Capabilities couldn't be requested.")
         raise ConnectionRefusedError
-    w_socket.send(f"PASS {token}\n".encode("utf-8"))  # auth user
-    w_socket.send(f"NICK {nickname}\n".encode("utf-8"))
+    w_socket.send(f"PASS {twitch_token}\n".encode("utf-8"))  # auth user
+    w_socket.send(f"NICK {twitch_nickname}\n".encode("utf-8"))
     resp = w_socket.recv(2048).decode("utf-8")  # check if auth was successful
-    # print(resp)
+
     if "Improperly formatted auth" in resp:
         logger.critical("Improperly formatted auth.")
         raise ConnectionRefusedError
@@ -82,7 +84,7 @@ def login(w_socket):
         raise ConnectionRefusedError
     w_socket.send(f"JOIN #{channel}\n".encode("utf-8"))  # join channel
     resp = w_socket.recv(2048).decode("utf-8")  # get join messages
-    logger.debug(resp)
+    logger.debug(resp.rstrip('\n').rstrip('\r'))
 
 
 def handle_command(message):
@@ -135,10 +137,11 @@ def chat_process(link_q):
     :param: link_q: The queue that the YouTube links from chat should be added to
     :return:
     """
-    if token == None:
+    if not twitch_token:
         logger.critical("")
         raise FileNotFoundError
-    logger.debug(f"Twitch token, nickname: {token}, {nickname}")
+    # We really shouldn't be logging the twitch token, so I disabled this line
+    # logger.debug(f"Twitch token, nickname: {twitch_token}, {twitch_nickname}")
 
     login(web_socket)
     logger.info(f"Ready and waiting for twitch commands in [{channel}]...")
@@ -151,13 +154,17 @@ def chat_process(link_q):
                 web_socket.send("PONG\n".encode("utf-8"))
             else:
                 message = parse_privmsg(resp)
-                logger.debug(message)
+                # logger.debug(message)
                 link = handle_command(message)
                 if link != None:
                     link_q.put(link)
 
+        except TypeError:
+            # In this case, no message was found
+            pass
         except Exception as e:
-            logger.critical(f"Error{e}")
+
+            logger.critical(f"Error {type(e).__name__}: {e}")
             pass
 
 def is_valid_youtube_video(user_input):

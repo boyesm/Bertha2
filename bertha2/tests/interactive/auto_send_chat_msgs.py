@@ -25,12 +25,11 @@ sock.send(f"NICK {nickname}\n".encode("utf-8"))
 sock.send(f"JOIN {channel}\n".encode("utf-8"))
 
 resp = sock.recv(2048).decode("utf-8")
-print(resp)
+# print(resp)
 
 MAX_MSG_PER_SECOND = 0.5  # this is a speed that works
 
-## I've modded this account now, so it could do 100 msgs / 30 seconds
-
+# I've modded this account now, so it could do 100 msgs / 30 seconds
 dx_last_message = time.time()
 
 

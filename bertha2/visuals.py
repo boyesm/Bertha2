@@ -1,10 +1,13 @@
+# Built-in packages
 import asyncio
 import time
 
-import simpleobsws
-
+# Internal imports
 from bertha2.settings import cuss_words, solenoid_cooldown_s
 from bertha2.utils.logs import initialize_module_logger, log_if_in_debug_mode
+
+# External imports
+import simpleobsws
 
 logger = initialize_module_logger(__name__)
 

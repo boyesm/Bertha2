@@ -10,8 +10,7 @@ import socket
 
 # Internal imports
 from bertha2.settings import dirs, queue_save_file
-from bertha2.utils.logs import initialize_root_logger
-
+from bertha2.utils.logs import init_logger
 from bertha2.chat import chat_process
 from bertha2.converter import converter_process
 from bertha2.hardware import hardware_process
@@ -19,15 +18,15 @@ from bertha2.visuals import visuals_process
 
 os.environ['IMAGEIO_VAR_NAME'] = 'ffmpeg'
 
-logger = initialize_root_logger(__name__)
+logger = init_logger(__name__)
 
 
 def create_dirs(directories):
-    for dir in directories:
-        file_dir = Path(dir)
+    # TODO This isn't specific enough
+    for directory in directories:
+        file_dir = Path(directory)
         if not os.path.exists(file_dir):
             os.makedirs(file_dir)
-
     logger.info(f"Created directories")
 
 
@@ -100,7 +99,7 @@ def main():
     sigint_e = Event()
     # TODO: if processes crash, restart them automatically
     # netcat = Popen(['nc', '-dkl', '8001'], stdout=PIPE, stderr=PIPE, shell=True)
-    proc = subprocess.Popen("watch nc -dkl 8001", shell=True, start_new_session=True)
+    # proc = subprocess.Popen("watch nc -dkl 8001", shell=True, start_new_session=True)
 
     input_p = Process(target=chat_process, args=(link_q,))
     converter_p = Process(target=converter_process, args=(sigint_e, cv_child_conn, link_q, play_q, title_q,))
