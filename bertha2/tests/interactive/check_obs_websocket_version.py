@@ -1,9 +1,6 @@
 import logging
-
-logging.basicConfig(level=logging.DEBUG)
 import asyncio
 import simpleobsws
-
 parameters = simpleobsws.IdentificationParameters(
     ignoreNonFatalRequestChecks=False)  # Create an IdentificationParameters object (optional for connecting)
 

@@ -1,0 +1,16 @@
+[34;49;1m[INFO      ][35;49;1m[main                ][0m ===== Starting Bertha2=====                                                     [32;49;1m[main.py:80][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Created directories                                                             [32;49;1m[main.py:28][0m
+[34;49;1m[DEBUG     ][35;49;1m[main                ][0m Loading queue: link_q                                                           [32;49;1m[main.py:59][0m
+[34;49;1m[DEBUG     ][35;49;1m[main                ][0m []                                                                              [32;49;1m[main.py:67][0m
+[34;49;1m[DEBUG     ][35;49;1m[main                ][0m Loading queue: play_q                                                           [32;49;1m[main.py:59][0m
+[34;49;1m[DEBUG     ][35;49;1m[main                ][0m []                                                                              [32;49;1m[main.py:67][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.converter   ][0m Converter process has been started                                              [32;49;1m[converter.py:155][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Updating OBS objects                                                            [32;49;1m[visuals.py:30][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Could not connect to OBS. Is it open on your computer?                          [32;49;1m[visuals.py:35][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Refreshed 'Next Up'                                                             [32;49;1m[visuals.py:188][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Updating OBS objects                                                            [32;49;1m[visuals.py:30][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Could not connect to OBS. Is it open on your computer?                          [32;49;1m[visuals.py:35][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Updating OBS objects                                                            [32;49;1m[visuals.py:30][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Could not connect to OBS. Is it open on your computer?                          [32;49;1m[visuals.py:35][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.hardware    ][0m Running hardware with test flag                                                 [32;49;1m[hardware.py:268][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m Ready and waiting for twitch commands in [berthatwo]...                         [32;49;1m[chat.py:192][0m

@@ -4,12 +4,12 @@ import time
 
 # Internal imports
 from bertha2.settings import cuss_words, SOLENOID_COOLDOWN_SECONDS
-from bertha2.utils.logs import initialize_module_logger, log_if_in_debug_mode
+from bertha2.utils.logs import get_module_logger
 
 # External imports
 import simpleobsws
 
-logger = initialize_module_logger(__name__)
+logger = get_module_logger(__name__)
 
 # TODO: Could these be added to settings?
 SCENE_NAME = 'Scene'
@@ -32,7 +32,7 @@ async def update_obs_obj_args(change_args):
         await obs_websocket.connect()  # Make the connection to obs-websocket
     except OSError:
         # This happens when OBS isn't open
-        logger.critical("Could not connect to OBS. Is it open on your computer?")
+        logger.warning("Could not connect to OBS. Is it open on your computer?")
         return
     except Exception:
         logger.critical("Could not connect to OBS.")
@@ -148,9 +148,13 @@ def update_playing_next(playing_next_list: list):
 
 
 def visuals_process(converter_visuals_conn, hardware_visuals_conn, video_name_q):
-    # this process should control livestream visuals.
-
-    log_if_in_debug_mode(logger, __name__)
+    """
+    Controls the livestream visuals
+    :param converter_visuals_conn:
+    :param hardware_visuals_conn:
+    :param video_name_q:
+    :return:
+    """
 
     no_video_playing_text = "Nothing currently playing."
 

@@ -46,6 +46,7 @@ Create a new file called 'cuss_words.txt' and add it into the root dir.
 Start netcat in a new terminal before running the hardware tests. This will allow the outputs of the 
 solenoids to be viewed on the command line.
 
+
 ```commandline
 nc -dkl 8001
 ```
@@ -65,4 +66,27 @@ nc -dkl 8001
   2. Go to "Edit configuration templates..." at the bottom left of the new window
   3. Check the "Emulate terminal in output console" box and apply
 
+## Logging
+* Logging levels can be enabled using arguments when running main.py. Use the argument along with the 
+desired logging level e.g. `python main.py --debug_level_chat 30` 
 
+The logging levels are as follows:
+* 10: DEBUG
+* 20: INFO
+* 30: WARNING
+* 40: ERROR
+* 50: CRITICAL
+
+The following arguments are available:
+* `--log_level_main`
+* `--log_level_chat`
+* `--log_level_visuals`
+* `--log_level_converter`
+* `--log_level_hardware`
+* To set the logging level for all modules, use `--log_level`
+* `--log_to_file` to store the logs in a file called `B2_logs-{date}.log`
+
+### Viewing log files
+
+Log files use ANSI for the coloring scheme. You will need to install an ANSI viewer extension to view th files
+There is a paid one for PyCharm, and a free one for VSCode.

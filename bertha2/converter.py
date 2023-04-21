@@ -1,4 +1,5 @@
 # Built-in packages
+import os.path
 from os import getcwd
 import asyncio
 import logging
@@ -13,7 +14,7 @@ from bertha2.settings import (
     proxy_username,
     proxy_password,
 )
-from bertha2.utils.logs import initialize_module_logger, log_if_in_debug_mode
+from bertha2.utils.logs import get_module_logger
 
 # External imports
 import wget
@@ -23,15 +24,9 @@ from pytube import YouTube
 from pytube.extract import video_id
 
 
-logger = initialize_module_logger(__name__)
+logger = get_module_logger(__name__)
 
-# This is to prevent messy debug logs from pyppeteer
-pptr_logger = logging.getLogger("pyppeteer")
-pptr_logger.setLevel(50)
-pptr_logger.addHandler(logging.StreamHandler())
-
-
-def download_video_audio(youtube_url):
+def download_video_audio(youtube_url: str):
     logger.debug(f"Converting YouTube URL into audio file...")
 
     yt = YouTube(youtube_url)
@@ -58,14 +53,14 @@ def download_video_audio(youtube_url):
 
 
 # TODO: get this function working
-async def convert_audio_to_midi(file_name):
-    log_if_in_debug_mode(logger, __name__)
-    logger.debug(f"converting audio to midi")
+async def convert_audio_to_midi(file_name: str):
+
+    logger.debug(f"Converting {file_name} to midi")
     # TODO: put some try catches in here to prevent timeouts
 
     proxy_num = random.randrange(0, 100000)
 
-    logger.debug(f"ATTEMPTING TO GET LINK")
+    logger.debug(f"Attempting to get link")
     browser = await launch(
         {
             "logLevel": 0,
@@ -122,8 +117,18 @@ async def convert_audio_to_midi(file_name):
     wget.download(link, str(MIDI_FILE_PATH / (file_name + ".midi")))
 
 
-def video_to_midi(youtube_url):
+def video_to_midi(youtube_url: str):
+    """
+
+    :param youtube_url:
+    :return: The filepath of the midi file, and the video title
+    """
     # TODO: add a feature that checks if the YouTube video has already been converted
+
+    filepath = str(MIDI_FILE_PATH / (file_name + ".midi"))
+    if(os.path.exists(filepath)):
+        logger.info("Midi file already exists. Not ")
+        return
 
     yt = YouTube(youtube_url)
     video_name = yt.vid_info['videoDetails']['title']
@@ -142,8 +147,6 @@ def video_to_midi(youtube_url):
 
     # TODO: if this fails, rerun the function
     asyncio.run(convert_audio_to_midi(file_name))
-
-    filepath = str(MIDI_FILE_PATH / (file_name + ".midi"))
 
     return filepath, video_name
 

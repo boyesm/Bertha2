@@ -2,12 +2,13 @@
 import json
 import os
 import signal
+import subprocess
 from multiprocessing import Process, Queue, Event, Pipe
 from pathlib import Path
 
 # Internal imports
 from bertha2.settings import dirs, queue_save_file
-from bertha2.utils.logs import init_logger
+from bertha2.utils.logs import get_module_logger
 from bertha2.chat import chat_process
 from bertha2.converter import converter_process
 from bertha2.hardware import hardware_process
@@ -15,7 +16,7 @@ from bertha2.visuals import visuals_process
 
 os.environ['IMAGEIO_VAR_NAME'] = 'ffmpeg'
 
-logger = init_logger(__name__)
+logger = get_module_logger('main')
 
 
 def create_dirs(directories):
@@ -55,7 +56,7 @@ def save_queues(link_queue, play_queue):
 
 
 def load_queue(queue_name):
-    logger.info(f"Loading queue: {queue_name}")
+    logger.debug(f"Loading queue: {queue_name}")
 
     q = Queue()
 
@@ -76,7 +77,7 @@ def load_queue(queue_name):
 
 def main():
 
-    logger.info(f"Initializing Bertha2...")
+    logger.info(f"===== Starting Bertha2=====")
     create_dirs(dirs)
 
     # Set signal handling of SIGINT to ignore mode.
@@ -96,10 +97,8 @@ def main():
     hv_child_conn, hv_parent_conn = Pipe()
 
     sigint_e = Event()
-    # TODO: if processes crash, restart them automatically
-    # netcat = Popen(['nc', '-dkl', '8001'], stdout=PIPE, stderr=PIPE, shell=True)
-    # proc = subprocess.Popen("watch nc -dkl 8001", shell=True, start_new_session=True)
 
+    # TODO: if processes crash, restart them automatically
     input_p = Process(target=chat_process, args=(link_q,))
     converter_p = Process(target=converter_process, args=(sigint_e, cv_child_conn, link_q, play_q, title_q,))
     hardware_p = Process(target=hardware_process, args=(sigint_e, hv_parent_conn, play_q, title_q,))

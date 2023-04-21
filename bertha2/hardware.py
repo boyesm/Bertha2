@@ -16,7 +16,7 @@ import mido
 import serial
 
 # Internal imports
-from bertha2.utils.logs import initialize_module_logger, log_if_in_debug_mode
+from bertha2.utils.logs import get_module_logger
 from bertha2.settings import (
     cli_args,
     SOLENOID_COOLDOWN_SECONDS,
@@ -27,7 +27,7 @@ from bertha2.settings import (
 arduino_connection = None
 sock = None
 
-logger = initialize_module_logger(__name__)
+logger = get_module_logger(__name__)
 
 
 # TODO: this shouldn't be defined when not in test mode
@@ -170,7 +170,6 @@ def update_solenoid_value(note_address, pwm_value):
         # this will ensure only valid notes are toggled, preventing memory address not found errors
         if (note_address < 0 + 1) or (note_address > NUMBER_OF_NOTES + 1) or (note_address >= 254): return
 
-        logger.debug(f"{note_address}, {int(pwm_value)}")
         if arduino_connection is not None:
             arduino_connection.write(struct.pack('>3B', int(note_address), int(pwm_value), int(255)))
 
@@ -260,16 +259,15 @@ async def play_midi_file(filename):
     await asyncio.gather(*tasks)
 
 
-def hardware_process(sigint_e, hardware_visuals_conn, play_q, title_q, ):
-    log_if_in_debug_mode(logger, __name__)
+def hardware_process(sigint_e, hardware_visuals_conn, play_q, title_q):
 
     global TEST_FLAG
     TEST_FLAG = cli_args.disable_hardware
     if TEST_FLAG:
         global sock
-
+        logger.debug("Running hardware with test flag")
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
+        subprocess.call("nc -dkl 8001", shell=True, start_new_session=True)
         try:
             sock.connect(('127.0.0.1', 8001))
         except:
@@ -277,6 +275,7 @@ def hardware_process(sigint_e, hardware_visuals_conn, play_q, title_q, ):
             raise ConnectionRefusedError
 
     else:  # test mode is disabled
+        logger.debug("Running hardware")
         global arduino_connection
 
         # Find the usb port that has something plugged in to use from /dev/ (only works with unix)
@@ -284,7 +283,7 @@ def hardware_process(sigint_e, hardware_visuals_conn, play_q, title_q, ):
         # port_to_use = os.popen("ls -a /dev/cu.usbserial*", ).read().split('\n')[0]
 
         try:
-            # TODO Why is this running multiple times? THis only gets imported by main.py once
+            # TODO Why is this running multiple times? This only gets imported by main.py once
             potential_ports = subprocess.check_output(["ls -a /dev/cu.usbserial*"], shell=True,
                                                       stderr=subprocess.DEVNULL).decode('ascii')
 

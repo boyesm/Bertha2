@@ -25,8 +25,19 @@ class TestChat(unittest.TestCase):
         command['command'] = ''
         self.assertEquals(chat.handle_command(command), None)
 
+        # Play command
         command['command'] = '!play'
-        message["command_arg"] = ''
+        command["command_arg"] = ''
+        self.assertEquals(chat.handle_command(command), None)
+
+        # Invalid video
+        command['command'] = '!play'
+        command["command_arg"] = 'test'
+        self.assertEquals(chat.handle_command(command), None)
+
+        # Age restricted video
+        command['command'] = '!play'
+        command["command_arg"] = 'https://youtu.be/84Epn5MSetk'
         self.assertEquals(chat.handle_command(command), None)
 
     def test_login(self):

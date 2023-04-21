@@ -1,12 +1,12 @@
 # v1.0 roadmap
 
 * Re-organize files and dirs
-* Rename start.py to main.py
+* [DONE] Rename start.py to main.py
 * [DONE] Fix Saved Queue
   * Will the queue save videos even if it's in the process of shutting down?
 * [DONE] Modify peak and hold voltage function
 * [MALCOLM] Doesn't play the first video that's requested (on startup, or on restart)
-* [JARVIS] It currently plays image files (!play https://i.ytimg.com/vi/QNQQGO2WJbM/hqdefault.jpg?sqp=-oaymwE2CNACELwBSFXyq4qpAygIARUAAIhCGAFwAcABBvABAfgBvgSAAoAIigIMCAAQARhyIFooQDAP&rs=AOn4CLCaDbi7K59Dw3oIoKaZXVtCsKV8Nw)
+* [DONE] It currently plays image files (!play https://i.ytimg.com/vi/QNQQGO2WJbM/hqdefault.jpg?sqp=-oaymwE2CNACELwBSFXyq4qpAygIARUAAIhCGAFwAcABBvABAfgBvgSAAoAIigIMCAAQARhyIFooQDAP&rs=AOn4CLCaDbi7K59Dw3oIoKaZXVtCsKV8Nw)
 * [NOT SPECIFIC] If a link that doesn't work gets past initial filter, make sure it doesn't mess everything up.
 * [JARVIS] Make a message saying the bot is down when it closes (i.e. set obs text to something like "bot is offline for maintenance")
 * [JARVIS] Why are other users seeing messages from berthatwo? All responses to !play commands should be whispers
@@ -15,7 +15,7 @@
 * [NOT SPECIFIC] Add some better explanations for what is going on (why does your video not immediately appear in next up? why does the bot not respond to only "!play"?)
 * [MALCOLM] Doesn't always save the play queue (like when the hardware isn't working)
 * [MALCOLM] "next up" onscreen element doesn't properly render after a restart. 
-* check for the existence of needed files on launch (cuss_wrds.txt, secrets.env)
+* Check for the existence of needed files on launch (cuss_wrds.txt, secrets.env)
 
 READ THIS: https://go.snyk.io/rs/677-THP-415/images/Python_Cheatsheet_whitepaper.pdf
 
@@ -39,17 +39,17 @@ READ THIS: https://go.snyk.io/rs/677-THP-415/images/Python_Cheatsheet_whitepaper
   * [DONE] Documented test setup guide
   * [DONE] Write a script that stress tests the stream
 * Better logging, some way of enabling different levels of information without constantly commenting out print statements
+  * Make sure the log levels are accurate to what they are. 
+  * Change log level while program is running? https://towardsdatascience.com/how-to-add-a-debug-mode-for-your-python-logging-mid-run-3c7330dc199d
   * [DONE] Control general log level, when debugging, debug level logs should be enabled
   * [DONE] Also be able to control log level for each module, when troubleshooting a single module for example, all debug level logs are not needed
-  * Make sure the log levels are accurate to what they are. 
-  * Document how to level logs.
-  * Change log level while program is running? https://towardsdatascience.com/how-to-add-a-debug-mode-for-your-python-logging-mid-run-3c7330dc199d
-  * Save logs to files
+  * [DONE] Document how to level logs.
+  * [DONE] Save logs to files
 * Be able to pause the program when certain conditions aren't met to prevent undefined behaviours.
   * In the following cases, the program should pause but not crash or stop running:
     * [DONE] OBS isn't open / crashes / can't be accessed
     * [DONE] OBS can't find elements that need to be accessed
-    * Cannot connect to Twitch chat
+    * [DONE] Cannot connect to Twitch chat
     * [DONE] Cannot connect to hardware / hardware emulator
   * In the following cases the program should stop running:
     * [DONE] Can't access important secret keys / keys are not valid
@@ -60,9 +60,9 @@ READ THIS: https://go.snyk.io/rs/677-THP-415/images/Python_Cheatsheet_whitepaper
 
 # Bugs / Needed Improvements
 
-* Why does `__init__.py` exist?
-* Make netcat automatically run
-* Implement a better peak and hold system. Solenoids shouldn't get so hot all the time.
+* [DONE] Make netcat automatically run
+* Gracefully close Twitch Chat connection
+* Implement a better peak and hold system. Solenoids shouldn't get so hot all the time. 
 * Make sure all solenoids turn off once done. There are often still signals left on after everything is done playing.
 * The load and save queues features need to be repaired
 * [DONE] Make sure the software actually pauses the hardware after the video is done playing for the specified time (e.g. 30 seconds)
@@ -77,6 +77,7 @@ READ THIS: https://go.snyk.io/rs/677-THP-415/images/Python_Cheatsheet_whitepaper
 * Create a start message for visuals process
 * If visuals.py can't connect to OBS after some time, the program will crash entirely.
   * What should the desired behaviour here be? If it can't connect, should it just wait until it can connect?
+  * Right now, it continues to run other processes and gets angry in the terminal. 
 * Enable a GitHub action that cleans up python code?
 
 # Considerations

@@ -1,8 +1,6 @@
 from os import getcwd, getenv, path
 from pathlib import Path
 import argparse
-
-
 import pandas as pd
 from dotenv import load_dotenv
 
@@ -37,19 +35,6 @@ queue_save_file = "saved_queues"
 
 
 # ================================
-# Logging
-# ================================
-# Easily create ANSI escape codes here: https://ansi.gabebanks.net
-magenta = "\x1b[35;49;1m"
-blue = "\x1b[34;49;1m"
-green = "\x1b[32;49;1m"
-reset = "\x1b[0m"
-# This format is aligned for ease of reading
-log_format = f"{blue}[%(levelname)-10s]{magenta}[%(name)-20s]{reset} %(message)-70s     {green}[%(filename)s:%(lineno)d]{reset}"
-# log_format = f"{blue}[%(levelname)s]{magenta}[%(name)s]{reset} %(message)s     {green}[%(filename)s:%(lineno)d]{reset}"
-
-
-# ================================
 # Twitch
 # ================================
 client_id = getenv("CLIENT_ID")
@@ -75,13 +60,17 @@ HARDWARE_TEST_FLAG = False
 # Parser
 # ================================
 parser = argparse.ArgumentParser(prog='Bertha2')
-parser.add_argument('--disable_hardware', action='store_true')  # checks if the `--disable_hardware` flag is used
-parser.add_argument("--log", action="store")
-parser.add_argument("--debug_visuals", action='store_true')
-parser.add_argument("--debug_converter", action='store_true')
-parser.add_argument("--debug_hardware", action='store_true')
-parser.add_argument("--debug_chat", action='store_true')
+parser.add_argument('--disable_hardware', action='store_true')  # Checks if the `--disable_hardware` flag is used
+parser.add_argument('-l', "--log_to_file", action="store_true")
+parser.add_argument("--log_level", action="store")  # The default logging level
+parser.add_argument("--log_level_main", action="store")
+parser.add_argument("--log_level_visuals", action="store")
+parser.add_argument("--log_level_converter", action="store")
+parser.add_argument("--log_level_hardware", action="store")
+parser.add_argument("--log_level_chat", action="store")
 cli_args = parser.parse_args()
+
+# print(cli_args)
 
 # ================================
 # Other
