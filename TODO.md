@@ -59,7 +59,8 @@ READ THIS: https://go.snyk.io/rs/677-THP-415/images/Python_Cheatsheet_whitepaper
 
 
 # Bugs / Needed Improvements
-
+* When fixing other things, shorts stopped working. https://www.youtube.com/shorts/861uoDmjv1U
+* It sometimes even freezes
 * [DONE] Make netcat automatically run
 * Gracefully close Twitch Chat connection
 * Implement a better peak and hold system. Solenoids shouldn't get so hot all the time. 

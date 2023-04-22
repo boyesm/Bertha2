@@ -77,7 +77,7 @@ def load_queue(queue_name):
 
 def main():
 
-    logger.info(f"===== Starting Bertha2=====")
+    logger.info(f"===== Starting Bertha2 =====")
     create_dirs(dirs)
 
     # Set signal handling of SIGINT to ignore mode.
@@ -128,8 +128,6 @@ def main():
     except Exception as e:
         logger.critical(f"Error has occurred. {type(e).__name__}: {e}")
     finally:
-        # Stop running netcat
-        netcat = None
         save_queues(link_q, play_q)
         logger.info(f"Shut down.")
 

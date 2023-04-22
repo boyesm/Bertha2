@@ -21,33 +21,28 @@ VIDEO_HEIGHT = 720
 
 parameters = simpleobsws.IdentificationParameters(
     ignoreNonFatalRequestChecks=False)  # Create an IdentificationParameters object (optional for connecting)
-obs_websocket = simpleobsws.WebSocketClient(url='ws://127.0.0.1:4444',
-                                 identification_parameters=parameters)  # Every possible argument has been passed, but none are required. See lib code for defaults.
+obs_websocket = simpleobsws.WebSocketClient(
+    url='ws://127.0.0.1:4444',
+    identification_parameters=parameters)  # Every possible argument has been passed, but none are required. See lib code for defaults.
 
 
-async def update_obs_obj_args(change_args):
+def update_obs_obj_args(change_args):
     # This will error if OBS isn't running
-    logger.info("Updating OBS objects")
-    try:
-        await obs_websocket.connect()  # Make the connection to obs-websocket
-    except OSError:
-        # This happens when OBS isn't open
-        logger.warning("Could not connect to OBS. Is it open on your computer?")
-        return
-    except Exception:
-        logger.critical("Could not connect to OBS.")
-    await obs_websocket.wait_until_identified()  # Wait for the identification handshake to complete
+    logger.debug(f"Updating OBS object: {change_args['inputName']}")
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(open_obs_connection())
 
     # The type of the input is "text_ft2_source_v2"
     request = simpleobsws.Request('SetInputSettings', change_args)
-    ret = await obs_websocket.call(request)  # Perform the request
+    ret = loop.run_until_complete(obs_websocket.call(request))  # Perform the request
 
     if ret.ok():  # Check if the request succeeded
         logger.debug(f"Request succeeded! Response data: {ret.responseData}")
     else:
         logger.warning(f"There was an error setting the text in OBS")
+        logger.warning(f"Response: {ret.requestStatus.comment}")
 
-    await obs_websocket.disconnect()  # Disconnect from the websocket server cleanly
+    loop.run_until_complete(obs_websocket.disconnect())  # Disconnect from the websocket server cleanly
 
 
 def obs_change_text_source_value(text_obj_id, text_obj_value: str):
@@ -77,8 +72,7 @@ def obs_change_text_source_value(text_obj_id, text_obj_value: str):
 
     # TODO: create a function for updating OBS and include this in it \/
     try:
-        loop = asyncio.get_event_loop()  # NOTE: Async function must be called like this.
-        loop.run_until_complete(update_obs_obj_args(change_arguments))
+        update_obs_obj_args(change_arguments)
     except Exception as e:
         logger.warning(f"Unable to connect to OBS. Is it running right now?")
 
@@ -102,8 +96,8 @@ def obs_change_video_source_value(media_obj_id, media_filepath: str):
     }
 
     # TODO: replace this code with OBS update function
-    loop = asyncio.get_event_loop()  # NOTE: Async function must be called like this.
-    loop.run_until_complete(update_obs_obj_args(change_arguments))
+    # loop = asyncio.get_event_loop()  # NOTE: Async function must be called like this.
+    update_obs_obj_args(change_arguments)
 
 
 def process_title(title: str):
@@ -147,6 +141,22 @@ def update_playing_next(playing_next_list: list):
     obs_change_text_source_value('queue', input_string)
 
 
+async def open_obs_connection():
+    logger.debug("Getting OBS connection...")
+    try:
+        await obs_websocket.connect()  # Make the connection to obs-websocket
+    except OSError:
+        # This happens when OBS isn't open
+        logger.warning("OBS is not open!")
+        return False
+    except Exception as e:
+        logger.critical("Could not connect to OBS.")
+        return False
+    await obs_websocket.wait_until_identified()  # Wait for the identification handshake to complete
+    logger.debug(obs_websocket.answers)
+    return True
+
+
 def visuals_process(converter_visuals_conn, hardware_visuals_conn, video_name_q):
     """
     Controls the livestream visuals
@@ -158,15 +168,24 @@ def visuals_process(converter_visuals_conn, hardware_visuals_conn, video_name_q)
 
     no_video_playing_text = "Nothing currently playing."
 
-    ## STATE variables & default values
+    # STATE variables & default values
     obs_current_status_text = no_video_playing_text
     obs_current_video_path = ""
     video_data_queue = []
     cooldown_bool = False
     update_next_up = True
     update_status_text = True
+    #
 
-    ##
+    # Confirm that OBS is open
+    loop = asyncio.get_event_loop()
+    connected = loop.run_until_complete(open_obs_connection())
+    if connected is False:
+        logger.warning("Could not connect to OBS")
+        return False  # TODO What should the default behavior be here?
+    loop.run_until_complete(obs_websocket.disconnect())  # Disconnect from the websocket server cleanly
+
+    logger.info("Visuals process has been started")
 
     while True:
 

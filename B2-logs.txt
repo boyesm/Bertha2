@@ -14,3 +14,675 @@
 [34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Could not connect to OBS. Is it open on your computer?                          [32;49;1m[visuals.py:35][0m
 [34;49;1m[DEBUG     ][35;49;1m[bertha2.hardware    ][0m Running hardware with test flag                                                 [32;49;1m[hardware.py:268][0m
 [34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m Ready and waiting for twitch commands in [berthatwo]...                         [32;49;1m[chat.py:192][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m ===== Starting Bertha2=====                                                     [32;49;1m[main.py:80][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Created directories                                                             [32;49;1m[main.py:28][0m
+[34;49;1m[DEBUG     ][35;49;1m[main                ][0m Loading queue: link_q                                                           [32;49;1m[main.py:59][0m
+[34;49;1m[DEBUG     ][35;49;1m[main                ][0m []                                                                              [32;49;1m[main.py:67][0m
+[34;49;1m[DEBUG     ][35;49;1m[main                ][0m Loading queue: play_q                                                           [32;49;1m[main.py:59][0m
+[34;49;1m[DEBUG     ][35;49;1m[main                ][0m []                                                                              [32;49;1m[main.py:67][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Updating OBS objects                                                            [32;49;1m[visuals.py:31][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Unable to connect to OBS. Is it running right now?                              [32;49;1m[visuals.py:76][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Refreshed 'Next Up'                                                             [32;49;1m[visuals.py:198][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Updating OBS objects                                                            [32;49;1m[visuals.py:31][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Unable to connect to OBS. Is it running right now?                              [32;49;1m[visuals.py:76][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Updating OBS objects                                                            [32;49;1m[visuals.py:31][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Saving queues to database.                                                      [32;49;1m[main.py:32][0m
+[34;49;1m[DEBUG     ][35;49;1m[main                ][0m {'play_q': [], 'link_q': []}                                                    [32;49;1m[main.py:50][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Saved queues to database.                                                       [32;49;1m[main.py:55][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Shut down.                                                                      [32;49;1m[main.py:134][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m ===== Starting Bertha2=====                                                     [32;49;1m[main.py:80][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Created directories                                                             [32;49;1m[main.py:28][0m
+[34;49;1m[DEBUG     ][35;49;1m[main                ][0m Loading queue: link_q                                                           [32;49;1m[main.py:59][0m
+[34;49;1m[DEBUG     ][35;49;1m[main                ][0m []                                                                              [32;49;1m[main.py:67][0m
+[34;49;1m[DEBUG     ][35;49;1m[main                ][0m Loading queue: play_q                                                           [32;49;1m[main.py:59][0m
+[34;49;1m[DEBUG     ][35;49;1m[main                ][0m []                                                                              [32;49;1m[main.py:67][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.converter   ][0m Converter process has been started                                              [32;49;1m[converter.py:155][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.hardware    ][0m Running hardware with test flag                                                 [32;49;1m[hardware.py:268][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Updating OBS objects                                                            [32;49;1m[visuals.py:31][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Unable to connect to OBS. Is it running right now?                              [32;49;1m[visuals.py:76][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Refreshed 'Next Up'                                                             [32;49;1m[visuals.py:198][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Updating OBS objects                                                            [32;49;1m[visuals.py:31][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Unable to connect to OBS. Is it running right now?                              [32;49;1m[visuals.py:76][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Updating OBS objects                                                            [32;49;1m[visuals.py:31][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Saving queues to database.                                                      [32;49;1m[main.py:32][0m
+[34;49;1m[DEBUG     ][35;49;1m[main                ][0m {'play_q': [], 'link_q': []}                                                    [32;49;1m[main.py:50][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Saved queues to database.                                                       [32;49;1m[main.py:55][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Shut down.                                                                      [32;49;1m[main.py:134][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m ===== Starting Bertha2=====                                                     [32;49;1m[main.py:80][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Created directories                                                             [32;49;1m[main.py:28][0m
+[34;49;1m[DEBUG     ][35;49;1m[main                ][0m Loading queue: link_q                                                           [32;49;1m[main.py:59][0m
+[34;49;1m[DEBUG     ][35;49;1m[main                ][0m []                                                                              [32;49;1m[main.py:67][0m
+[34;49;1m[DEBUG     ][35;49;1m[main                ][0m Loading queue: play_q                                                           [32;49;1m[main.py:59][0m
+[34;49;1m[DEBUG     ][35;49;1m[main                ][0m []                                                                              [32;49;1m[main.py:67][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Updating OBS objects                                                            [32;49;1m[visuals.py:31][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Unable to connect to OBS. Is it running right now?                              [32;49;1m[visuals.py:76][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Refreshed 'Next Up'                                                             [32;49;1m[visuals.py:198][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Updating OBS objects                                                            [32;49;1m[visuals.py:31][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Unable to connect to OBS. Is it running right now?                              [32;49;1m[visuals.py:76][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Updating OBS objects                                                            [32;49;1m[visuals.py:31][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.converter   ][0m Converter process has been started                                              [32;49;1m[converter.py:155][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.hardware    ][0m Running hardware with test flag                                                 [32;49;1m[hardware.py:268][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Saving queues to database.                                                      [32;49;1m[main.py:32][0m
+[34;49;1m[DEBUG     ][35;49;1m[main                ][0m {'play_q': [], 'link_q': []}                                                    [32;49;1m[main.py:50][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Saved queues to database.                                                       [32;49;1m[main.py:55][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Shut down.                                                                      [32;49;1m[main.py:134][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m ===== Starting Bertha2=====                                                     [32;49;1m[main.py:80][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Created directories                                                             [32;49;1m[main.py:28][0m
+[34;49;1m[DEBUG     ][35;49;1m[main                ][0m Loading queue: link_q                                                           [32;49;1m[main.py:59][0m
+[34;49;1m[DEBUG     ][35;49;1m[main                ][0m []                                                                              [32;49;1m[main.py:67][0m
+[34;49;1m[DEBUG     ][35;49;1m[main                ][0m Loading queue: play_q                                                           [32;49;1m[main.py:59][0m
+[34;49;1m[DEBUG     ][35;49;1m[main                ][0m []                                                                              [32;49;1m[main.py:67][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Updating OBS objects                                                            [32;49;1m[visuals.py:31][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Getting OBS connection...                                                       [32;49;1m[visuals.py:144][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m There was an error setting the text in OBS                                      [32;49;1m[visuals.py:41][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Refreshed 'Next Up'                                                             [32;49;1m[visuals.py:198][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Updating OBS objects                                                            [32;49;1m[visuals.py:31][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Getting OBS connection...                                                       [32;49;1m[visuals.py:144][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m There was an error setting the text in OBS                                      [32;49;1m[visuals.py:41][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Updating OBS objects                                                            [32;49;1m[visuals.py:31][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Getting OBS connection...                                                       [32;49;1m[visuals.py:144][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m There was an error setting the text in OBS                                      [32;49;1m[visuals.py:41][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.hardware    ][0m Running hardware with test flag                                                 [32;49;1m[hardware.py:268][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.converter   ][0m Converter process has been started                                              [32;49;1m[converter.py:155][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m Ready and waiting for twitch commands in [berthatwo]...                         [32;49;1m[chat.py:190][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m ===== Starting Bertha2=====                                                     [32;49;1m[main.py:80][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Created directories                                                             [32;49;1m[main.py:28][0m
+[34;49;1m[DEBUG     ][35;49;1m[main                ][0m Loading queue: link_q                                                           [32;49;1m[main.py:59][0m
+[34;49;1m[DEBUG     ][35;49;1m[main                ][0m []                                                                              [32;49;1m[main.py:67][0m
+[34;49;1m[DEBUG     ][35;49;1m[main                ][0m Loading queue: play_q                                                           [32;49;1m[main.py:59][0m
+[34;49;1m[DEBUG     ][35;49;1m[main                ][0m []                                                                              [32;49;1m[main.py:67][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.hardware    ][0m Running hardware with test flag                                                 [32;49;1m[hardware.py:268][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.converter   ][0m Converter process has been started                                              [32;49;1m[converter.py:155][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Updating OBS objects                                                            [32;49;1m[visuals.py:31][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Getting OBS connection...                                                       [32;49;1m[visuals.py:145][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m There was an error setting the text in OBS                                      [32;49;1m[visuals.py:41][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Response: RequestResponse(requestType='SetInputSettings', requestStatus=RequestStatus(result=False, code=600, comment='No source was found by the name of `queue`.'), responseData=None)     [32;49;1m[visuals.py:42][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Refreshed 'Next Up'                                                             [32;49;1m[visuals.py:199][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Updating OBS objects                                                            [32;49;1m[visuals.py:31][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Getting OBS connection...                                                       [32;49;1m[visuals.py:145][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m There was an error setting the text in OBS                                      [32;49;1m[visuals.py:41][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Response: RequestResponse(requestType='SetInputSettings', requestStatus=RequestStatus(result=False, code=600, comment='No source was found by the name of `current_song`.'), responseData=None)     [32;49;1m[visuals.py:42][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Updating OBS objects                                                            [32;49;1m[visuals.py:31][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Getting OBS connection...                                                       [32;49;1m[visuals.py:145][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m There was an error setting the text in OBS                                      [32;49;1m[visuals.py:41][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Response: RequestResponse(requestType='SetInputSettings', requestStatus=RequestStatus(result=False, code=600, comment='No source was found by the name of `playing_video`.'), responseData=None)     [32;49;1m[visuals.py:42][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m Ready and waiting for twitch commands in [berthatwo]...                         [32;49;1m[chat.py:190][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m ===== Starting Bertha2=====                                                     [32;49;1m[main.py:80][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Created directories                                                             [32;49;1m[main.py:28][0m
+[34;49;1m[DEBUG     ][35;49;1m[main                ][0m Loading queue: link_q                                                           [32;49;1m[main.py:59][0m
+[34;49;1m[DEBUG     ][35;49;1m[main                ][0m []                                                                              [32;49;1m[main.py:67][0m
+[34;49;1m[DEBUG     ][35;49;1m[main                ][0m Loading queue: play_q                                                           [32;49;1m[main.py:59][0m
+[34;49;1m[DEBUG     ][35;49;1m[main                ][0m []                                                                              [32;49;1m[main.py:67][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.hardware    ][0m Running hardware with test flag                                                 [32;49;1m[hardware.py:268][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.converter   ][0m Converter process has been started                                              [32;49;1m[converter.py:155][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Updating OBS objects                                                            [32;49;1m[visuals.py:31][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Getting OBS connection...                                                       [32;49;1m[visuals.py:145][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m There was an error setting the text in OBS                                      [32;49;1m[visuals.py:41][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Response: No source was found by the name of `queue`.                           [32;49;1m[visuals.py:42][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Refreshed 'Next Up'                                                             [32;49;1m[visuals.py:199][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Updating OBS objects                                                            [32;49;1m[visuals.py:31][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Getting OBS connection...                                                       [32;49;1m[visuals.py:145][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m There was an error setting the text in OBS                                      [32;49;1m[visuals.py:41][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Response: No source was found by the name of `current_song`.                    [32;49;1m[visuals.py:42][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Updating OBS objects                                                            [32;49;1m[visuals.py:31][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Getting OBS connection...                                                       [32;49;1m[visuals.py:145][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m There was an error setting the text in OBS                                      [32;49;1m[visuals.py:41][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Response: No source was found by the name of `playing_video`.                   [32;49;1m[visuals.py:42][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m Ready and waiting for twitch commands in [berthatwo]...                         [32;49;1m[chat.py:190][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m ===== Starting Bertha2=====                                                     [32;49;1m[main.py:80][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Created directories                                                             [32;49;1m[main.py:28][0m
+[34;49;1m[DEBUG     ][35;49;1m[main                ][0m Loading queue: link_q                                                           [32;49;1m[main.py:59][0m
+[34;49;1m[DEBUG     ][35;49;1m[main                ][0m []                                                                              [32;49;1m[main.py:67][0m
+[34;49;1m[DEBUG     ][35;49;1m[main                ][0m Loading queue: play_q                                                           [32;49;1m[main.py:59][0m
+[34;49;1m[DEBUG     ][35;49;1m[main                ][0m []                                                                              [32;49;1m[main.py:67][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.converter   ][0m Converter process has been started                                              [32;49;1m[converter.py:155][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Updating OBS objects                                                            [32;49;1m[visuals.py:31][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Getting OBS connection...                                                       [32;49;1m[visuals.py:145][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Request succeeded! Response data: None                                          [32;49;1m[visuals.py:39][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Refreshed 'Next Up'                                                             [32;49;1m[visuals.py:199][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Updating OBS objects                                                            [32;49;1m[visuals.py:31][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Getting OBS connection...                                                       [32;49;1m[visuals.py:145][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m There was an error setting the text in OBS                                      [32;49;1m[visuals.py:41][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Response: No source was found by the name of `current_song`.                    [32;49;1m[visuals.py:42][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Updating OBS objects                                                            [32;49;1m[visuals.py:31][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Getting OBS connection...                                                       [32;49;1m[visuals.py:145][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.hardware    ][0m Running hardware with test flag                                                 [32;49;1m[hardware.py:268][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m There was an error setting the text in OBS                                      [32;49;1m[visuals.py:41][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Response: No source was found by the name of `playing_video`.                   [32;49;1m[visuals.py:42][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m Ready and waiting for twitch commands in [berthatwo]...                         [32;49;1m[chat.py:190][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m ===== Starting Bertha2=====                                                     [32;49;1m[main.py:80][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Created directories                                                             [32;49;1m[main.py:28][0m
+[34;49;1m[DEBUG     ][35;49;1m[main                ][0m Loading queue: link_q                                                           [32;49;1m[main.py:59][0m
+[34;49;1m[DEBUG     ][35;49;1m[main                ][0m []                                                                              [32;49;1m[main.py:67][0m
+[34;49;1m[DEBUG     ][35;49;1m[main                ][0m Loading queue: play_q                                                           [32;49;1m[main.py:59][0m
+[34;49;1m[DEBUG     ][35;49;1m[main                ][0m []                                                                              [32;49;1m[main.py:67][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Updating OBS objects                                                            [32;49;1m[visuals.py:31][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Getting OBS connection...                                                       [32;49;1m[visuals.py:145][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Request succeeded! Response data: None                                          [32;49;1m[visuals.py:39][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Refreshed 'Next Up'                                                             [32;49;1m[visuals.py:199][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Updating OBS objects                                                            [32;49;1m[visuals.py:31][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Getting OBS connection...                                                       [32;49;1m[visuals.py:145][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Request succeeded! Response data: None                                          [32;49;1m[visuals.py:39][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Updating OBS objects                                                            [32;49;1m[visuals.py:31][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Getting OBS connection...                                                       [32;49;1m[visuals.py:145][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m There was an error setting the text in OBS                                      [32;49;1m[visuals.py:41][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Response: No source was found by the name of `playing_video`.                   [32;49;1m[visuals.py:42][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.converter   ][0m Converter process has been started                                              [32;49;1m[converter.py:155][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.hardware    ][0m Running hardware with test flag                                                 [32;49;1m[hardware.py:268][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m Ready and waiting for twitch commands in [berthatwo]...                         [32;49;1m[chat.py:190][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m ===== Starting Bertha2=====                                                     [32;49;1m[main.py:80][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Created directories                                                             [32;49;1m[main.py:28][0m
+[34;49;1m[DEBUG     ][35;49;1m[main                ][0m Loading queue: link_q                                                           [32;49;1m[main.py:59][0m
+[34;49;1m[DEBUG     ][35;49;1m[main                ][0m []                                                                              [32;49;1m[main.py:67][0m
+[34;49;1m[DEBUG     ][35;49;1m[main                ][0m Loading queue: play_q                                                           [32;49;1m[main.py:59][0m
+[34;49;1m[DEBUG     ][35;49;1m[main                ][0m []                                                                              [32;49;1m[main.py:67][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Updating OBS objects                                                            [32;49;1m[visuals.py:31][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Getting OBS connection...                                                       [32;49;1m[visuals.py:145][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Request succeeded! Response data: None                                          [32;49;1m[visuals.py:39][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Refreshed 'Next Up'                                                             [32;49;1m[visuals.py:199][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Updating OBS objects                                                            [32;49;1m[visuals.py:31][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Getting OBS connection...                                                       [32;49;1m[visuals.py:145][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Request succeeded! Response data: None                                          [32;49;1m[visuals.py:39][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Updating OBS objects                                                            [32;49;1m[visuals.py:31][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Getting OBS connection...                                                       [32;49;1m[visuals.py:145][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.converter   ][0m Converter process has been started                                              [32;49;1m[converter.py:155][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Request succeeded! Response data: None                                          [32;49;1m[visuals.py:39][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.hardware    ][0m Running hardware with test flag                                                 [32;49;1m[hardware.py:268][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m Ready and waiting for twitch commands in [berthatwo]...                         [32;49;1m[chat.py:190][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m ===== Starting Bertha2=====                                                     [32;49;1m[main.py:80][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Created directories                                                             [32;49;1m[main.py:28][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.converter   ][0m Converter process has been started                                              [32;49;1m[converter.py:155][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Updating OBS objects                                                            [32;49;1m[visuals.py:31][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Updating OBS objects                                                            [32;49;1m[visuals.py:31][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Updating OBS objects                                                            [32;49;1m[visuals.py:31][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m Ready and waiting for twitch commands in [berthatwo]...                         [32;49;1m[chat.py:190][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m ===== Starting Bertha2=====                                                     [32;49;1m[main.py:80][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Created directories                                                             [32;49;1m[main.py:28][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.converter   ][0m Converter process has been started                                              [32;49;1m[converter.py:155][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m Ready and waiting for twitch commands in [berthatwo]...                         [32;49;1m[chat.py:190][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m ===== Starting Bertha2=====                                                     [32;49;1m[main.py:80][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Created directories                                                             [32;49;1m[main.py:28][0m
+[34;49;1m[DEBUG     ][35;49;1m[main                ][0m Loading queue: link_q                                                           [32;49;1m[main.py:59][0m
+[34;49;1m[DEBUG     ][35;49;1m[main                ][0m []                                                                              [32;49;1m[main.py:67][0m
+[34;49;1m[DEBUG     ][35;49;1m[main                ][0m Loading queue: play_q                                                           [32;49;1m[main.py:59][0m
+[34;49;1m[DEBUG     ][35;49;1m[main                ][0m []                                                                              [32;49;1m[main.py:67][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.converter   ][0m Converter process has been started                                              [32;49;1m[converter.py:155][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.hardware    ][0m Running hardware with test flag                                                 [32;49;1m[hardware.py:268][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Updating OBS object: {'inputName': 'queue', 'inputSettings': {'text': 'Next Up:\nNothing queued.'}}     [32;49;1m[visuals.py:31][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Getting OBS connection...                                                       [32;49;1m[visuals.py:145][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Request succeeded! Response data: None                                          [32;49;1m[visuals.py:39][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Refreshed 'Next Up'                                                             [32;49;1m[visuals.py:199][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Updating OBS object: {'inputName': 'current_song', 'inputSettings': {'text': 'Nothing currently playing.'}}     [32;49;1m[visuals.py:31][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Getting OBS connection...                                                       [32;49;1m[visuals.py:145][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Request succeeded! Response data: None                                          [32;49;1m[visuals.py:39][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Updating OBS object: {'inputName': 'playing_video', 'inputSettings': {'local_file': '', 'width': 1280, 'height': 720}}     [32;49;1m[visuals.py:31][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Getting OBS connection...                                                       [32;49;1m[visuals.py:145][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Request succeeded! Response data: None                                          [32;49;1m[visuals.py:39][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m Ready and waiting for twitch commands in [berthatwo]...                         [32;49;1m[chat.py:190][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m ===== Starting Bertha2=====                                                     [32;49;1m[main.py:80][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Created directories                                                             [32;49;1m[main.py:28][0m
+[34;49;1m[DEBUG     ][35;49;1m[main                ][0m Loading queue: link_q                                                           [32;49;1m[main.py:59][0m
+[34;49;1m[DEBUG     ][35;49;1m[main                ][0m []                                                                              [32;49;1m[main.py:67][0m
+[34;49;1m[DEBUG     ][35;49;1m[main                ][0m Loading queue: play_q                                                           [32;49;1m[main.py:59][0m
+[34;49;1m[DEBUG     ][35;49;1m[main                ][0m []                                                                              [32;49;1m[main.py:67][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.hardware    ][0m Running hardware with test flag                                                 [32;49;1m[hardware.py:268][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Updating OBS object: queue                                                      [32;49;1m[visuals.py:31][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Getting OBS connection...                                                       [32;49;1m[visuals.py:145][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Request succeeded! Response data: None                                          [32;49;1m[visuals.py:39][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Refreshed 'Next Up'                                                             [32;49;1m[visuals.py:199][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Updating OBS object: current_song                                               [32;49;1m[visuals.py:31][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Getting OBS connection...                                                       [32;49;1m[visuals.py:145][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.converter   ][0m Converter process has been started                                              [32;49;1m[converter.py:155][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Request succeeded! Response data: None                                          [32;49;1m[visuals.py:39][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Updating OBS object: playing_video                                              [32;49;1m[visuals.py:31][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Getting OBS connection...                                                       [32;49;1m[visuals.py:145][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Request succeeded! Response data: None                                          [32;49;1m[visuals.py:39][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m Ready and waiting for twitch commands in [berthatwo]...                         [32;49;1m[chat.py:190][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m ===== Starting Bertha2=====                                                     [32;49;1m[main.py:80][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Created directories                                                             [32;49;1m[main.py:28][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.converter   ][0m Converter process has been started                                              [32;49;1m[converter.py:155][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Updating OBS object: queue                                                      [32;49;1m[visuals.py:31][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Updating OBS object: current_song                                               [32;49;1m[visuals.py:31][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Updating OBS object: playing_video                                              [32;49;1m[visuals.py:31][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m Ready and waiting for twitch commands in [berthatwo]...                         [32;49;1m[chat.py:190][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m ===== Starting Bertha2 =====                                                    [32;49;1m[main.py:80][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Created directories                                                             [32;49;1m[main.py:28][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Visuals process has been started                                                [32;49;1m[visuals.py:182][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.converter   ][0m Converter process has been started                                              [32;49;1m[converter.py:155][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m Ready and waiting for twitch commands in [berthatwo]...                         [32;49;1m[chat.py:190][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m Command: !play https://www.youtube.com/watch?v=2DmK_H7IdTo                      [32;49;1m[chat.py:124][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m Attempting to add: www.youtube.com/watch?v=2DmK_H7IdTo                          [32;49;1m[chat.py:129][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m Length: 253                                                                     [32;49;1m[chat.py:228][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m The video follow video has been queued: www.youtube.com/watch?v=2DmK_H7IdTo     [32;49;1m[chat.py:157][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m ===== Starting Bertha2 =====                                                    [32;49;1m[main.py:80][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Created directories                                                             [32;49;1m[main.py:28][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.converter   ][0m Converter process has been started                                              [32;49;1m[converter.py:155][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Visuals process has been started                                                [32;49;1m[visuals.py:182][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m Ready and waiting for twitch commands in [berthatwo]...                         [32;49;1m[chat.py:190][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m Command: !play https://www.youtube.com/watch?v=1KTgc2SEt50                      [32;49;1m[chat.py:124][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m Attempting to add: www.youtube.com/watch?v=1KTgc2SEt50                          [32;49;1m[chat.py:129][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m Link is invalid                                                                 [32;49;1m[chat.py:135][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m ===== Starting Bertha2 =====                                                    [32;49;1m[main.py:80][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Created directories                                                             [32;49;1m[main.py:28][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.converter   ][0m Converter process has been started                                              [32;49;1m[converter.py:155][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Visuals process has been started                                                [32;49;1m[visuals.py:182][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m Ready and waiting for twitch commands in [berthatwo]...                         [32;49;1m[chat.py:190][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m ===== Starting Bertha2 =====                                                    [32;49;1m[main.py:80][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Created directories                                                             [32;49;1m[main.py:28][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Visuals process has been started                                                [32;49;1m[visuals.py:182][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.converter   ][0m Converter process has been started                                              [32;49;1m[converter.py:155][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m Ready and waiting for twitch commands in [berthatwo]...                         [32;49;1m[chat.py:190][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m Command: !play https://www.youtube.com/watch?v=2DmK_H7IdTo                      [32;49;1m[chat.py:124][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m Attempting to add: www.youtube.com/watch?v=2DmK_H7IdTo                          [32;49;1m[chat.py:129][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m Length: 253                                                                     [32;49;1m[chat.py:228][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m The video follow video has been queued: www.youtube.com/watch?v=2DmK_H7IdTo     [32;49;1m[chat.py:157][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m Command: !play https://www.youtube.com/watch?v=1KTgc2SEt50                      [32;49;1m[chat.py:124][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m Attempting to add: www.youtube.com/watch?v=1KTgc2SEt50                          [32;49;1m[chat.py:129][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m Length: 1742                                                                    [32;49;1m[chat.py:228][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m Video length exceeds max                                                        [32;49;1m[chat.py:149][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m Command: !play hello                                                            [32;49;1m[chat.py:124][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m Attempting to add: ello                                                         [32;49;1m[chat.py:129][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m Link is invalid                                                                 [32;49;1m[chat.py:135][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m Command: !play https://www.youtube.com/shorts/861uoDmjv1U                       [32;49;1m[chat.py:124][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m Attempting to add: www.youtube.com/shorts/861uoDmjv1U                           [32;49;1m[chat.py:129][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m Link is invalid                                                                 [32;49;1m[chat.py:135][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m Command: https://www.youtube.com/shorts/861uoDmjv1U                             [32;49;1m[chat.py:124][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m ===== Starting Bertha2 =====                                                    [32;49;1m[main.py:80][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Created directories                                                             [32;49;1m[main.py:28][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.converter   ][0m Converter process has been started                                              [32;49;1m[converter.py:155][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Visuals process has been started                                                [32;49;1m[visuals.py:182][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m OBS is not open!                                                                [32;49;1m[visuals.py:150][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Unable to connect to OBS. Is it running right now?                              [32;49;1m[visuals.py:77][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m OBS is not open!                                                                [32;49;1m[visuals.py:150][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Unable to connect to OBS. Is it running right now?                              [32;49;1m[visuals.py:77][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m OBS is not open!                                                                [32;49;1m[visuals.py:150][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Saving queues to database.                                                      [32;49;1m[main.py:32][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Saved queues to database.                                                       [32;49;1m[main.py:55][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Shut down.                                                                      [32;49;1m[main.py:134][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m ===== Starting Bertha2 =====                                                    [32;49;1m[main.py:80][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Created directories                                                             [32;49;1m[main.py:28][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.converter   ][0m Converter process has been started                                              [32;49;1m[converter.py:155][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Visuals process has been started                                                [32;49;1m[visuals.py:184][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m OBS is not open!                                                                [32;49;1m[visuals.py:150][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Unable to connect to OBS. Is it running right now?                              [32;49;1m[visuals.py:77][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m OBS is not open!                                                                [32;49;1m[visuals.py:150][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Unable to connect to OBS. Is it running right now?                              [32;49;1m[visuals.py:77][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m OBS is not open!                                                                [32;49;1m[visuals.py:150][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Saving queues to database.                                                      [32;49;1m[main.py:32][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Saved queues to database.                                                       [32;49;1m[main.py:55][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Shut down.                                                                      [32;49;1m[main.py:134][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m ===== Starting Bertha2 =====                                                    [32;49;1m[main.py:80][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Created directories                                                             [32;49;1m[main.py:28][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Visuals process has been started                                                [32;49;1m[visuals.py:186][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m OBS is not open!                                                                [32;49;1m[visuals.py:150][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Unable to connect to OBS. Is it running right now?                              [32;49;1m[visuals.py:77][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m OBS is not open!                                                                [32;49;1m[visuals.py:150][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Unable to connect to OBS. Is it running right now?                              [32;49;1m[visuals.py:77][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m OBS is not open!                                                                [32;49;1m[visuals.py:150][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.converter   ][0m Converter process has been started                                              [32;49;1m[converter.py:155][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Saving queues to database.                                                      [32;49;1m[main.py:32][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Saved queues to database.                                                       [32;49;1m[main.py:55][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Shut down.                                                                      [32;49;1m[main.py:134][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m ===== Starting Bertha2 =====                                                    [32;49;1m[main.py:80][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Created directories                                                             [32;49;1m[main.py:28][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.converter   ][0m Converter process has been started                                              [32;49;1m[converter.py:155][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Visuals process has been started                                                [32;49;1m[visuals.py:188][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Unable to connect to OBS. Is it running right now?                              [32;49;1m[visuals.py:79][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Unable to connect to OBS. Is it running right now?                              [32;49;1m[visuals.py:79][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Saving queues to database.                                                      [32;49;1m[main.py:32][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Saved queues to database.                                                       [32;49;1m[main.py:55][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Shut down.                                                                      [32;49;1m[main.py:134][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m ===== Starting Bertha2 =====                                                    [32;49;1m[main.py:80][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Created directories                                                             [32;49;1m[main.py:28][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Visuals process has been started                                                [32;49;1m[visuals.py:188][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Unable to connect to OBS. Is it running right now?                              [32;49;1m[visuals.py:79][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Unable to connect to OBS. Is it running right now?                              [32;49;1m[visuals.py:79][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.converter   ][0m Converter process has been started                                              [32;49;1m[converter.py:155][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Saving queues to database.                                                      [32;49;1m[main.py:32][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Saved queues to database.                                                       [32;49;1m[main.py:55][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Shut down.                                                                      [32;49;1m[main.py:134][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m ===== Starting Bertha2 =====                                                    [32;49;1m[main.py:80][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Created directories                                                             [32;49;1m[main.py:28][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Visuals process has been started                                                [32;49;1m[visuals.py:188][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Unable to connect to OBS. Is it running right now?                              [32;49;1m[visuals.py:79][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Unable to connect to OBS. Is it running right now?                              [32;49;1m[visuals.py:79][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.converter   ][0m Converter process has been started                                              [32;49;1m[converter.py:155][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Saving queues to database.                                                      [32;49;1m[main.py:32][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Saved queues to database.                                                       [32;49;1m[main.py:55][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Shut down.                                                                      [32;49;1m[main.py:134][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m ===== Starting Bertha2 =====                                                    [32;49;1m[main.py:80][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Created directories                                                             [32;49;1m[main.py:28][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Visuals process has been started                                                [32;49;1m[visuals.py:188][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.converter   ][0m Converter process has been started                                              [32;49;1m[converter.py:155][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Updating OBS object: queue                                                      [32;49;1m[visuals.py:31][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Unable to connect to OBS. Is it running right now?                              [32;49;1m[visuals.py:79][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Refreshed 'Next Up'                                                             [32;49;1m[visuals.py:207][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Updating OBS object: current_song                                               [32;49;1m[visuals.py:31][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Unable to connect to OBS. Is it running right now?                              [32;49;1m[visuals.py:79][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Updating OBS object: playing_video                                              [32;49;1m[visuals.py:31][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Saving queues to database.                                                      [32;49;1m[main.py:32][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Saved queues to database.                                                       [32;49;1m[main.py:55][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Shut down.                                                                      [32;49;1m[main.py:134][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m ===== Starting Bertha2 =====                                                    [32;49;1m[main.py:80][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Created directories                                                             [32;49;1m[main.py:28][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.converter   ][0m Converter process has been started                                              [32;49;1m[converter.py:155][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Visuals process has been started                                                [32;49;1m[visuals.py:188][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Updating OBS object: queue                                                      [32;49;1m[visuals.py:31][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Unable to connect to OBS. Is it running right now?                              [32;49;1m[visuals.py:79][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Refreshed 'Next Up'                                                             [32;49;1m[visuals.py:207][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Updating OBS object: current_song                                               [32;49;1m[visuals.py:31][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Unable to connect to OBS. Is it running right now?                              [32;49;1m[visuals.py:79][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Updating OBS object: playing_video                                              [32;49;1m[visuals.py:31][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Saving queues to database.                                                      [32;49;1m[main.py:32][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Saved queues to database.                                                       [32;49;1m[main.py:55][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Shut down.                                                                      [32;49;1m[main.py:134][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m ===== Starting Bertha2 =====                                                    [32;49;1m[main.py:80][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Created directories                                                             [32;49;1m[main.py:28][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.converter   ][0m Converter process has been started                                              [32;49;1m[converter.py:155][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Visuals process has been started                                                [32;49;1m[visuals.py:189][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Updating OBS object: queue                                                      [32;49;1m[visuals.py:31][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Unable to connect to OBS. Is it running right now?                              [32;49;1m[visuals.py:79][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Refreshed 'Next Up'                                                             [32;49;1m[visuals.py:208][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Updating OBS object: current_song                                               [32;49;1m[visuals.py:31][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Unable to connect to OBS. Is it running right now?                              [32;49;1m[visuals.py:79][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Updating OBS object: playing_video                                              [32;49;1m[visuals.py:31][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Saving queues to database.                                                      [32;49;1m[main.py:32][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Saved queues to database.                                                       [32;49;1m[main.py:55][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Shut down.                                                                      [32;49;1m[main.py:134][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m ===== Starting Bertha2 =====                                                    [32;49;1m[main.py:80][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Created directories                                                             [32;49;1m[main.py:28][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.converter   ][0m Converter process has been started                                              [32;49;1m[converter.py:155][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Getting OBS connection...                                                       [32;49;1m[visuals.py:147][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Saving queues to database.                                                      [32;49;1m[main.py:32][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Saved queues to database.                                                       [32;49;1m[main.py:55][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Shut down.                                                                      [32;49;1m[main.py:134][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m ===== Starting Bertha2 =====                                                    [32;49;1m[main.py:80][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Created directories                                                             [32;49;1m[main.py:28][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Visuals process has been started                                                [32;49;1m[visuals.py:189][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Updating OBS object: queue                                                      [32;49;1m[visuals.py:31][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Unable to connect to OBS. Is it running right now?                              [32;49;1m[visuals.py:79][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Refreshed 'Next Up'                                                             [32;49;1m[visuals.py:208][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Updating OBS object: current_song                                               [32;49;1m[visuals.py:31][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Unable to connect to OBS. Is it running right now?                              [32;49;1m[visuals.py:79][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Updating OBS object: playing_video                                              [32;49;1m[visuals.py:31][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.converter   ][0m Converter process has been started                                              [32;49;1m[converter.py:155][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Saving queues to database.                                                      [32;49;1m[main.py:32][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Saved queues to database.                                                       [32;49;1m[main.py:55][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Shut down.                                                                      [32;49;1m[main.py:134][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m ===== Starting Bertha2 =====                                                    [32;49;1m[main.py:80][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Created directories                                                             [32;49;1m[main.py:28][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.converter   ][0m Converter process has been started                                              [32;49;1m[converter.py:155][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Visuals process has been started                                                [32;49;1m[visuals.py:189][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Updating OBS object: queue                                                      [32;49;1m[visuals.py:31][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Unable to connect to OBS. Is it running right now?                              [32;49;1m[visuals.py:79][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Refreshed 'Next Up'                                                             [32;49;1m[visuals.py:208][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Updating OBS object: current_song                                               [32;49;1m[visuals.py:31][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Unable to connect to OBS. Is it running right now?                              [32;49;1m[visuals.py:79][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Updating OBS object: playing_video                                              [32;49;1m[visuals.py:31][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Saving queues to database.                                                      [32;49;1m[main.py:32][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Saved queues to database.                                                       [32;49;1m[main.py:55][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Shut down.                                                                      [32;49;1m[main.py:134][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m ===== Starting Bertha2 =====                                                    [32;49;1m[main.py:80][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Created directories                                                             [32;49;1m[main.py:28][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.converter   ][0m Converter process has been started                                              [32;49;1m[converter.py:155][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Saving queues to database.                                                      [32;49;1m[main.py:32][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Saved queues to database.                                                       [32;49;1m[main.py:55][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Shut down.                                                                      [32;49;1m[main.py:134][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m ===== Starting Bertha2 =====                                                    [32;49;1m[main.py:80][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Created directories                                                             [32;49;1m[main.py:28][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Getting OBS connection...                                                       [32;49;1m[visuals.py:145][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m OBS is not open!                                                                [32;49;1m[visuals.py:150][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Could not make connection to OBS                                                [32;49;1m[visuals.py:184][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.converter   ][0m Converter process has been started                                              [32;49;1m[converter.py:155][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Saving queues to database.                                                      [32;49;1m[main.py:32][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Saved queues to database.                                                       [32;49;1m[main.py:55][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Shut down.                                                                      [32;49;1m[main.py:134][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m ===== Starting Bertha2 =====                                                    [32;49;1m[main.py:80][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Created directories                                                             [32;49;1m[main.py:28][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Getting OBS connection...                                                       [32;49;1m[visuals.py:145][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.converter   ][0m Converter process has been started                                              [32;49;1m[converter.py:155][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m Ready and waiting for twitch commands in [berthatwo]...                         [32;49;1m[chat.py:190][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Saving queues to database.                                                      [32;49;1m[main.py:32][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Saved queues to database.                                                       [32;49;1m[main.py:55][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Shut down.                                                                      [32;49;1m[main.py:134][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m ===== Starting Bertha2 =====                                                    [32;49;1m[main.py:80][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Created directories                                                             [32;49;1m[main.py:28][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Getting OBS connection...                                                       [32;49;1m[visuals.py:145][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m {}                                                                              [32;49;1m[visuals.py:156][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.converter   ][0m Converter process has been started                                              [32;49;1m[converter.py:155][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m Ready and waiting for twitch commands in [berthatwo]...                         [32;49;1m[chat.py:190][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Visuals process has been started                                                [32;49;1m[visuals.py:187][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Unable to connect to OBS. Is it running right now?                              [32;49;1m[visuals.py:77][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Refreshed 'Next Up'                                                             [32;49;1m[visuals.py:206][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Unable to connect to OBS. Is it running right now?                              [32;49;1m[visuals.py:77][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Saving queues to database.                                                      [32;49;1m[main.py:32][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Saved queues to database.                                                       [32;49;1m[main.py:55][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Shut down.                                                                      [32;49;1m[main.py:134][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m ===== Starting Bertha2 =====                                                    [32;49;1m[main.py:80][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Created directories                                                             [32;49;1m[main.py:28][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Getting OBS connection...                                                       [32;49;1m[visuals.py:145][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.converter   ][0m Converter process has been started                                              [32;49;1m[converter.py:155][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m Ready and waiting for twitch commands in [berthatwo]...                         [32;49;1m[chat.py:190][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Saving queues to database.                                                      [32;49;1m[main.py:32][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Saved queues to database.                                                       [32;49;1m[main.py:55][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Shut down.                                                                      [32;49;1m[main.py:134][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m ===== Starting Bertha2 =====                                                    [32;49;1m[main.py:80][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Created directories                                                             [32;49;1m[main.py:28][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.converter   ][0m Converter process has been started                                              [32;49;1m[converter.py:155][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Getting OBS connection...                                                       [32;49;1m[visuals.py:145][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m OBS is not open!                                                                [32;49;1m[visuals.py:150][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Could not make connection to OBS                                                [32;49;1m[visuals.py:184][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Saving queues to database.                                                      [32;49;1m[main.py:32][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Saved queues to database.                                                       [32;49;1m[main.py:55][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Shut down.                                                                      [32;49;1m[main.py:134][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m ===== Starting Bertha2 =====                                                    [32;49;1m[main.py:80][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Created directories                                                             [32;49;1m[main.py:28][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.converter   ][0m Converter process has been started                                              [32;49;1m[converter.py:155][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Getting OBS connection...                                                       [32;49;1m[visuals.py:145][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m OBS is not open!                                                                [32;49;1m[visuals.py:150][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Could not make connection to OBS                                                [32;49;1m[visuals.py:184][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Saving queues to database.                                                      [32;49;1m[main.py:32][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Saved queues to database.                                                       [32;49;1m[main.py:55][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Shut down.                                                                      [32;49;1m[main.py:135][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m ===== Starting Bertha2 =====                                                    [32;49;1m[main.py:80][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Created directories                                                             [32;49;1m[main.py:28][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.converter   ][0m Converter process has been started                                              [32;49;1m[converter.py:155][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Getting OBS connection...                                                       [32;49;1m[visuals.py:145][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m OBS is not open!                                                                [32;49;1m[visuals.py:150][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Could not make connection to OBS                                                [32;49;1m[visuals.py:184][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Saving queues to database.                                                      [32;49;1m[main.py:32][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Saved queues to database.                                                       [32;49;1m[main.py:55][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Shut down.                                                                      [32;49;1m[main.py:132][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m ===== Starting Bertha2 =====                                                    [32;49;1m[main.py:80][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Created directories                                                             [32;49;1m[main.py:28][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.converter   ][0m Converter process has been started                                              [32;49;1m[converter.py:155][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Getting OBS connection...                                                       [32;49;1m[visuals.py:145][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m Ready and waiting for twitch commands in [berthatwo]...                         [32;49;1m[chat.py:190][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m {}                                                                              [32;49;1m[visuals.py:156][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Visuals process has been started                                                [32;49;1m[visuals.py:187][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Unable to connect to OBS. Is it running right now?                              [32;49;1m[visuals.py:77][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Refreshed 'Next Up'                                                             [32;49;1m[visuals.py:206][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Unable to connect to OBS. Is it running right now?                              [32;49;1m[visuals.py:77][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Saving queues to database.                                                      [32;49;1m[main.py:32][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Saved queues to database.                                                       [32;49;1m[main.py:55][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Shut down.                                                                      [32;49;1m[main.py:132][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m ===== Starting Bertha2 =====                                                    [32;49;1m[main.py:80][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Created directories                                                             [32;49;1m[main.py:28][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.converter   ][0m Converter process has been started                                              [32;49;1m[converter.py:155][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Visuals process has been started                                                [32;49;1m[visuals.py:188][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Updating OBS object: queue                                                      [32;49;1m[visuals.py:31][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Getting OBS connection...                                                       [32;49;1m[visuals.py:146][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m {}                                                                              [32;49;1m[visuals.py:157][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Request succeeded! Response data: None                                          [32;49;1m[visuals.py:40][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Unable to connect to OBS. Is it running right now?                              [32;49;1m[visuals.py:78][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Refreshed 'Next Up'                                                             [32;49;1m[visuals.py:207][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Updating OBS object: current_song                                               [32;49;1m[visuals.py:31][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Getting OBS connection...                                                       [32;49;1m[visuals.py:146][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m {}                                                                              [32;49;1m[visuals.py:157][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Request succeeded! Response data: None                                          [32;49;1m[visuals.py:40][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Unable to connect to OBS. Is it running right now?                              [32;49;1m[visuals.py:78][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Updating OBS object: playing_video                                              [32;49;1m[visuals.py:31][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Getting OBS connection...                                                       [32;49;1m[visuals.py:146][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m {}                                                                              [32;49;1m[visuals.py:157][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Request succeeded! Response data: None                                          [32;49;1m[visuals.py:40][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Saving queues to database.                                                      [32;49;1m[main.py:32][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Saved queues to database.                                                       [32;49;1m[main.py:55][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Shut down.                                                                      [32;49;1m[main.py:132][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m ===== Starting Bertha2 =====                                                    [32;49;1m[main.py:80][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Created directories                                                             [32;49;1m[main.py:28][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Visuals process has been started                                                [32;49;1m[visuals.py:188][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.converter   ][0m Converter process has been started                                              [32;49;1m[converter.py:155][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Updating OBS object: queue                                                      [32;49;1m[visuals.py:31][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Getting OBS connection...                                                       [32;49;1m[visuals.py:146][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m {}                                                                              [32;49;1m[visuals.py:157][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Request succeeded! Response data: None                                          [32;49;1m[visuals.py:40][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Unable to connect to OBS. Is it running right now?                              [32;49;1m[visuals.py:78][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Refreshed 'Next Up'                                                             [32;49;1m[visuals.py:207][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Updating OBS object: current_song                                               [32;49;1m[visuals.py:31][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Getting OBS connection...                                                       [32;49;1m[visuals.py:146][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m {}                                                                              [32;49;1m[visuals.py:157][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Request succeeded! Response data: None                                          [32;49;1m[visuals.py:40][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Unable to connect to OBS. Is it running right now?                              [32;49;1m[visuals.py:78][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Updating OBS object: playing_video                                              [32;49;1m[visuals.py:31][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Getting OBS connection...                                                       [32;49;1m[visuals.py:146][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m {}                                                                              [32;49;1m[visuals.py:157][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Request succeeded! Response data: None                                          [32;49;1m[visuals.py:40][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m Ready and waiting for twitch commands in [berthatwo]...                         [32;49;1m[chat.py:190][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m ===== Starting Bertha2 =====                                                    [32;49;1m[main.py:80][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Created directories                                                             [32;49;1m[main.py:28][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Getting OBS connection...                                                       [32;49;1m[visuals.py:146][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m {}                                                                              [32;49;1m[visuals.py:157][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Visuals process has been started                                                [32;49;1m[visuals.py:189][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Updating OBS object: queue                                                      [32;49;1m[visuals.py:31][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Getting OBS connection...                                                       [32;49;1m[visuals.py:146][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m {}                                                                              [32;49;1m[visuals.py:157][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Request succeeded! Response data: None                                          [32;49;1m[visuals.py:40][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Unable to connect to OBS. Is it running right now?                              [32;49;1m[visuals.py:78][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Refreshed 'Next Up'                                                             [32;49;1m[visuals.py:208][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Updating OBS object: current_song                                               [32;49;1m[visuals.py:31][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Getting OBS connection...                                                       [32;49;1m[visuals.py:146][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m {}                                                                              [32;49;1m[visuals.py:157][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Request succeeded! Response data: None                                          [32;49;1m[visuals.py:40][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Unable to connect to OBS. Is it running right now?                              [32;49;1m[visuals.py:78][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Updating OBS object: playing_video                                              [32;49;1m[visuals.py:31][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Getting OBS connection...                                                       [32;49;1m[visuals.py:146][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m {}                                                                              [32;49;1m[visuals.py:157][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Request succeeded! Response data: None                                          [32;49;1m[visuals.py:40][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.converter   ][0m Converter process has been started                                              [32;49;1m[converter.py:155][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m Ready and waiting for twitch commands in [berthatwo]...                         [32;49;1m[chat.py:190][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m ===== Starting Bertha2 =====                                                    [32;49;1m[main.py:80][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Created directories                                                             [32;49;1m[main.py:28][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.converter   ][0m Converter process has been started                                              [32;49;1m[converter.py:155][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Getting OBS connection...                                                       [32;49;1m[visuals.py:146][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m OBS is not open!                                                                [32;49;1m[visuals.py:151][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Could not make connection to OBS                                                [32;49;1m[visuals.py:186][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Saving queues to database.                                                      [32;49;1m[main.py:32][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Saved queues to database.                                                       [32;49;1m[main.py:55][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Shut down.                                                                      [32;49;1m[main.py:132][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m ===== Starting Bertha2 =====                                                    [32;49;1m[main.py:80][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Created directories                                                             [32;49;1m[main.py:28][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.converter   ][0m Converter process has been started                                              [32;49;1m[converter.py:155][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Getting OBS connection...                                                       [32;49;1m[visuals.py:146][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m OBS is not open!                                                                [32;49;1m[visuals.py:151][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Could not make connection to OBS                                                [32;49;1m[visuals.py:185][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Saving queues to database.                                                      [32;49;1m[main.py:32][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Saved queues to database.                                                       [32;49;1m[main.py:55][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Shut down.                                                                      [32;49;1m[main.py:132][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m ===== Starting Bertha2 =====                                                    [32;49;1m[main.py:80][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Created directories                                                             [32;49;1m[main.py:28][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.converter   ][0m Converter process has been started                                              [32;49;1m[converter.py:155][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Getting OBS connection...                                                       [32;49;1m[visuals.py:146][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m OBS is not open!                                                                [32;49;1m[visuals.py:151][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Could not connect to OBS                                                        [32;49;1m[visuals.py:185][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Saving queues to database.                                                      [32;49;1m[main.py:32][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Saved queues to database.                                                       [32;49;1m[main.py:55][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Shut down.                                                                      [32;49;1m[main.py:132][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m ===== Starting Bertha2 =====                                                    [32;49;1m[main.py:80][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Created directories                                                             [32;49;1m[main.py:28][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Getting OBS connection...                                                       [32;49;1m[visuals.py:146][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m {}                                                                              [32;49;1m[visuals.py:157][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Visuals process has been started                                                [32;49;1m[visuals.py:189][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Updating OBS object: queue                                                      [32;49;1m[visuals.py:31][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Getting OBS connection...                                                       [32;49;1m[visuals.py:146][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m {}                                                                              [32;49;1m[visuals.py:157][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Request succeeded! Response data: None                                          [32;49;1m[visuals.py:40][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Unable to connect to OBS. Is it running right now?                              [32;49;1m[visuals.py:78][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Refreshed 'Next Up'                                                             [32;49;1m[visuals.py:208][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Updating OBS object: current_song                                               [32;49;1m[visuals.py:31][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Getting OBS connection...                                                       [32;49;1m[visuals.py:146][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m {}                                                                              [32;49;1m[visuals.py:157][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Request succeeded! Response data: None                                          [32;49;1m[visuals.py:40][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Unable to connect to OBS. Is it running right now?                              [32;49;1m[visuals.py:78][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Updating OBS object: playing_video                                              [32;49;1m[visuals.py:31][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Getting OBS connection...                                                       [32;49;1m[visuals.py:146][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m {}                                                                              [32;49;1m[visuals.py:157][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Request succeeded! Response data: None                                          [32;49;1m[visuals.py:40][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.converter   ][0m Converter process has been started                                              [32;49;1m[converter.py:155][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m Ready and waiting for twitch commands in [berthatwo]...                         [32;49;1m[chat.py:190][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m ===== Starting Bertha2 =====                                                    [32;49;1m[main.py:80][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Created directories                                                             [32;49;1m[main.py:28][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.converter   ][0m Converter process has been started                                              [32;49;1m[converter.py:155][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m {}                                                                              [32;49;1m[visuals.py:157][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Visuals process has been started                                                [32;49;1m[visuals.py:189][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m {}                                                                              [32;49;1m[visuals.py:157][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Unable to connect to OBS. Is it running right now?                              [32;49;1m[visuals.py:78][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m {}                                                                              [32;49;1m[visuals.py:157][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Unable to connect to OBS. Is it running right now?                              [32;49;1m[visuals.py:78][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m {}                                                                              [32;49;1m[visuals.py:157][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m Ready and waiting for twitch commands in [berthatwo]...                         [32;49;1m[chat.py:190][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m ===== Starting Bertha2 =====                                                    [32;49;1m[main.py:80][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Created directories                                                             [32;49;1m[main.py:28][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.converter   ][0m Converter process has been started                                              [32;49;1m[converter.py:155][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Visuals process has been started                                                [32;49;1m[visuals.py:189][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Unable to connect to OBS. Is it running right now?                              [32;49;1m[visuals.py:78][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Unable to connect to OBS. Is it running right now?                              [32;49;1m[visuals.py:78][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m Ready and waiting for twitch commands in [berthatwo]...                         [32;49;1m[chat.py:190][0m
+[34;49;1m[CRITICAL  ][35;49;1m[bertha2.chat        ][0m Error ConnectionResetError: [Errno 54] Connection reset by peer                 [32;49;1m[chat.py:210][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m ===== Starting Bertha2 =====                                                    [32;49;1m[main.py:80][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Created directories                                                             [32;49;1m[main.py:28][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Visuals process has been started                                                [32;49;1m[visuals.py:189][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Unable to connect to OBS. Is it running right now?                              [32;49;1m[visuals.py:78][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Unable to connect to OBS. Is it running right now?                              [32;49;1m[visuals.py:78][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.converter   ][0m Converter process has been started                                              [32;49;1m[converter.py:155][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m Ready and waiting for twitch commands in [berthatwo]...                         [32;49;1m[chat.py:190][0m
+[34;49;1m[CRITICAL  ][35;49;1m[bertha2.chat        ][0m Error ConnectionResetError: [Errno 54] Connection reset by peer                 [32;49;1m[chat.py:210][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m ===== Starting Bertha2 =====                                                    [32;49;1m[main.py:80][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Created directories                                                             [32;49;1m[main.py:28][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.converter   ][0m Converter process has been started                                              [32;49;1m[converter.py:155][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Visuals process has been started                                                [32;49;1m[visuals.py:189][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Unable to connect to OBS. Is it running right now?                              [32;49;1m[visuals.py:78][0m
+[34;49;1m[WARNING   ][35;49;1m[bertha2.visuals     ][0m Unable to connect to OBS. Is it running right now?                              [32;49;1m[visuals.py:78][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m Ready and waiting for twitch commands in [berthatwo]...                         [32;49;1m[chat.py:190][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m ===== Starting Bertha2 =====                                                    [32;49;1m[main.py:80][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Created directories                                                             [32;49;1m[main.py:28][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.converter   ][0m Converter process has been started                                              [32;49;1m[converter.py:155][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Visuals process has been started                                                [32;49;1m[visuals.py:189][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m Ready and waiting for twitch commands in [berthatwo]...                         [32;49;1m[chat.py:190][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m ===== Starting Bertha2 =====                                                    [32;49;1m[main.py:80][0m
+[34;49;1m[INFO      ][35;49;1m[main                ][0m Created directories                                                             [32;49;1m[main.py:28][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Getting OBS connection...                                                       [32;49;1m[visuals.py:145][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m {}                                                                              [32;49;1m[visuals.py:156][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.visuals     ][0m Visuals process has been started                                                [32;49;1m[visuals.py:188][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Updating OBS object: queue                                                      [32;49;1m[visuals.py:31][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Getting OBS connection...                                                       [32;49;1m[visuals.py:145][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m {}                                                                              [32;49;1m[visuals.py:156][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Request succeeded! Response data: None                                          [32;49;1m[visuals.py:40][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Refreshed 'Next Up'                                                             [32;49;1m[visuals.py:207][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Updating OBS object: current_song                                               [32;49;1m[visuals.py:31][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Getting OBS connection...                                                       [32;49;1m[visuals.py:145][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m {}                                                                              [32;49;1m[visuals.py:156][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Request succeeded! Response data: None                                          [32;49;1m[visuals.py:40][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Updating OBS object: playing_video                                              [32;49;1m[visuals.py:31][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Getting OBS connection...                                                       [32;49;1m[visuals.py:145][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m {}                                                                              [32;49;1m[visuals.py:156][0m
+[34;49;1m[DEBUG     ][35;49;1m[bertha2.visuals     ][0m Request succeeded! Response data: None                                          [32;49;1m[visuals.py:40][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.converter   ][0m Converter process has been started                                              [32;49;1m[converter.py:155][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m Ready and waiting for twitch commands in [berthatwo]...                         [32;49;1m[chat.py:190][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m Command: !play https://www.youtube.com/watch?v=1KTgc2SEt50                      [32;49;1m[chat.py:124][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m Attempting to add: www.youtube.com/watch?v=1KTgc2SEt50                          [32;49;1m[chat.py:129][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m Length: 1742                                                                    [32;49;1m[chat.py:228][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m Video length exceeds max                                                        [32;49;1m[chat.py:149][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m Command: !play https://www.youtube.com/watch?v=2DmK_H7IdTo                      [32;49;1m[chat.py:124][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m Attempting to add: www.youtube.com/watch?v=2DmK_H7IdTo                          [32;49;1m[chat.py:129][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m Length: 253                                                                     [32;49;1m[chat.py:228][0m
+[34;49;1m[INFO      ][35;49;1m[bertha2.chat        ][0m The video follow video has been queued: www.youtube.com/watch?v=2DmK_H7IdTo     [32;49;1m[chat.py:157][0m
