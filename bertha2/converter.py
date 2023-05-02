@@ -144,7 +144,7 @@ def video_to_midi(youtube_url):
     return filepath, video_name
 
 
-def converter_process(sigint_e, conn, link_q, play_q, title_q):
+def converter_process(sigint_e, conn, link_q, play_q,):
     logger.info(f"Converter process has been started.")
     while not sigint_e.is_set():
         try:
@@ -157,7 +157,6 @@ def converter_process(sigint_e, conn, link_q, play_q, title_q):
                        "filepath": f"{getcwd()}/files/video/{YouTube(link).video_id}.mp4"})  # This should be here. As soon as a video is finished converting, it should be added to the queue because we know it's safe
 
             play_q.put(filepath)
-            title_q.put(video_title)
         except:  # this will occur when link_q is empty. not the best way to implement.
             pass
 

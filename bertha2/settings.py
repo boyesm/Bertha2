@@ -38,6 +38,19 @@ no_video_playing_text = "Nothing currently playing."
 status_text_obs_source_id = "current_song"
 playing_video_obs_source_id = "playing_video"
 
+visuals_empty_queue_next_up_message = "Nothing queued."
+visuals_nonempty_queue_header_message = "Next Up:"
+
+default_visuals_state = {
+    "currently_displayed_status_text": no_video_playing_text,
+    "currently_playing_video_path": "",
+    "currently_displayed_next_up": "",
+    "queued_video_metadata_objects": [],  # 0th subscript in this list is the currently playing video
+    "is_video_currently_playing": False,
+    "is_bertha_on_cooldown": False,
+    "does_next_up_need_update": True,
+    "does_status_text_need_update": True
+}
 
 def import_cuss_words():
     global cuss_words

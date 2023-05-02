@@ -11,11 +11,14 @@ if is_obs_open != "y":
 
 @skipIf(skip_tests, "OBS is not open")
 class Test(TestCase):
+    # https://github.com/obsproject/obs-websocket/blob/master/docs/generated/protocol.md#requests
 
     def test_update_obs_text_source_value(self):
         response = update_obs_text_source_value(status_text_obs_source_id, "this is a test string!!!")
         self.assertTrue(response.ok())
+        # TODO: check if value stored in the obs source is the value that should be there.
 
     def test_update_obs_video_source_value(self):
         response = update_obs_video_source_value(playing_video_obs_source_id, "video_filepath")
         self.assertTrue(response.ok())
+        # TODO: check if value stored in the obs source is the value that should be there.

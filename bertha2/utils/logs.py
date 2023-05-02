@@ -1,7 +1,5 @@
 import logging
-
 from bertha2.settings import cli_args, log_format
-
 
 def initialize_module_logger(module_name):
     logger = logging.getLogger(module_name)

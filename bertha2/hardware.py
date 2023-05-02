@@ -1,12 +1,5 @@
-"""
-what this file should do:
-- read midi file (take a midi file location as input)
-- convert to data playable by the hardware
-- play on hardware
-"""
-
 import asyncio
-import socket  # TODO: This shouldn't be imported by default. But this isn't super important
+import socket
 import struct
 import subprocess
 import time
@@ -24,7 +17,7 @@ starting_note = 48
 number_of_notes = 48
 arduino_connection = None
 sock = None
-TEST_FLAG = False  # TODO: This should be False by default
+TEST_FLAG = False
 
 # TODO: this shouldn't be defined when not in test mode
 last_cl_update = time.time()
@@ -256,68 +249,72 @@ async def play_midi_file(midi_filename):
     await asyncio.gather(*tasks)
 
 
+def create_connection_with_piano():
+    global arduino_connection
+
+    # Find the usb port that has something plugged in to use from /dev/ (only works with unix)
+    # port can be found via the command: ls /dev/
+    # port_to_use = os.popen("ls -a /dev/cu.usbserial*", ).read().split('\n')[0]
+
+    try:
+        potential_ports = subprocess.check_output(["ls -a /dev/cu.usbserial*"], shell=True,
+                                                  stderr=subprocess.DEVNULL).decode('ascii')
+
+        logger.debug(f"Setting serial up")
+        arduino_connection = serial.Serial()
+        port_to_use = potential_ports.split("\n")[0]
+        logger.debug(f"Setting Arduino port to: {port_to_use}")
+        arduino_connection.port = port_to_use
+        logger.debug(f"Setting Arduino baudrate and timeout: {port_to_use}")
+        arduino_connection.baudrate = 115200
+        arduino_connection.timeout = 0.1
+        logger.debug(f"Connecting to arduino on port:{port_to_use}")
+        arduino_connection.open()
+
+    except:
+        logger.warning("Unable to connect to Arduino. Is it plugged in?")
+        raise ConnectionRefusedError
+
+
+
+def hardware_process_loop(hardware_visuals_conn, play_q):
+    filepath = play_q.get(timeout=10)
+    logger.info("Starting playback of song on hardware")
+    hardware_visuals_conn.send("playing")
+    asyncio.run(play_midi_file(filepath))
+    hardware_visuals_conn.send("cooldown")
+    # wait to cool down solenoids
+    time.sleep(solenoid_cooldown_s)
+    hardware_visuals_conn.send("waiting")
+    logger.info("Finished playback of song on hardware")
+
+
+def create_connection_with_terminal():
+    global sock
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    try:
+        sock.connect(('127.0.0.1', 8001))
+    except:
+        logger.error(f"Socket connection refused. Run netcat with `nc -dkl 8001`.")
+        raise ConnectionRefusedError
+
+
 def hardware_process(sigint_e, hardware_visuals_conn, play_q, ):
     log_if_in_debug_mode(logger, __name__)
 
     global TEST_FLAG
     TEST_FLAG = cli_args.disable_hardware
+
     if TEST_FLAG:
-        global sock
-
-        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-        try:
-            sock.connect(('127.0.0.1', 8001))
-        except:
-            logger.error(f"Socket connection refused. Run netcat with `nc -dkl 8001`.")
-            raise ConnectionRefusedError
+        create_connection_with_terminal()
 
     else:  # test mode is disabled
-        global arduino_connection
+        create_connection_with_piano()
 
-        # Find the usb port that has something plugged in to use from /dev/ (only works with unix)
-        # port can be found via the command: ls /dev/
-        # port_to_use = os.popen("ls -a /dev/cu.usbserial*", ).read().split('\n')[0]
-
-        try:
-            # TODO Why is this running multiple times? THis only gets imported by start.py once
-            potential_ports = subprocess.check_output(["ls -a /dev/cu.usbserial*"], shell=True,
-                                                      stderr=subprocess.DEVNULL).decode('ascii')
-
-            logger.info(f"Setting serial up")
-            arduino_connection = serial.Serial()
-            # pprint(potential_ports)
-            port_to_use = potential_ports.split("\n")[0]
-            logger.info(f"Setting Arduino port to: {port_to_use}")
-            arduino_connection.port = port_to_use
-            logger.info(f"Setting Arduino baudrate and timeout: {port_to_use}")
-            arduino_connection.baudrate = 115200
-            arduino_connection.timeout = 0.1
-            logger.info(f"Connecting to arduino on port:{port_to_use}")
-            arduino_connection.open()
-
-        except:
-            logger.warning("Unable to connect to Arduino. Is it plugged in?")
-            # TODO: should we end the program here? or keep searching for an arduino to be connected?
-            return
 
     while not sigint_e.is_set():
         try:
-            # title = title_q.get()
-            filepath = play_q.get(timeout=10)
-
-            logger.info("Starting playback of song on hardware")
-
-            asyncio.run(play_midi_file(filepath))
-
-            hardware_visuals_conn.send("wait")
-
-            # wait to cool down solenoids
-            time.sleep(solenoid_cooldown_s)
-
-            hardware_visuals_conn.send("done")
-
-            logger.info("Finished playback of song on hardware")
+            hardware_process_loop(hardware_visuals_conn, play_q)
 
         except:
             pass

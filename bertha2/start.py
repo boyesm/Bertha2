@@ -11,6 +11,7 @@ os.environ['IMAGEIO_VAR_NAME'] = 'ffmpeg'
 
 logger = initialize_root_logger(__name__)
 
+
 from bertha2.chat import chat_process
 from bertha2.converter import converter_process
 from bertha2.hardware import hardware_process
@@ -83,8 +84,6 @@ if __name__ == '__main__':
 
     link_q = load_queue("link_q")  # we need a queue for YouTube links
     play_q = load_queue("play_q")  # this is the queue of ready to play videos
-    title_q = Queue()  # queue of video names for obs to display
-    video_name_list = []  # The list is only 10 items long  # TODO: this doesn't need to be created here (it doesn't seem like it anyway). it should just be created in livestream.py
 
     # converter -> visuals connection
     cv_parent_conn, cv_child_conn = Pipe()
@@ -93,8 +92,9 @@ if __name__ == '__main__':
 
     sigint_e = Event()
     # TODO: if processes crash, restart them automatically
+    # why does visuals have the parent and child conns, when it is only receiving data?
     input_p = Process(target=chat_process, args=(link_q,))
-    converter_p = Process(target=converter_process, args=(sigint_e, cv_child_conn, link_q, play_q, title_q,))
+    converter_p = Process(target=converter_process, args=(sigint_e, cv_child_conn, link_q, play_q,))
     hardware_p = Process(target=hardware_process, args=(sigint_e, hv_parent_conn, play_q,))
     visuals_p = Process(target=visuals_process, args=(cv_parent_conn, hv_child_conn,))
 
