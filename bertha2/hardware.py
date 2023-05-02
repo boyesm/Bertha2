@@ -276,7 +276,6 @@ def create_connection_with_piano():
         raise ConnectionRefusedError
 
 
-
 def hardware_process_loop(hardware_visuals_conn, play_q):
     filepath = play_q.get(timeout=10)
     logger.info("Starting playback of song on hardware")
@@ -310,7 +309,6 @@ def hardware_process(sigint_e, hardware_visuals_conn, play_q, ):
 
     else:  # test mode is disabled
         create_connection_with_piano()
-
 
     while not sigint_e.is_set():
         try:

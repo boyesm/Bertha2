@@ -52,6 +52,7 @@ default_visuals_state = {
     "does_status_text_need_update": True
 }
 
+
 def import_cuss_words():
     global cuss_words
 
