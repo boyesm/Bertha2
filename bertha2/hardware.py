@@ -3,17 +3,23 @@ import socket
 import struct
 import subprocess
 import time
+import os
+import random
 
 import mido
 import serial
 
-from bertha2.settings import cli_args, solenoid_cooldown_s
-from bertha2.utils.logs import initialize_module_logger, log_if_in_debug_mode
+import logging
 
-logger = initialize_module_logger(__name__)
+from bertha2.settings import cli_args, solenoid_cooldown_s, log_format
+from bertha2.utils.logs import initialize_module_logger, log_if_in_debug_mode, initialize_root_logger
+
+# logger = initialize_module_logger(__name__)
+logging.basicConfig(level=10, format=log_format)
+logger = logging.getLogger(__name__)
 
 ### GLOBAL VARIABLES ###
-starting_note = 48
+starting_note = 41
 number_of_notes = 48
 arduino_connection = None
 sock = None
@@ -171,8 +177,8 @@ def power_draw_function(velocity, time_passed):
 
     cutoff = 0.1  # TODO: find a value for this variable. seconds
     minimum_power = 100  # TODO: find a value for this variable. minimum amount of power required to depress note
-    minimum_hold = 100  # TODO: find a value for this variable. minimum amount of power to keep depressing the note after it's already been depressed initially
-    maximum_power = 255
+    minimum_hold = 50  # TODO: find a value for this variable. minimum amount of power to keep depressing the note after it's already been depressed initially
+    maximum_power = 150
     maximum_velocity = 127
 
     if time_passed < cutoff:
@@ -224,7 +230,10 @@ async def play_midi_file(midi_filename):
         input_time += mido.tick2second(msg.time, ticks_per_beat, tempo)
 
         if isinstance(msg, mido.MetaMessage):
-            continue
+            if msg.type == 'set_tempo':
+                tempo = msg.tempo
+            else:
+                continue
         else:
             if msg.type == 'note_on':
                 note = msg.note - starting_note
@@ -319,20 +328,38 @@ def hardware_process(sigint_e, hardware_visuals_conn, play_q, ):
     else:
         logger.info("Hardware process has been shut down.")
 
+def play_random_verified_song():
+
+    mypath = "/Users/malcolm/Projects/Personal Projects/Bertha2/files/midi/verified"
+    onlyfiles = [f for f in os.listdir(mypath) if os.path.isfile(os.path.join(mypath, f))]
+
+    random.shuffle(onlyfiles)
+
+    for mid_track in onlyfiles:
+        try:
+            asyncio.run(
+                play_midi_file(f"{mypath}/{mid_track}"))
+            time.sleep(10)
+        except KeyboardInterrupt:
+            time.sleep(3)
+            continue
+
+
 
 if __name__ == '__main__':
     logger.info("Running some tests.")
+
+    create_connection_with_piano()
 
     # asyncio.run(test_every_note())
     # asyncio.run(test_every_note_at_once())
 
     # turn_on_some_notes()  # NOTE: Don't run this with power enabled
 
-    midi_filename = "../files/midi-files/all_notes.mid"
-    # midi_filename = "midi/take5.mid"
-    # midi_filename = "midi/Wii Channels - Mii Channel.mid"
-    # midi_filename = "midi-files/The Entertainer.mid"
-    # midi_filename = "midi/graze_the_roof.mid"
-    # midi_filename = "files/midi/mJdeFEog-YQ.midi"
+    # mid_tracks = ["Pirate.mid"]
+    #
+    # for mid_track in mid_tracks:
+    #     asyncio.run(play_midi_file(f"/Users/malcolm/Projects/Personal Projects/Bertha2/files/midi/verified/{mid_track}"))
+    #     time.sleep(10)
 
-    asyncio.run(play_midi_file(midi_filename))
+    play_random_verified_song()
