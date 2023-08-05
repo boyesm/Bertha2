@@ -330,7 +330,7 @@ def hardware_process(sigint_e, hardware_visuals_conn, play_q, ):
 
 def play_random_verified_song():
 
-    mypath = "/Users/malcolm/Projects/Personal Projects/Bertha2/files/midi/verified"
+    mypath = "/Users/owner/Documents/PROJECTS/Bertha2/files/midi/verified"
     onlyfiles = [f for f in os.listdir(mypath) if os.path.isfile(os.path.join(mypath, f))]
 
     random.shuffle(onlyfiles)
@@ -343,7 +343,6 @@ def play_random_verified_song():
         except KeyboardInterrupt:
             time.sleep(3)
             continue
-
 
 
 if __name__ == '__main__':
