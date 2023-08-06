@@ -178,7 +178,7 @@ def power_draw_function(velocity, time_passed):
     cutoff = 0.1  # TODO: find a value for this variable. seconds
     minimum_power = 100  # TODO: find a value for this variable. minimum amount of power required to depress note
     minimum_hold = 50  # TODO: find a value for this variable. minimum amount of power to keep depressing the note after it's already been depressed initially
-    maximum_power = 150
+    maximum_power = 160
     maximum_velocity = 127
 
     if time_passed < cutoff:
@@ -330,7 +330,7 @@ def hardware_process(sigint_e, hardware_visuals_conn, play_q, ):
 
 def play_random_verified_song():
 
-    mypath = "/Users/owner/Documents/PROJECTS/Bertha2/files/midi/verified"
+    mypath = "/Users/owner/Documents/PROJECTS/Bertha2/files/midi/new"
     onlyfiles = [f for f in os.listdir(mypath) if os.path.isfile(os.path.join(mypath, f))]
 
     random.shuffle(onlyfiles)
