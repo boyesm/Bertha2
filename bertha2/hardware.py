@@ -328,9 +328,10 @@ def hardware_process(sigint_e, hardware_visuals_conn, play_q, ):
     else:
         logger.info("Hardware process has been shut down.")
 
+
 def play_random_verified_song():
 
-    mypath = "/Users/owner/Documents/PROJECTS/Bertha2/files/midi/new"
+    mypath = "/Users/owner/Documents/PROJECTS/Bertha2/files/midi/verified-bangers"
     onlyfiles = [f for f in os.listdir(mypath) if os.path.isfile(os.path.join(mypath, f))]
 
     random.shuffle(onlyfiles)
@@ -339,7 +340,7 @@ def play_random_verified_song():
         try:
             asyncio.run(
                 play_midi_file(f"{mypath}/{mid_track}"))
-            time.sleep(10)
+            time.sleep(3)
         except KeyboardInterrupt:
             time.sleep(3)
             continue

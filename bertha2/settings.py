@@ -64,7 +64,7 @@ def import_cuss_words():
             return word_list
     except Exception as e:
         # TODO Log this
-        print("CUSS WORDS NOT ENABLED")
+        print(f"CUSS WORDS NOT ENABLED {e}")
         return []
 
 cuss_words = import_cuss_words()

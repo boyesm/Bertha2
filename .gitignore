@@ -8,6 +8,11 @@ anothertest.py
 *.mkv
 *.midi
 *.db
+files/midi/unverified/
+files/midi/verified/
+files/midi/tests/pop/
+files/midi/tests/video-games/
+files/audio/
 secrets.env
 **/.DS_Store
 /files/midi-files/
