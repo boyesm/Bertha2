@@ -2,12 +2,14 @@
 example.png
 .DS_Store
 tmp-files
+fiels
 test.py
 anothertest.py
 *.mp4
 *.mkv
 *.midi
 *.db
+files/audio/
 secrets.env
 **/.DS_Store
 /files/midi-files/

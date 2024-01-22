@@ -62,5 +62,3 @@ nc -dkl 8001
   1. Go to RUN > EDIT CONFIGURATIONS
   2. Go to "Edit configuration templates..." at the bottom left of the new window
   3. Check the "Emulate terminal in output console" box and apply
-
-

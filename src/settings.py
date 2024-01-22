@@ -1,3 +1,4 @@
+import logging
 from os import getcwd, getenv
 from pathlib import Path
 from dotenv import load_dotenv
@@ -30,17 +31,6 @@ proxy_password = getenv("PROXY_PASSWORD")
 
 cuss_words_file_name = "cuss_words.txt"
 
-def import_cuss_words():
-    global cuss_words
-
-    with open(cuss_words_file_name) as f:
-        words = f.read()
-        word_list = words.split("\n")
-        word_list = list(filter(None, word_list))  # Remove blank elements (e.g. "") from array
-        return word_list
-
-cuss_words = import_cuss_words()
-
 
 # Initialize command line args
 parser = argparse.ArgumentParser(prog = 'Bertha2')
@@ -52,6 +42,25 @@ parser.add_argument("--debug_hardware", action='store_true')
 parser.add_argument("--debug_chat", action='store_true')
 
 cli_args = parser.parse_args()
+
+### LOGGING SETUP ###
+logger = logging.getLogger(__name__)
+if cli_args.debug_chat:  # If the debug flag is set high, enable debug level logging
+    logging.getLogger(__name__).setLevel(logging.DEBUG)
+
+def import_cuss_words():
+    global cuss_words
+    try:
+        with open(cuss_words_file_name) as f:
+            words = f.read()
+            word_list = words.split("\n")
+            word_list = list(filter(None, word_list))  # Remove blank elements (e.g. "") from array
+            return word_list
+    except FileNotFoundError:
+        logger.debug("Could not find the cuss words file.")
+        return []
+
+cuss_words = import_cuss_words()
 
 # Logging Formatter
 # Easily create ANSI escape codes here: https://ansi.gabebanks.net
