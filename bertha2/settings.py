@@ -56,12 +56,16 @@ default_visuals_state = {
 def import_cuss_words():
     global cuss_words
 
-    with open(cuss_words_file_name) as f:
-        words = f.read()
-        word_list = words.split("\n")
-        word_list = list(filter(None, word_list))  # Remove blank elements (e.g. "") from array
-        return word_list
-
+    try:
+        with open(cuss_words_file_name) as f:
+            words = f.read()
+            word_list = words.split("\n")
+            word_list = list(filter(None, word_list))  # Remove blank elements (e.g. "") from array
+            return word_list
+    except Exception as e:
+        # TODO Log this
+        print(f"CUSS WORDS NOT ENABLED {e}")
+        return []
 
 cuss_words = import_cuss_words()
 
