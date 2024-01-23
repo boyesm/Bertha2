@@ -235,12 +235,12 @@ async def play_midi_file(midi_filename):
             else:
                 continue
         else:
-            if msg.type == 'note_on':
+            if (msg.type == 'note_on') and (msg.velocity != 0):
                 note = msg.note - starting_note
                 logger.debug(f"note_on {note} {msg.velocity} {input_time}")
                 temp_lengs.update({note: {"velocity": msg.velocity, "init_note_delay": input_time}})
 
-            elif msg.type == 'note_off':
+            elif (msg.type == 'note_off') or ((msg.type == 'note_on') and (msg.velocity == 0)):
                 note = msg.note - starting_note
                 logger.debug(f"note_off {note}")
                 # logger.debug(temp_lens)
@@ -345,6 +345,22 @@ def play_random_verified_song():
             continue
 
 
+def play_random_real_song():
+
+    mypath = "/Users/malcolm/Projects/Personal Projects/Bertha2/files/midi/real"
+    onlyfiles = [f for f in os.listdir(mypath) if os.path.isfile(os.path.join(mypath, f))]
+
+    random.shuffle(onlyfiles)
+
+    for mid_track in onlyfiles:
+        try:
+            asyncio.run(
+                play_midi_file(f"{mypath}/{mid_track}"))
+            time.sleep(10)
+        except KeyboardInterrupt:
+            time.sleep(3)
+            continue
+
 
 if __name__ == '__main__':
     logger.info("Running some tests.")
@@ -361,5 +377,9 @@ if __name__ == '__main__':
     # for mid_track in mid_tracks:
     #     asyncio.run(play_midi_file(f"/Users/malcolm/Projects/Personal Projects/Bertha2/files/midi/verified/{mid_track}"))
     #     time.sleep(10)
+
+    # asyncio.run(play_midi_file(f"/Users/malcolm/Projects/Personal Projects/Bertha2/files/midi/tests/scale.mid"))
+    # asyncio.run(play_midi_file(f"/Users/malcolm/Projects/Personal Projects/Bertha2/files/midi/real/ShakeItOff.mid"))
+    # play_random_real_song()
 
     play_random_verified_song()
